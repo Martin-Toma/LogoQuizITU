@@ -14,6 +14,7 @@ class MainMenuFragment : Fragment(), IMainMenuView {
 
     private var playButton: Button? = null
     private var myLogoButton: Button? = null
+    private var quickPlayButton: Button? = null
     private var playPresenter: IMainMenuController? = null
 
     override fun onCreateView(
@@ -25,6 +26,7 @@ class MainMenuFragment : Fragment(), IMainMenuView {
 
         playButton = view.findViewById(R.id.PlayButton)
         myLogoButton = view.findViewById(R.id.MyLogos)
+        quickPlayButton = view.findViewById(R.id.QuickPlay)
         playPresenter = MainMenuController(this)
 
         playButton?.setOnClickListener {
@@ -33,6 +35,9 @@ class MainMenuFragment : Fragment(), IMainMenuView {
 
         myLogoButton?.setOnClickListener{
             (playPresenter as MainMenuController).onClickButton("toMyLogos")
+        }
+        quickPlayButton?.setOnClickListener{
+            (playPresenter as MainMenuController).onClickButton("toGameRandom")
         }
 
         // Inflate the layout for this fragment
