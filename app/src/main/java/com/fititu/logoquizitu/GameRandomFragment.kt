@@ -103,7 +103,7 @@ class GameRandomFragment : Fragment() {
         }
     }
     fun addLogoLetterButtons(gridLayout: GridLayout){
-        for(i in 0 until /*randomLogo.Name.Length*/){
+        for(i in 0 until 4/*randomLogo.Name.Length*/){
             val button = Button(requireContext())
             button.setOnClickListener {
                 // Handle button click
