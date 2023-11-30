@@ -25,5 +25,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/QuickPlay"
         android:text="Quick Play" />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/RandomName"
+            android:text="Random Name" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

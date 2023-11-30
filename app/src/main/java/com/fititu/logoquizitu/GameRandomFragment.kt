@@ -23,6 +23,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.min
 import kotlin.random.Random
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.room.Room
 
 private val alphabet = "abcdefghijklmnopqrstuvwxyz"
 class GameRandomFragment : Fragment() {
@@ -90,9 +91,10 @@ class GameRandomFragment : Fragment() {
         addRandomLetterButtons(lettersGridLayout)
     }
     fun getRandomLogo() {
+        var r : LogoEntity? = null
         lifecycleScope.launch {
-            randomLogo = withContext(Dispatchers.IO) {
-                logoEntityDao.getRandomPhotoPost()!!
+            r = withContext(Dispatchers.IO) {
+                logoEntityDao.getRandomPhotoPost()
             }
 
          /*   withContext(Dispatchers.Main) {
@@ -150,7 +152,13 @@ class GameRandomFragment : Fragment() {
                 }
             }*/
         }*/
-    }
+        }
+        if(r == null){
+            print ("r is null")
+        }
+        else{
+            print(" s")
+        }
     }
 
 
@@ -165,6 +173,7 @@ class GameRandomFragment : Fragment() {
             button.text = ""
             // Customize button appearance if needed
             button.setBackgroundColor(Color.WHITE)
+            button.setTextColor(Color.BLACK)
             // Add button to GridLayout
             val params = GridLayout.LayoutParams()
             if(gridLayout.rowCount == 1)
@@ -201,6 +210,7 @@ class GameRandomFragment : Fragment() {
             //todo ensure letters from logo name are always there
             val button = Button(requireContext())
             button.text = letters[i].letter.toString()
+            button.setTextColor(Color.BLACK)
             button.setOnClickListener {
                 // Handle button click
                 onLetterButtonClick(button,letters[i])
@@ -226,7 +236,7 @@ class GameRandomFragment : Fragment() {
         button.setBackgroundColor(letter.bgColor)
         button.isEnabled = false
         currentLogoNameButton.text = letter.letter.toString()
-        currentLogoNameButton.setBackgroundColor(Color.YELLOW)
+      //  currentLogoNameButton.setBackgroundColor(Color.YELLOW)
         currentLogoNameButton.isEnabled = true
         val logoLetter = nameLetters[logoNameButtons.indexOf(currentLogoNameButton)]
         logoLetter.bgColor = Color.YELLOW
