@@ -64,7 +64,8 @@ class GameRandomFragment : Fragment() {
         gameOriginalViewModel.logoEntity?.let { logoEntity ->
             // Use an image loading library like Glide or Picasso to load the image
             // Replace "requireContext()" with "this" if not in a fragment
-            Glide.with(requireContext())
+            //delay(500)
+            Glide.with(randomLogoImageView.context)
                 .load(logoEntity.imagePath)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_background)
@@ -103,7 +104,7 @@ class GameRandomFragment : Fragment() {
         }
     }
     fun addLogoLetterButtons(gridLayout: GridLayout){
-        for(i in 0 until /*randomLogo.Name.Length*/){
+        for(i in 0 until 2){ //randomLogo.Name.Length
             val button = Button(requireContext())
             button.setOnClickListener {
                 // Handle button click
@@ -136,7 +137,7 @@ class GameRandomFragment : Fragment() {
         params.rowSpec = GridLayout.spec(gridLayout.rowCount-1)
         params.columnSpec = GridLayout.spec(gridLayout.columnCount-1)
         params.width = 150
-        button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
+        //button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
         params.setMargins(50, 10, 10, 10)
         button.setOnClickListener {
             // Handle button click
