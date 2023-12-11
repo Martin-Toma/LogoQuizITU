@@ -89,12 +89,13 @@ class GameRandomFragment : Fragment() {
         lettersGridLayout.columnCount = columns
         // Add random letter buttons
         addRandomLetterButtons(lettersGridLayout)
+        
     }
     fun getRandomLogo() {
         var r : LogoEntity? = null
         lifecycleScope.launch {
-            r = withContext(Dispatchers.IO) {
-                logoEntityDao.getRandomPhotoPost()
+            randomLogo = withContext(Dispatchers.IO) {
+                logoEntityDao.getRandomPhotoPost()!!
             }
 
          /*   withContext(Dispatchers.Main) {
