@@ -1,5 +1,6 @@
 package com.fititu.logoquizitu.Model
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -13,5 +14,5 @@ interface LogoEntityDao {
     fun getAllPhotoPosts(): List<LogoEntity>
 
     @Query("SELECT * FROM logo_entity ORDER BY RANDOM() LIMIT 1")
-    fun getRandomPhotoPost(): LogoEntity?
+    suspend fun getRandomPhotoPost(): LogoEntity
 }
