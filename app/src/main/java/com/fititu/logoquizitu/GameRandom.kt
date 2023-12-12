@@ -24,14 +24,11 @@ import androidx.room.Room
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import kotlinx.coroutines.*
+import java.util.*
 
-private val alphabet = "abcdefghijklmnopqrstuvwxyz"
 class GameRandom : Fragment() {
-    private var logos = mutableListOf<CompanyEntity>()
-    private lateinit var logoEntityDao: LogoEntityDao
     private lateinit var companyDao: CompanyDao
     private lateinit var randomLogo: CompanyEntity
-    private val randomLogoLiveData = MutableLiveData<LogoEntity>()
     private var letters = mutableListOf<Letter>()
     private var nameLetters = mutableListOf<Letter>()
     private var letterButtons = mutableListOf<Button>()
@@ -48,10 +45,7 @@ class GameRandom : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-      //  logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
-       // getRandomLogo()
         return inflater.inflate(R.layout.fragment_game_random,container,false)
     }
 
@@ -59,10 +53,7 @@ class GameRandom : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         getRandomLogo()
         val randomLogoImageView: ImageView = view.findViewById(R.id.logoImageView)
-        // Load the random logo into the ImageView
-        // Observe changes in the logoEntity LiveData
-            // Use an image loading library like Glide or Picasso to load the image
-            // Replace "requireContext()" with "this" if not in a fragment
+
         Glide.with(randomLogoImageView.context)
             .load(randomLogo.imgAltered)
             .placeholder(R.drawable.ic_launcher_foreground)
@@ -81,8 +72,8 @@ class GameRandom : Fragment() {
             logoNameGridLayout.columnCount = columns
         }
         addLogoLetterButtons(logoNameGridLayout)
-        // create buttons for each letter in the logo name
 
+        // create buttons for each letter in the logo name
         val lettersGridLayout: GridLayout = view.findViewById(R.id.lettersGridLayout)
         columns = min((lettercount+1)/2,8)
         lettersGridLayout.rowCount = 2
@@ -93,13 +84,7 @@ class GameRandom : Fragment() {
     }
 
      fun getRandomLogo() {
-        /*lifecycleScope.launch {
-            logos = withContext(Dispatchers.IO){
-                companyDao.getAll().toMutableList()
-            }
-        }*/
          randomLogo = runBlocking(Dispatchers.IO) {
-             //companyDao.getAllCompanies().toMutableList()
              companyDao.getRandomCompany()
          }
     }
@@ -254,6 +239,8 @@ class GameRandom : Fragment() {
         for (letter in logName) {
             letters.add(Letter(1,null,letter, Color.WHITE, Color.WHITE))
         }
+        val existingChars = logName.lowercase(Locale.ROOT).toSet()
+        var alphabet = "abcdefghijklmnopqrstuvwxyz".filter { !existingChars.contains(it) }
         for (i in 0 until (lettersToAdd - logName.length)) {
             val random = Random.Default
             val randomLetter = alphabet[random.nextInt(0, alphabet.length)]
