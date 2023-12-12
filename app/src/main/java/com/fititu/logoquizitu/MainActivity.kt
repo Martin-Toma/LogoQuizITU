@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         switchFragment(MainMenuFragment())
 
-       // this.deleteDatabase(DbConstants.DB_NAME)
+        //this.deleteDatabase(DbConstants.DB_NAME)
         AppDatabase.initDb(this, lifecycleScope)
     }
 

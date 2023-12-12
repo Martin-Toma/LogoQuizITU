@@ -2,10 +2,13 @@ package com.fititu.logoquizitu
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.FileUtils
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,23 +16,30 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Controller.IMainMenuController
 import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.LogoEntity
 import com.fititu.logoquizitu.Model.LogoEntityDao
 import com.fititu.logoquizitu.View.IMainMenuView
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 
 class MyLogosFragment : Fragment(), IMainMenuView {
-
+    // https://stackoverflow.com/questions/62258967/android-best-approach-for-saving-images-in-room-database
     private var plusButton: Button? = null
     private var plusPresenter: IMainMenuController? = null
 
@@ -41,6 +51,9 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
     private lateinit var viewref : View
 
+    //private lateinit var imageView2 : ImageView
+
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +62,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         viewref = view
         //plusButton = view.findViewById(R.id.addButton)
         plusPresenter = MainMenuController(this)
-
+        //imageView2 = viewref.findViewById(R.id.imageView2)
         /*
         plusButton?.setOnClickListener {
             (plusPresenter as MainMenuController).onClickButton("toAdd")
@@ -74,16 +87,116 @@ class MyLogosFragment : Fragment(), IMainMenuView {
             val caption = view.findViewById<EditText>(R.id.captionEditText).text.toString()
 
             if (selectedImagePath.isNotBlank() && caption.isNotBlank()) {
-                val photoPost = LogoEntity(imagePath = selectedImagePath, name = caption, description = caption)
+                //val imgBitmap = imageGetBitmap(selectedImagePath)
+                /*if(imgBitmap == null){
+                    Toast.makeText(requireContext(), "Error decoding the image", Toast.LENGTH_SHORT).show()
+                }
+                else {*/
+
+                val image_file_name = selectedImagePath.toString()
+                val new_image_file_name = caption + "." + get_file_type(image_file_name)
+                Log.d("File name", new_image_file_name)
+
+                val dir_path = requireContext().filesDir
+                val file = File(dir_path, new_image_file_name)
+
+                // Open an output stream to the destination file
+                // Open an output stream to the destination file
+                val outputStream: OutputStream = FileOutputStream(file)
+
+                // Copy the data from the input stream to the output stream
+                val uri = Uri.parse(selectedImagePath)
+
+                val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
+
+                if(inputStream != null){
+                    // Copy the data from the input stream to the output stream
+                    FileUtils.copy(inputStream, outputStream)
+                    //outputStream.getChannel().transferFrom(inputStream, 0, inputStream.size());
+                }
+                else{
+                    Log.e("ERR", "empty input")
+                }
+                Log.d("ERR", "${uri}")
+
+                val outputPath = file.absolutePath //dir_path.toString() + new_image_file_name;
+
+                /*Glide.with(requireContext())
+                    .load(outputPath)
+                    .into(imageView2)*/
+                outputStream.close()
+                Log.d("File name", outputPath)
+                val photoPost = LogoEntity(
+                    imagePath = outputPath,//selectedImagePath,
+                    name = caption,
+                    description = caption //imageBitmap = imgBitmap
+                )
+
                 insertPhotoPost(photoPost)
+                //}
             } else {
                 Toast.makeText(requireContext(), "Please select an image and enter a caption", Toast.LENGTH_SHORT).show()
             }
         }
-
+        // Clear the database on fragment creation
+        /*viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                AppDatabase.getInstance(requireContext()).clearAllTables()
+            }
+        }*/
         loadPhotoPosts()
         return view
     }
+
+    fun get_file_type(whole_path : String?) : String?{
+        val uri = Uri.parse(whole_path)
+
+        // Get the path from the URI
+        val path = uri.path ?: return null
+
+        // Use File to get the file name
+        val file = File(path)
+
+        // Get the file name
+        val fileName = file.name
+
+        // Split the file name by dot to get the parts
+        val parts = fileName.split(".")
+
+        // The last part will be the file extension
+        return if (parts.size > 1) {
+            parts.last()
+        } else {
+            return null
+        }
+    }
+
+    // convert from bitmap to byte array
+    fun getBytes(bitmap: Bitmap?): ByteArray? {
+        if(bitmap != null){
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream)
+            return stream.toByteArray()
+        }
+        return null
+    }
+
+    /*fun imageGetBitmap(path: String): ByteArray? {
+        try {
+            val options = BitmapFactory.Options()
+            val inputStream = requireContext().contentResolver.openInputStream(Uri.parse(path))
+            if(inputStream != null){
+                return getBytes(BitmapFactory.decodeStream(inputStream, null, options))
+            }
+            else{
+                Log.e("EMPTY STREAM", "Error: input stream null")
+                return null
+            }
+        } catch (e: Exception){
+            Log.e("EMPTY BITMAP", "Error: ${e}")
+            return null
+        }
+    }*/
 
     override fun changeView(fragment: Fragment) {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()

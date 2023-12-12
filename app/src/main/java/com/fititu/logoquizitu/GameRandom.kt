@@ -1,7 +1,9 @@
 package com.fititu.logoquizitu
 
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,24 +12,30 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
 import kotlin.math.min
 import kotlin.random.Random
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.Model.LogoEntity
+import com.fititu.logoquizitu.Model.LogoEntityDao
 import kotlinx.coroutines.*
 import java.util.*
 
 class GameRandom : Fragment() {
     private lateinit var companyDao: CompanyDao
+    private lateinit var logoEntityDao: LogoEntityDao
     private lateinit var randomLogo: CompanyEntity
+    private lateinit var randomLogo2: LogoEntity
     private var letters = mutableListOf<Letter>()
     private var nameLetters = mutableListOf<Letter>()
     private var letterButtons = mutableListOf<Button>()
     private var lettercount : Int = 8
     private var logoNameButtons = mutableListOf<Button>()
     private lateinit var currentLogoNameButton : Button
+    private lateinit var randomLogoImageView: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -38,6 +46,7 @@ class GameRandom : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
         return inflater.inflate(R.layout.fragment_game_random,container,false)
     }
@@ -45,7 +54,7 @@ class GameRandom : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getRandomLogo()
-        val randomLogoImageView: ImageView = view.findViewById(R.id.logoImageView)
+        randomLogoImageView = view.findViewById(R.id.logoImageView)
 
         Glide.with(randomLogoImageView.context)
             .load(randomLogo.imgAltered)
@@ -78,6 +87,22 @@ class GameRandom : Fragment() {
      fun getRandomLogo() {
          randomLogo = runBlocking(Dispatchers.IO) {
              companyDao.getRandomCompany()
+         }
+         lifecycleScope.launch {
+             randomLogo2 = withContext(Dispatchers.IO) {
+                 logoEntityDao.getRandomPhotoPost()!!
+             }
+             var path_UI : String? = null
+             withContext(Dispatchers.Main) {
+                 val path = randomLogo2.imagePath
+                 path_UI = path
+
+                 Log.d("Image Loading", "other ${Uri.parse(path)}")
+             }
+             Glide.with(requireContext())
+                 .load(path_UI)
+                 .into(randomLogoImageView)
+             //setImage(path_UI, bitmap)
          }
     }
 

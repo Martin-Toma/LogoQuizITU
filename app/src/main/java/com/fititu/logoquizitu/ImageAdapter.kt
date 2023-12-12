@@ -1,6 +1,7 @@
 package com.fititu.logoquizitu
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +28,10 @@ class ImageAdapter(private var photoList: List<LogoEntity>) :
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val currentPhoto = photoList[position]
         val context = holder.itemView.context
-
+        Log.d("Image Loading", "OK ${currentPhoto.imagePath} | ${Uri.parse(currentPhoto.imagePath)}")
         // Set image and caption
         Glide.with(context)
-            .load(Uri.parse(currentPhoto.imagePath))
+            .load(currentPhoto.imagePath)//Uri.parse(currentPhoto.imagePath))
             .into(holder.imageView)
 
         holder.captionTextView.text = currentPhoto.name
