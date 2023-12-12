@@ -20,7 +20,6 @@ import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.LogoEntity
 import com.fititu.logoquizitu.Model.LogoEntityDao
-import com.fititu.logoquizitu.Model.LogoEntityDao_Impl
 import com.fititu.logoquizitu.View.IMainMenuView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide

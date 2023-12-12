@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
+import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +20,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         switchFragment(MainMenuFragment())
+
+//        this.deleteDatabase(DbConstants.DB_NAME)
+        AppDatabase.initDb(this, lifecycleScope)
     }
 
     private fun switchFragment(fragment: Fragment){
