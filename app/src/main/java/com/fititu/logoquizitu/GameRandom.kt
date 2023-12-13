@@ -18,16 +18,22 @@ import com.fititu.logoquizitu.Model.AppDatabase
 import kotlin.math.min
 import kotlin.random.Random
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
+import com.fititu.logoquizitu.Model.Dao.GlobalProfileDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.Model.Entity.GlobalProfileEntity
 import com.fititu.logoquizitu.Model.LogoEntity
 import com.fititu.logoquizitu.Model.LogoEntityDao
 import kotlinx.coroutines.*
 import java.util.*
+import kotlin.collections.List
 
 class GameRandom : Fragment() {
     private lateinit var companyDao: CompanyDao
     private lateinit var logoEntityDao: LogoEntityDao
     private lateinit var randomLogo: CompanyEntity
+    private lateinit var globalProfileDao: GlobalProfileDao
+    private lateinit var globalProfiles: List<GlobalProfileEntity>
+    private lateinit var globalProfile: GlobalProfileEntity
     private lateinit var randomLogo2: LogoEntity
     private var letters = mutableListOf<Letter>()
     private var nameLetters = mutableListOf<Letter>()
@@ -48,13 +54,14 @@ class GameRandom : Fragment() {
     ): View? {
         logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
-
+        globalProfileDao = AppDatabase.getInstance(requireContext()).globalProfileDao()
         return inflater.inflate(R.layout.fragment_game_random,container,false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         randomLogoImageView = view.findViewById(R.id.logoImageView)
+        getGlobalProfile()
         getRandomLogo()
 /*
         Glide.with(randomLogoImageView.context)
@@ -84,12 +91,18 @@ class GameRandom : Fragment() {
         addRandomLetterButtons(lettersGridLayout)
 
     }
-
+    fun getGlobalProfile() {
+        globalProfiles = runBlocking(Dispatchers.IO) {
+            globalProfileDao.get()
+        }
+        globalProfile = globalProfiles[0]
+    }
      fun getRandomLogo() {
          randomLogo = runBlocking(Dispatchers.IO) {
              companyDao.getRandomCompany()
 
          }
+
 
          var pathUI : String? = null
              val path = randomLogo.imgAltered
@@ -206,20 +219,22 @@ class GameRandom : Fragment() {
     fun checkLogoName(){
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
         if(randomLogo.companyName == logoNameString){
+            updateCompanySolved()
             navigateToNextFragment()
             return
         }
         analyzeLogoName(logoNameString)
         jumpToFreeLetter()
     }
-
+    private fun updateCompanySolved() {
+        randomLogo.solved = true
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                companyDao.update(randomLogo)
+            }
+        }
+    }
     private fun navigateToNextFragment() {
-      /*  val fragmentManager = requireActivity().supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val newFragment = GameRandom()
-        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()//navigate to next fragment*/
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 

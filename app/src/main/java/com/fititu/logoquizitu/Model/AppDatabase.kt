@@ -198,7 +198,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
 
             val globalProfileEntity = GlobalProfileEntity(
-                0, 5, 0, 0
+                0, 5, 0, 0, -1, "", "", "", ""
             )
 
 

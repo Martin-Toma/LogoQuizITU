@@ -8,5 +8,10 @@ data class GlobalProfileEntity(
     @PrimaryKey(autoGenerate = true) val id : Int,
     val hintsCount: Int,
     val hintsUsedCount: Int,
-    val gameTime: Long // Duration in seconds
+    val gameTime: Long, // Duration in seconds
+    val currentCompanyId : Int,
+    val logoLetters : String,
+    val logoColors : String,
+    val letters : String,
+    val letterColors : String,
 )
