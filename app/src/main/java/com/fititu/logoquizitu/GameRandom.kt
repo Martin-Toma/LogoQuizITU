@@ -48,19 +48,20 @@ class GameRandom : Fragment() {
     ): View? {
         logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
+
         return inflater.inflate(R.layout.fragment_game_random,container,false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getRandomLogo()
         randomLogoImageView = view.findViewById(R.id.logoImageView)
-
+        getRandomLogo()
+/*
         Glide.with(randomLogoImageView.context)
             .load(randomLogo.imgAltered)
             .placeholder(R.drawable.ic_launcher_foreground)
             .error(R.drawable.ic_launcher_background)
-            .into(randomLogoImageView)
+            .into(randomLogoImageView)*/
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
         var columns = min( (randomLogo.companyName.length + 1) / 2,8)
@@ -87,7 +88,20 @@ class GameRandom : Fragment() {
      fun getRandomLogo() {
          randomLogo = runBlocking(Dispatchers.IO) {
              companyDao.getRandomCompany()
+
          }
+
+         var pathUI : String? = null
+             val path = randomLogo.imgAltered
+             pathUI = path
+             Log.d("Image Loading", "other ${Uri.parse(path)}")
+
+         Glide.with(requireContext())
+             .load(pathUI)
+             .into(randomLogoImageView)
+             //setImage(path_UI, bitmap)
+
+         /*
          lifecycleScope.launch {
              randomLogo2 = withContext(Dispatchers.IO) {
                  logoEntityDao.getRandomPhotoPost()!!
@@ -103,7 +117,7 @@ class GameRandom : Fragment() {
                  .load(path_UI)
                  .into(randomLogoImageView)
              //setImage(path_UI, bitmap)
-         }
+         }*/
     }
 
 
@@ -173,8 +187,8 @@ class GameRandom : Fragment() {
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
         if(logoNameString.length == randomLogo.companyName.length )
             checkLogoName()
-        if(logoNameButtons.indexOf(currentLogoNameButton)== logoNameButtons.size-1)//last letter
-            checkLogoName()
+       /* if(logoNameButtons.indexOf(currentLogoNameButton)== logoNameButtons.size-1)//last letter
+            checkLogoName()*/
         else {
             jumpToFreeLetter()
         }
@@ -200,12 +214,25 @@ class GameRandom : Fragment() {
     }
 
     private fun navigateToNextFragment() {
-        val fragmentManager = requireActivity().supportFragmentManager
+      /*  val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         val newFragment = GameRandom()
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()//navigate to next fragment
+        fragmentTransaction.commit()//navigate to next fragment*/
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val newFragment = CompanyInfo()
+        val bundle = Bundle().apply {
+            putInt("param1", randomLogo.id)
+            putString("param2", "GameRandom")
+        }
+        newFragment.arguments = bundle
+
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     private fun onLogoLetterButtonClick(button: Button){
