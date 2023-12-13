@@ -15,15 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 class CompanyInfo() : Fragment() {
-    private var param1: Int = 0
-    private lateinit var param2: String
+    private var companyId: Int = 0
+    private lateinit var gameMode: String
     private lateinit var companyDao : CompanyDao
     private lateinit var company : CompanyEntity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            //      param1 = it.getString(ARG_PARAM1)
-            //       param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -31,19 +29,13 @@ class CompanyInfo() : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_company_info, container, false)
-
-        // Retrieve arguments
-        param1 = arguments?.getInt("param1")!!
-        param2 = arguments?.getString("param2")!!
+        companyId = arguments?.getInt("CompanyId")!!
+        gameMode = arguments?.getString("GameMode")!!
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
-        retrieveCompany(param1!!)
+        retrieveCompany(companyId!!)
         val descriptionText = view.findViewById<TextView>(R.id.Description)
         descriptionText.text = company.companyDescription
-
-        // Use the parameters as needed
-
         return view
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +63,7 @@ class CompanyInfo() : Fragment() {
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val newFragment = when(param2){
+        val newFragment = when(gameMode){
             "mainMenu" -> MainMenuFragment()
             "GameRandom" -> GameRandom()
             "companyInfo" -> CompanyInfo()

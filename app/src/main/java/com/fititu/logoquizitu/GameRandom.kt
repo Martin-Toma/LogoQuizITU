@@ -225,8 +225,8 @@ class GameRandom : Fragment() {
 
         val newFragment = CompanyInfo()
         val bundle = Bundle().apply {
-            putInt("param1", randomLogo.id)
-            putString("param2", "GameRandom")
+            putInt("CompanyId", randomLogo.id)
+            putString("GameMode", "GameRandom")
         }
         newFragment.arguments = bundle
 
