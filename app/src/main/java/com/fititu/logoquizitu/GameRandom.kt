@@ -53,14 +53,14 @@ class GameRandom : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getRandomLogo()
-        randomLogoImageView = view.findViewById(R.id.logoImageView)
 
-        Glide.with(randomLogoImageView.context)
+        randomLogoImageView = view.findViewById(R.id.logoImageView)
+        getRandomLogo()
+        /*Glide.with(randomLogoImageView.context)
             .load(randomLogo.imgAltered)
             .placeholder(R.drawable.ic_launcher_foreground)
             .error(R.drawable.ic_launcher_background)
-            .into(randomLogoImageView)
+            .into(randomLogoImageView)*/
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
         var columns = min( (randomLogo.companyName.length + 1) / 2,8)
@@ -88,13 +88,11 @@ class GameRandom : Fragment() {
          randomLogo = runBlocking(Dispatchers.IO) {
              companyDao.getRandomCompany()
          }
+
          lifecycleScope.launch {
-             randomLogo2 = withContext(Dispatchers.IO) {
-                 logoEntityDao.getRandomPhotoPost()!!
-             }
              var path_UI : String? = null
              withContext(Dispatchers.Main) {
-                 val path = randomLogo2.imagePath
+                 val path = randomLogo.imgOriginal//randomLogo2.imagePath
                  path_UI = path
 
                  Log.d("Image Loading", "other ${Uri.parse(path)}")

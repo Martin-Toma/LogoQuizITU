@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.Model.LogoEntity
 
 @Dao
 interface CompanyDao {
@@ -38,4 +39,10 @@ interface CompanyDao {
     suspend fun getRandomCompany() : CompanyEntity
     // for more special filters do set operations on lists returned by these
     // for sorting do sort on list returned by these
+
+    @Insert
+    suspend fun insert(photoPost: CompanyEntity)
+
+    @Query("SELECT * FROM CompanyEntity")
+    fun getAllPhotoPostsC(): List<CompanyEntity>
 }
