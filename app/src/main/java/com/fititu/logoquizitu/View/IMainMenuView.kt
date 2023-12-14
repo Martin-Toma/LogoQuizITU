@@ -5,4 +5,5 @@ import androidx.fragment.app.FragmentTransaction
 
 interface IMainMenuView {
     fun changeView(fragment: Fragment)
+    fun changeViewWithParam(fragment: Fragment, )
 }

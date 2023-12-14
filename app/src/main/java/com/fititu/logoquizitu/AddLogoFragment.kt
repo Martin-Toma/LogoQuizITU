@@ -39,6 +39,16 @@ import androidx.activity.addCallback
 
 class AddLogoFragment : Fragment() {
 
+    companion object {
+        fun newInstance(param1: Int): AddLogoFragment {
+            val fragment = AddLogoFragment()
+            val args = Bundle()
+            args.putInt("ARG_PARAM1", param1)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     private var plusButton: Button? = null
 
     private val SELECT_IMAGE_REQUEST = 1

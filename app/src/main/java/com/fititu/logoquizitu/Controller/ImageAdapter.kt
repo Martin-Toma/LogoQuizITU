@@ -25,6 +25,15 @@ class ImageAdapter(
     private val context : Context ) :
     RecyclerView.Adapter<ImageAdapter.PhotoViewHolder>() {
 
+    interface OnEditButtonClickListener {
+        fun onEditButtonClicked(position: Int, id: Int)
+    }
+
+    private var editListener: OnEditButtonClickListener? = null
+
+    fun setOnEditButtonClickListener(listener: OnEditButtonClickListener) {
+        this.editListener = listener
+    }
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.itemImageView)
         val captionTextView: TextView = itemView.findViewById(R.id.itemCaptionTextView)
@@ -49,7 +58,7 @@ class ImageAdapter(
 
         holder.captionTextView.text = currentPhoto.companyName
         holder.editButton.setOnClickListener {
-
+            editListener?.onEditButtonClicked(position, currentPhoto.id)
         }
         holder.deleteButton.setOnClickListener {
             val itemToDelete = photoList[position]

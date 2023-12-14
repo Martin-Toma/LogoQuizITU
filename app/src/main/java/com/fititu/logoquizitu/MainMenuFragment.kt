@@ -56,5 +56,8 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         transaction.commit()
     }
 
+    override fun changeViewWithParam(fragment: Fragment) {
+    }
+
 
 }
