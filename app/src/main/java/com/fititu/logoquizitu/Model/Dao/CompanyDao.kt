@@ -35,8 +35,11 @@ interface CompanyDao {
     @Query("SELECT * FROM CompanyEntity WHERE countryOfOriginName = :countryName")
     suspend fun getCompaniesOfCountry(countryName : String) : List<CompanyEntity>
 
-    @Query("SELECT * FROM CompanyEntity ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT * FROM CompanyEntity/* WHERE solved=0*/ ORDER BY RANDOM() LIMIT 1") //todo uncomment solved=0, this excludes solved companies
     suspend fun getRandomCompany() : CompanyEntity
+    //select entity with id as parameter
+    @Query("SELECT * FROM CompanyEntity WHERE id = :id")
+    suspend fun getCompanyById(id : Int) : CompanyEntity
     // for more special filters do set operations on lists returned by these
     // for sorting do sort on list returned by these
 

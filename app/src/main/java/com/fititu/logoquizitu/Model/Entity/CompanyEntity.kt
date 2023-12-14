@@ -12,7 +12,7 @@ data class CompanyEntity (
     @PrimaryKey(autoGenerate = true) val id: Int,
     val imgAltered : String,
     val imgOriginal : String,
-    val solved : Boolean,
+    var solved : Boolean,
     val companyName: String,
     val companyDescription : String,
 
