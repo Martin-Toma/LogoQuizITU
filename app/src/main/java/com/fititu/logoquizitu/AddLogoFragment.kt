@@ -54,6 +54,8 @@ class AddLogoFragment : Fragment() {
         viewref = view
         logoEntityDao = AppDatabase.getInstance(requireContext()).companyDao()
 
+        val descriptionEditText : EditText = view.findViewById(R.id.descriptionEditText)
+
         val selectImageButton: Button = view.findViewById(R.id.selectImageButton)
         selectImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -63,6 +65,7 @@ class AddLogoFragment : Fragment() {
         val imageButton: Button = view.findViewById(R.id.imageButton)
         imageButton.setOnClickListener {
             val caption = view.findViewById<EditText>(R.id.captionEditText).text.toString()
+            val description : String = descriptionEditText.text.toString()
 
             if (selectedImagePath.isNotBlank() && caption.isNotBlank()) {
                 //val imgBitmap = imageGetBitmap(selectedImagePath)
@@ -112,7 +115,7 @@ class AddLogoFragment : Fragment() {
                     id = 0,
                     imgOriginal = outputPath,//selectedImagePath,
                     companyName = caption,
-                    companyDescription = caption, //imageBitmap = imgBitmap
+                    companyDescription = description, //imageBitmap = imgBitmap
                     solved = false,
                     imgAltered = outputPath,
                     foundationDate = Date(),
