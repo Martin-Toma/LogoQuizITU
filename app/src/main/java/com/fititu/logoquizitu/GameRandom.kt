@@ -63,7 +63,7 @@ class GameRandom : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         randomLogoImageView = view.findViewById(R.id.logoImageView)
         getGlobalProfile()
-        if (globalProfile.id != -1) { //no game in progress
+        if (globalProfile.currentCompanyId != -1) { //no game in progress
             initializeSavedGame(view)
             return
         }
@@ -97,7 +97,7 @@ class GameRandom : Fragment() {
          }
 
          lifecycleScope.launch {
-             var path_UI : String? = null
+             var path_UI: String? = null
              withContext(Dispatchers.Main) {
                  val path = randomLogo.imgOriginal//randomLogo2.imagePath
                  path_UI = path
@@ -109,6 +109,7 @@ class GameRandom : Fragment() {
                  .into(randomLogoImageView)
              //setImage(path_UI, bitmap)
          }
+     }
 
     fun getGlobalProfile() {
         globalProfiles = runBlocking(Dispatchers.IO) {
@@ -630,6 +631,19 @@ class GameRandom : Fragment() {
     private fun LoadLogo() {
         randomLogo = runBlocking(Dispatchers.IO) {
             companyDao.getCompanyById(globalProfile.currentCompanyId)
+        }
+        lifecycleScope.launch {
+            var path_UI: String? = null
+            withContext(Dispatchers.Main) {
+                val path = randomLogo.imgOriginal//randomLogo2.imagePath
+                path_UI = path
+
+                Log.d("Image Loading", "other ${Uri.parse(path)}")
+            }
+            Glide.with(requireContext())
+                .load(path_UI)
+                .into(randomLogoImageView)
+            //setImage(path_UI, bitmap)
         }
 
     }
