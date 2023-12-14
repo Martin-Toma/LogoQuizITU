@@ -68,13 +68,6 @@ class GameRandom : Fragment() {
             return
         }
         getRandomLogo()
-
-        /*
-                Glide.with(randomLogoImageView.context)
-                    .load(randomLogo.imgAltered)
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .error(R.drawable.ic_launcher_background)
-                    .into(randomLogoImageView)*/
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
         var columns = min((randomLogo.companyName.length + 1) / 2, 8)
@@ -97,13 +90,33 @@ class GameRandom : Fragment() {
 
     }
 
+
+     fun getRandomLogo() {
+         randomLogo = runBlocking(Dispatchers.IO) {
+             companyDao.getRandomCompany()
+         }
+
+         lifecycleScope.launch {
+             var path_UI : String? = null
+             withContext(Dispatchers.Main) {
+                 val path = randomLogo.imgOriginal//randomLogo2.imagePath
+                 path_UI = path
+
+                 Log.d("Image Loading", "other ${Uri.parse(path)}")
+             }
+             Glide.with(requireContext())
+                 .load(path_UI)
+                 .into(randomLogoImageView)
+             //setImage(path_UI, bitmap)
+         }
+
     fun getGlobalProfile() {
         globalProfiles = runBlocking(Dispatchers.IO) {
             globalProfileDao.get()
         }
         globalProfile = globalProfiles[0]
     }
-
+/*
     fun getRandomLogo() {
         randomLogo = runBlocking(Dispatchers.IO) {
             companyDao.getRandomCompany()
@@ -138,7 +151,7 @@ class GameRandom : Fragment() {
                 .into(randomLogoImageView)
             //setImage(path_UI, bitmap)
         }*/
-    }
+    }*/
 
 
     fun addLogoLetterButtons(gridLayout: GridLayout) {

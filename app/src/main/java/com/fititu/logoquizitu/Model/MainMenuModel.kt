@@ -22,6 +22,9 @@ class MainMenuModel(): IMainMenuModel {
             "toRandomName" -> {
                 fragment = RandomNameFragment()
             }
+            "toCreateLogo" -> {
+                fragment = CreateLogoFragment()
+            }
         }
         return fragment
     }

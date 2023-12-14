@@ -3,6 +3,10 @@ package com.fititu.logoquizitu
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,10 +25,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.PrimaryKey
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Controller.IMainMenuController
 import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.Model.AppDatabase
+import com.fititu.logoquizitu.Model.Dao.CompanyDao
+import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.Model.LogoEntity
 import com.fititu.logoquizitu.Model.LogoEntityDao
 import com.fititu.logoquizitu.View.IMainMenuView
@@ -36,6 +43,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.Date
 
 
 class MyLogosFragment : Fragment(), IMainMenuView {
@@ -44,12 +52,14 @@ class MyLogosFragment : Fragment(), IMainMenuView {
     private var plusPresenter: IMainMenuController? = null
 
     private val SELECT_IMAGE_REQUEST = 1
-    private lateinit var logoEntityDao: LogoEntityDao
+    private lateinit var logoEntityDao: CompanyDao
     private var selectedImagePath: String = ""
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImageAdapter
 
     private lateinit var viewref : View
+
+    private var playPresenter: IMainMenuController? = null
 
     //private lateinit var imageView2 : ImageView
 
@@ -60,15 +70,19 @@ class MyLogosFragment : Fragment(), IMainMenuView {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_my_logos, container, false)
         viewref = view
-        //plusButton = view.findViewById(R.id.addButton)
-        plusPresenter = MainMenuController(this)
+        plusButton = view.findViewById(R.id.addButton)
+        playPresenter = MainMenuController(this)
         //imageView2 = viewref.findViewById(R.id.imageView2)
-        /*
-        plusButton?.setOnClickListener {
-            (plusPresenter as MainMenuController).onClickButton("toAdd")
-        } */
 
-        logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
+        plusButton?.setOnClickListener {
+            (playPresenter as MainMenuController).onClickButton("toAdd")
+        }
+        /*
+        plusButton?.setOnClickListener{
+            (playPresenter as MainMenuController).onClickButton("toCreateLogo")
+        }*/
+
+        logoEntityDao = AppDatabase.getInstance(requireContext()).companyDao()
 
         recyclerView = view.findViewById(R.id.photoRecyclerView)
         adapter = ImageAdapter(emptyList()) // Initial empty list
@@ -126,10 +140,23 @@ class MyLogosFragment : Fragment(), IMainMenuView {
                     .into(imageView2)*/
                 outputStream.close()
                 Log.d("File name", outputPath)
-                val photoPost = LogoEntity(
-                    imagePath = outputPath,//selectedImagePath,
-                    name = caption,
-                    description = caption //imageBitmap = imgBitmap
+
+                // prepare masked image
+                //maskLogo(outputPath);
+
+                val photoPost = CompanyEntity(
+                    id = 0,
+                    imgOriginal = outputPath,//selectedImagePath,
+                    companyName = caption,
+                    companyDescription = caption, //imageBitmap = imgBitmap
+                    solved = false,
+                    imgAltered = outputPath,
+                    foundationDate = Date(),
+                    userCreated = true,
+                    categoryName = null,
+                    countryOfOriginName = null,
+                    gameState = null,
+                    levelId = null
                 )
 
                 insertPhotoPost(photoPost)
@@ -219,7 +246,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         }
     }
 
-    private fun insertPhotoPost(photoPost: LogoEntity) {
+    private fun insertPhotoPost(photoPost: CompanyEntity) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 logoEntityDao.insert(photoPost)
@@ -240,9 +267,33 @@ class MyLogosFragment : Fragment(), IMainMenuView {
     private fun loadPhotoPosts() {
         lifecycleScope.launch {
             val photoList = withContext(Dispatchers.IO) {
-                logoEntityDao.getAllPhotoPosts()
+                logoEntityDao.getAllPhotoPostsC()
             }
             adapter.setPhotoList(photoList)
         }
+    }
+
+    // for masked image
+    private fun maskLogo(origPath : String) {
+        // Load the image
+        val bitmap = BitmapFactory.decodeFile(origPath)
+
+        // Create a mutable bitmap to draw on
+        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        // Prepare to draw on the image
+        val canvas = Canvas(mutableBitmap)
+        val paint = Paint()
+        paint.color = Color.RED
+        paint.strokeWidth = 10f
+
+        // Draw a line on the image
+        canvas.drawLine(0f, 0f, 100f, 100f, paint)
+
+        // Save the image to a new file
+        val out = FileOutputStream("path_to_your_new_image_file")
+        mutableBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        out.flush()
+        out.close()
     }
 }

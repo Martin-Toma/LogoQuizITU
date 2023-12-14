@@ -10,8 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.Model.LogoEntity
 import com.bumptech.glide.Glide
+import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 
-class ImageAdapter(private var photoList: List<LogoEntity>) :
+class ImageAdapter(private var photoList: List<CompanyEntity>) :
     RecyclerView.Adapter<ImageAdapter.PhotoViewHolder>() {
 
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -28,17 +29,17 @@ class ImageAdapter(private var photoList: List<LogoEntity>) :
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val currentPhoto = photoList[position]
         val context = holder.itemView.context
-        Log.d("Image Loading", "OK ${currentPhoto.imagePath} | ${Uri.parse(currentPhoto.imagePath)}")
+        Log.d("Image Loading", "OK ${currentPhoto.imgOriginal} | ${Uri.parse(currentPhoto.imgOriginal)}")
         // Set image and caption
         Glide.with(context)
-            .load(currentPhoto.imagePath)//Uri.parse(currentPhoto.imagePath))
+            .load(currentPhoto.imgOriginal)//Uri.parse(currentPhoto.imagePath))
             .into(holder.imageView)
 
-        holder.captionTextView.text = currentPhoto.name
+        holder.captionTextView.text = currentPhoto.companyName
     }
 
     // Function to update the photoList in the adapter
-    fun setPhotoList(newList: List<LogoEntity>) {
+    fun setPhotoList(newList: List<CompanyEntity>) {
         photoList = newList
         notifyDataSetChanged() // Notify the adapter that the data set has changed
     }
