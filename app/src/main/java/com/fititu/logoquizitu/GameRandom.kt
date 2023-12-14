@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
@@ -38,9 +39,9 @@ class GameRandom : Fragment() {
     private var letters = mutableListOf<Letter>()
     private var nameLetters = mutableListOf<Letter>()
     private var letterButtons = mutableListOf<Button>()
-    private var lettercount : Int = 8
+    private var lettercount: Int = 8
     private var logoNameButtons = mutableListOf<Button>()
-    private lateinit var currentLogoNameButton : Button
+    private lateinit var currentLogoNameButton: Button
     private lateinit var randomLogoImageView: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,28 +56,32 @@ class GameRandom : Fragment() {
         logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
         globalProfileDao = AppDatabase.getInstance(requireContext()).globalProfileDao()
-        return inflater.inflate(R.layout.fragment_game_random,container,false)
+        return inflater.inflate(R.layout.fragment_game_random, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         randomLogoImageView = view.findViewById(R.id.logoImageView)
         getGlobalProfile()
+        if (globalProfile.id != -1) { //no game in progress
+            initializeSavedGame(view)
+            return
+        }
         getRandomLogo()
-/*
-        Glide.with(randomLogoImageView.context)
-            .load(randomLogo.imgAltered)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_background)
-            .into(randomLogoImageView)*/
+
+        /*
+                Glide.with(randomLogoImageView.context)
+                    .load(randomLogo.imgAltered)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(randomLogoImageView)*/
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
-        var columns = min( (randomLogo.companyName.length + 1) / 2,8)
-        if(lettercount <=12) {
+        var columns = min((randomLogo.companyName.length + 1) / 2, 8)
+        if (lettercount <= 12) {
             logoNameGridLayout.rowCount = 1
             logoNameGridLayout.columnCount = randomLogo.companyName.length + 1
-        }
-        else{
+        } else {
             logoNameGridLayout.rowCount = 2
             logoNameGridLayout.columnCount = columns
         }
@@ -84,58 +89,60 @@ class GameRandom : Fragment() {
 
         // create buttons for each letter in the logo name
         val lettersGridLayout: GridLayout = view.findViewById(R.id.lettersGridLayout)
-        columns = min((lettercount+1)/2,8)
+        columns = min((lettercount + 1) / 2, 8)
         lettersGridLayout.rowCount = 2
         lettersGridLayout.columnCount = columns
         // Add random letter buttons
         addRandomLetterButtons(lettersGridLayout)
 
     }
+
     fun getGlobalProfile() {
         globalProfiles = runBlocking(Dispatchers.IO) {
             globalProfileDao.get()
         }
         globalProfile = globalProfiles[0]
     }
-     fun getRandomLogo() {
-         randomLogo = runBlocking(Dispatchers.IO) {
-             companyDao.getRandomCompany()
 
-         }
+    fun getRandomLogo() {
+        randomLogo = runBlocking(Dispatchers.IO) {
+            companyDao.getRandomCompany()
+
+        }
 
 
-         var pathUI : String? = null
-             val path = randomLogo.imgAltered
-             pathUI = path
-             Log.d("Image Loading", "other ${Uri.parse(path)}")
+        var pathUI: String? = null
+        val path = randomLogo.imgAltered
+        pathUI = path
+        Log.d("Image Loading", "other ${Uri.parse(path)}")
 
-         Glide.with(requireContext())
-             .load(pathUI)
-             .into(randomLogoImageView)
-             //setImage(path_UI, bitmap)
+        Glide.with(requireContext())
+            .load(pathUI)
+            .into(randomLogoImageView)
+        //setImage(path_UI, bitmap)
 
-         /*
-         lifecycleScope.launch {
-             randomLogo2 = withContext(Dispatchers.IO) {
-                 logoEntityDao.getRandomPhotoPost()!!
-             }
-             var path_UI : String? = null
-             withContext(Dispatchers.Main) {
-                 val path = randomLogo2.imagePath
-                 path_UI = path
+        /*
+        lifecycleScope.launch {
+            randomLogo2 = withContext(Dispatchers.IO) {
+                logoEntityDao.getRandomPhotoPost()!!
+            }
+            var path_UI : String? = null
+            withContext(Dispatchers.Main) {
+                val path = randomLogo2.imagePath
+                path_UI = path
 
-                 Log.d("Image Loading", "other ${Uri.parse(path)}")
-             }
-             Glide.with(requireContext())
-                 .load(path_UI)
-                 .into(randomLogoImageView)
-             //setImage(path_UI, bitmap)
-         }*/
+                Log.d("Image Loading", "other ${Uri.parse(path)}")
+            }
+            Glide.with(requireContext())
+                .load(path_UI)
+                .into(randomLogoImageView)
+            //setImage(path_UI, bitmap)
+        }*/
     }
 
 
-    fun addLogoLetterButtons(gridLayout: GridLayout){
-        for(i in 0 until /*6*/randomLogo.companyName.length){
+    fun addLogoLetterButtons(gridLayout: GridLayout) {
+        for (i in 0 until /*6*/randomLogo.companyName.length) {
             val button = Button(requireContext())
             button.setOnClickListener {
                 onLogoLetterButtonClick(button)
@@ -145,7 +152,7 @@ class GameRandom : Fragment() {
             button.setTextColor(Color.BLACK)
             // Add button to GridLayout
             val params = GridLayout.LayoutParams()
-            if(gridLayout.rowCount == 1)
+            if (gridLayout.rowCount == 1)
                 params.rowSpec = GridLayout.spec(0)
             else
                 params.rowSpec = GridLayout.spec(i / gridLayout.columnCount)
@@ -157,7 +164,7 @@ class GameRandom : Fragment() {
             gridLayout.addView(button)
             button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_letter)
             logoNameButtons.add(button)
-            nameLetters.add(Letter(i,null,randomLogo.companyName[i],Color.WHITE,Color.WHITE))
+            nameLetters.add(Letter(i, null, randomLogo.companyName[i], Color.WHITE, Color.WHITE))
         }
         val resetButton = (view?.findViewById<Button>(R.id.resetButton))!!
         resetButton.text = "X"
@@ -167,15 +174,20 @@ class GameRandom : Fragment() {
         }
         currentLogoNameButton = logoNameButtons[0]
     }
-    fun addRandomLetterButtons(gridLayout: GridLayout){
+
+    fun addRandomLetterButtons(gridLayout: GridLayout) {
         for (i in 0 until lettercount) {
             val button = Button(requireContext())
             button.text = letters[i].letter.toString()
             button.setTextColor(Color.BLACK)
             button.setOnClickListener {
-                onLetterButtonClick(button,letters[i])
+                onLetterButtonClick(button, letters[i])
             }
             button.setBackgroundColor(letters[i].bgColor)
+            if(letters[i].bgColor == Color.DKGRAY || letters[i].bgColor == Color.GREEN) {
+                button.isEnabled = false
+                button.isVisible = false
+            }
             val params = GridLayout.LayoutParams()
             params.rowSpec = GridLayout.spec(i / gridLayout.columnCount)
             params.columnSpec = GridLayout.spec(i % gridLayout.columnCount)
@@ -187,7 +199,8 @@ class GameRandom : Fragment() {
             letterButtons.add(button)
         }
     }
-    private fun onLetterButtonClick(button: Button,letter: Letter) {
+
+    private fun onLetterButtonClick(button: Button, letter: Letter) {
         letter.bgColor = Color.DKGRAY
         button.setBackgroundColor(letter.bgColor)
         button.isEnabled = false
@@ -198,27 +211,28 @@ class GameRandom : Fragment() {
         logoLetter.assignedLetter = letter.id
         logoLetter.letter = letter.letter
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
-        if(logoNameString.length == randomLogo.companyName.length )
+        saveCurrentGameState()
+        if (logoNameString.length == randomLogo.companyName.length)
             checkLogoName()
-       /* if(logoNameButtons.indexOf(currentLogoNameButton)== logoNameButtons.size-1)//last letter
-            checkLogoName()*/
+        /* if(logoNameButtons.indexOf(currentLogoNameButton)== logoNameButtons.size-1)//last letter
+             checkLogoName()*/
         else {
             jumpToFreeLetter()
         }
     }
 
     private fun jumpToFreeLetter() {
-        for (text in logoNameButtons){
-            if(text.text == ""){
+        for (text in logoNameButtons) {
+            if (text.text == "") {
                 currentLogoNameButton = text
                 break
             }
         }
     }
 
-    fun checkLogoName(){
+    fun checkLogoName() {
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
-        if(randomLogo.companyName == logoNameString){
+        if (randomLogo.companyName == logoNameString) {
             updateCompanySolved()
             navigateToNextFragment()
             return
@@ -226,6 +240,7 @@ class GameRandom : Fragment() {
         analyzeLogoName(logoNameString)
         jumpToFreeLetter()
     }
+
     private fun updateCompanySolved() {
         randomLogo.solved = true
         lifecycleScope.launch {
@@ -234,7 +249,9 @@ class GameRandom : Fragment() {
             }
         }
     }
+
     private fun navigateToNextFragment() {
+        resetCurrentGameState()
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
@@ -250,11 +267,11 @@ class GameRandom : Fragment() {
         fragmentTransaction.commit()
     }
 
-    private fun onLogoLetterButtonClick(button: Button){
+    private fun onLogoLetterButtonClick(button: Button) {
         val logoLetter = nameLetters[logoNameButtons.indexOf(button)] //find corresponding logoLetter
         logoLetter.bgColor = Color.WHITE
         logoLetter.letter = ' '
-        val letterToFind= letters[logoLetter.assignedLetter!!]
+        val letterToFind = letters[logoLetter.assignedLetter!!]
         logoLetter.assignedLetter = null
         letterToFind.bgColor = letterToFind.defaultColor
         val buttonToChange = letterButtons[letters.indexOf(letterToFind)]
@@ -265,11 +282,13 @@ class GameRandom : Fragment() {
         button.text = "" //reset the text
         button.setBackgroundColor(Color.WHITE)
         buttonToChange.isEnabled = true
-        button .isEnabled = false
+        button.isEnabled = false
+        saveCurrentGameState()
         jumpToFreeLetter()
 
     }
-    private fun calculateLetterCount(logName: String){
+
+    private fun calculateLetterCount(logName: String) {
         var lettersToAdd = logName.length + 4
         if (lettersToAdd < 8)
             lettersToAdd = 8
@@ -277,43 +296,47 @@ class GameRandom : Fragment() {
             lettersToAdd = 16
         lettercount = lettersToAdd
         for (letter in logName) {
-            letters.add(Letter(1,null,letter, Color.WHITE, Color.WHITE))
+            letters.add(Letter(1, null, letter, Color.WHITE, Color.WHITE))
         }
         val existingChars = logName.lowercase(Locale.ROOT).toSet()
-        val alphabet = "abcdefghijklmnopqrstuvwxyz".filter { !existingChars.contains(it) }//exclude letters from logo name
+        val alphabet =
+            "abcdefghijklmnopqrstuvwxyz".filter { !existingChars.contains(it) }//exclude letters from logo name
         for (i in 0 until (lettersToAdd - logName.length)) {
             val random = Random.Default
             val randomLetter = alphabet[random.nextInt(0, alphabet.length)]
-            letters.add(Letter(1,null,randomLetter, Color.WHITE, Color.WHITE))
+            letters.add(Letter(1, null, randomLetter, Color.WHITE, Color.WHITE))
         }
         letters.shuffle()
         //assign id to each letter
-        for (i in 0 until letters.size){
+        for (i in 0 until letters.size) {
             letters[i].id = i
         }
     }
-    private fun resetLogoLetters(){
-        for (letter in letters){
+
+    private fun resetLogoLetters() {
+        for (letter in letters) {
             letter.bgColor = Color.WHITE
         }
-        for(logobutton in logoNameButtons){
+        for (logobutton in logoNameButtons) {
             logobutton.text = ""
             logobutton.setBackgroundColor(Color.WHITE)
             logobutton.isEnabled = false
         }
-        for(letterButton in letterButtons){
+        for (letterButton in letterButtons) {
             letterButton.isEnabled = true
             letterButton.setBackgroundColor(Color.WHITE)
             letterButton.visibility = View.VISIBLE
         }
+        resetCurrentGameState()
         jumpToFreeLetter()
     }
-    private fun analyzeLogoName(LogoNameString: String){
+
+    private fun analyzeLogoName(LogoNameString: String) {
         val CorrectLogoName = randomLogo.companyName
         var correctLogoNameModified = CorrectLogoName
         var i = 0
-        while (i < CorrectLogoName.length){
-            if(CorrectLogoName[i] == nameLetters[i].letter){//correct letter on correct position
+        while (i < CorrectLogoName.length) {
+            if (CorrectLogoName[i] == nameLetters[i].letter) {//correct letter on correct position
 
                 nameLetters[i].bgColor = Color.GREEN
                 nameLetters[i].defaultColor = Color.GREEN
@@ -331,23 +354,23 @@ class GameRandom : Fragment() {
                 letterButton.isEnabled = false
                 letterButton.visibility = View.INVISIBLE
 
-                correctLogoNameModified = correctLogoNameModified.replaceFirst(correctLogoNameModified[i].toString(),".")
+                correctLogoNameModified =
+                    correctLogoNameModified.replaceFirst(correctLogoNameModified[i].toString(), ".")
                 i++
-            }
-            else i++
+            } else i++
         }
         i = 0
         val stupidKotlin = StringBuilder(LogoNameString)
-        while(i < LogoNameString.length){
-            if(correctLogoNameModified[i] == '.'){
+        while (i < LogoNameString.length) {
+            if (correctLogoNameModified[i] == '.') {
                 stupidKotlin.setCharAt(i, '.')
             }
             i++
         }
         i = 0
         //reset all letterbuttons that are yellow to white
-        for( letter in letters){
-            if(letter.bgColor == Color.YELLOW){
+        for (letter in letters) {
+            if (letter.bgColor == Color.YELLOW) {
                 val letterButton = letterButtons[letters.indexOf(letter)]
                 letterButton.setBackgroundColor(Color.WHITE)
                 letterButton.isEnabled = true
@@ -355,12 +378,11 @@ class GameRandom : Fragment() {
                 letter.defaultColor = Color.WHITE
             }
         }
-        while (i < stupidKotlin.length){
-            if(stupidKotlin[i] == '.'){
+        while (i < stupidKotlin.length) {
+            if (stupidKotlin[i] == '.') {
                 i++
                 continue
-            }
-            else if (correctLogoNameModified.contains(stupidKotlin[i])){
+            } else if (correctLogoNameModified.contains(stupidKotlin[i])) {
                 //find the letter in correctLogoNameModified
                 val nameLetter = nameLetters[i]
                 val logoNameButton = logoNameButtons[nameLetters.indexOf(nameLetter)]
@@ -376,12 +398,13 @@ class GameRandom : Fragment() {
                 letter.defaultColor = Color.YELLOW
                 nameLetter.bgColor = Color.WHITE
                 stupidKotlin.setCharAt(i, '.')
-                correctLogoNameModified = correctLogoNameModified.replaceFirst(stupidKotlin[i].toString(),".")
+                correctLogoNameModified = correctLogoNameModified.replaceFirst(stupidKotlin[i].toString(), ".")
             }
             i++
         }
         resetNameButtons()
         resetUsedLetters()
+        saveCurrentGameState()
     }
 
     private fun resetNameButtons() {
@@ -411,6 +434,191 @@ class GameRandom : Fragment() {
             }
         }
     }
-}
 
-data class Letter(var id: Int,var assignedLetter: Int?,var letter: Char, var bgColor: Int, var defaultColor: Int )
+    private fun resetCurrentGameState() {
+        runBlocking(Dispatchers.IO) {
+            globalProfileDao.update(
+                GlobalProfileEntity(
+                    globalProfile.id,
+                    globalProfile.hintsCount,
+                    globalProfile.hintsUsedCount,
+                    globalProfile.gameTime,
+                    -1,
+                    "",
+                    "",
+                    "",
+                    ""
+                )
+            )
+            globalProfiles = globalProfileDao.get()
+        }
+    }
+
+    private fun saveCurrentGameState() {
+        var logoName = ""
+        for (button in logoNameButtons) {
+            if (button.text != "") {
+                logoName += button.text
+            } else logoName += " "
+        }
+        var logoColor = ""
+
+        for (letter in nameLetters) {
+            when (letter.bgColor) {
+                Color.WHITE -> logoColor += 'W'
+                Color.YELLOW -> logoColor += 'Y'
+                Color.GREEN -> logoColor += 'G'
+                Color.DKGRAY -> logoColor += 'D'
+
+            }
+        }
+        val letterstring = letters.joinToString("") { it.letter.toString() }
+        var nameColor = ""
+        for (letter in letters) {
+            when (letter.bgColor) {
+                Color.WHITE -> nameColor += "W"
+                Color.YELLOW -> nameColor += "Y"
+                Color.GREEN -> nameColor += "G"
+                Color.DKGRAY -> nameColor += "D"
+            }
+        }
+        runBlocking(Dispatchers.IO) {
+            globalProfileDao.update(
+                GlobalProfileEntity(
+                    globalProfile.id,
+                    globalProfile.hintsCount,
+                    globalProfile.hintsUsedCount,
+                    globalProfile.gameTime,
+                    randomLogo.id,
+                    logoName,
+                    logoColor,
+                    letterstring,
+                    nameColor
+                )
+            )
+            globalProfiles = globalProfileDao.get()
+        }
+        globalProfile = globalProfiles[0] //update globalProfile
+    }
+
+    private fun initializeSavedGame(view: View) {
+        val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
+        LoadLogo()
+        val logoLetterCount = globalProfile.logoLetters.length
+        val logoNameCharArray = globalProfile.logoLetters.toCharArray()
+        val logoColorCharArray = globalProfile.logoColors.toCharArray()
+        if (logoLetterCount <= 12) {
+            logoNameGridLayout.rowCount = 1
+            logoNameGridLayout.columnCount = logoLetterCount + 1
+        } else {
+            logoNameGridLayout.rowCount = 2
+            logoNameGridLayout.columnCount = min((logoLetterCount + 1) / 2, 8)
+        }
+        //create buttons and letter objects for logo name
+        val letterCharArray = globalProfile.letters.toCharArray()
+        val letterColorCharArray = globalProfile.letterColors.toCharArray()
+        for (i in logoNameCharArray.indices) {
+            createLogoButton(logoNameCharArray, i, logoColorCharArray, logoNameGridLayout)
+        }
+
+        val lettersGridLayout: GridLayout = view.findViewById(R.id.lettersGridLayout)
+        lettersGridLayout.rowCount = 2
+        lettersGridLayout.columnCount = min((globalProfile.letters.length + 1) / 2, 8)
+        for(i in letterCharArray.indices){
+            //create letters
+            val color = when(letterColorCharArray[i]){
+                'W' -> Color.WHITE
+                'Y' -> Color.YELLOW
+                'G' -> Color.GREEN
+                'D' -> Color.DKGRAY
+                else -> Color.WHITE
+            }
+            letters.add(Letter(i, null, letterCharArray[i], color, color))
+        }
+        lettercount = letters.size
+        addRandomLetterButtons(lettersGridLayout)
+        createResetButton(view)
+        jumpToFreeLetter()
+    }
+
+    private fun createResetButton(view: View) {
+        val resetButton = (view?.findViewById<Button>(R.id.resetButton))!!
+        resetButton.text = "X"
+        resetButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
+        resetButton.setOnClickListener {
+            resetLogoLetters()
+        }
+    }
+
+    private fun createLogoButton(
+        logoNameCharArray: CharArray,
+        i: Int,
+        logoColorCharArray: CharArray,
+        logoNameGridLayout: GridLayout
+    ) {
+        val button = Button(requireContext())
+        button.setOnClickListener {
+            onLogoLetterButtonClick(button)
+        }
+        if (logoNameCharArray[i] == ' ') {
+            button.text = ""
+            button.isEnabled = false
+        } else
+            button.text = logoNameCharArray[i].toString()
+        when (logoColorCharArray[i]) {
+            'W' -> {
+                button.setBackgroundColor(Color.WHITE)
+                nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.WHITE, Color.WHITE))
+            }
+
+            'Y' -> {
+                button.setBackgroundColor(Color.WHITE)
+                nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.WHITE, Color.WHITE))
+            }
+
+            'G' -> {
+                button.setBackgroundColor(Color.GREEN)
+                nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.GREEN, Color.GREEN))
+                button.isEnabled = false
+            }
+
+            'D' -> {
+                button.setBackgroundColor(Color.WHITE)
+                nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.WHITE, Color.WHITE))
+            }
+        }
+        button.setTextColor(Color.BLACK)
+        // Add button to GridLayout
+        val params = GridLayout.LayoutParams()
+        if (logoNameGridLayout.rowCount == 1)
+            params.rowSpec = GridLayout.spec(0)
+        else
+            params.rowSpec = GridLayout.spec(i / logoNameGridLayout.columnCount)
+        params.columnSpec = GridLayout.spec(i % logoNameGridLayout.columnCount)
+        params.width = 100
+        params.setMargins(10, 10, 10, 10)
+        button.layoutParams = params
+        logoNameGridLayout.addView(button)
+        button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_letter)
+        logoNameButtons.add(button)
+    }
+    private fun AssignLetters(){
+        for(logoLetter in nameLetters){
+            if(logoLetter.bgColor == Color.GREEN){
+                //find the letter in letters and assign it to logoLetter
+                val letter = letters.find { it.letter == logoLetter.letter && it.bgColor == Color.GREEN }//todo stopped here
+                logoLetter.assignedLetter = letter?.id
+            }
+            else if(logoLetter.letter != ' '){
+
+            }
+        }
+    }
+    private fun LoadLogo() {
+        randomLogo = runBlocking(Dispatchers.IO) {
+            companyDao.getCompanyById(globalProfile.currentCompanyId)
+        }
+
+    }
+}
+    data class Letter(var id: Int, var assignedLetter: Int?, var letter: Char, var bgColor: Int, var defaultColor: Int)

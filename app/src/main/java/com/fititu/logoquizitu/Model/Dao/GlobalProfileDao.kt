@@ -15,7 +15,7 @@ interface GlobalProfileDao {
     suspend fun add(globalProfileEntity: GlobalProfileEntity)
 
     @Update
-    suspend fun update(globalProfileEntity: GlobalProfileEntity)
+    fun update(globalProfileEntity: GlobalProfileEntity)
 
     @Delete
     suspend fun delete(globalProfileEntity: GlobalProfileEntity)
@@ -23,4 +23,5 @@ interface GlobalProfileDao {
     @Transaction
     @Query("SELECT * FROM GlobalProfileEntity LIMIT 1") // there should be only one profile
     suspend fun get() : List<GlobalProfileEntity>
+
 }
