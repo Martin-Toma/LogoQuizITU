@@ -181,8 +181,6 @@ class AddLogoFragment : Fragment() {
                     insertPhotoPost(photoPost)
                 }
 
-
-                requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
             } else {
                 Toast.makeText(requireContext(), "Please select an image and enter a caption", Toast.LENGTH_SHORT).show()
             }
@@ -208,8 +206,9 @@ class AddLogoFragment : Fragment() {
             Glide.with(this)
                 .load(selectedImageUri)
                 .into(imageView)
+
+            imageNotChanged = false // signalize there is new image
         }
-        imageNotChanged = false
     }
     /*private fun clearFields() {
         viewref.findViewById<ImageView>(R.id.imageView).setImageResource(0)
@@ -223,10 +222,12 @@ class AddLogoFragment : Fragment() {
 
                  // add logo to db
                 logoEntityDao.insert(photoPost)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Logo saved successfully", Toast.LENGTH_SHORT).show()
+                    requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+                }
 
             }
-
-            Toast.makeText(requireContext(), "Logo saved successfully", Toast.LENGTH_SHORT).show()
 
             //clearFields()
         }
@@ -238,8 +239,11 @@ class AddLogoFragment : Fragment() {
             withContext(Dispatchers.IO) {
                 // update item in db
                 logoEntityDao.update(photoPost)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
+                    requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+                }
             }
-            Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
             //clearFields()
         }
     }
