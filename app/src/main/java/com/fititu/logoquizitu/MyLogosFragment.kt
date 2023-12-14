@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
         adapter.setOnEditButtonClickListener(object : ImageAdapter.OnEditButtonClickListener {
             override fun onEditButtonClicked(position: Int, id: Int) {
+                Log.d("Check", "onEditButtonClicked was clicked")
                 (playPresenter as MainMenuController).editDbFragment("toAdd", id)
             }
         })

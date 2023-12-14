@@ -19,7 +19,7 @@ class MainMenuController(
     }
     override fun editDbFragment(where: String, entityId: Int){
         val mainMenuModel = MainMenuModel()
-        val newFragment = mainMenuModel.nextFragment(where)
+        val newFragment = mainMenuModel.nextFragmentWithParam(where, entityId)
         menuView.changeViewWithParam(fragment = newFragment!!);
     }
 }

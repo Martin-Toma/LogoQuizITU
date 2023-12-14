@@ -55,6 +55,13 @@ class AddLogoFragment : Fragment() {
     private lateinit var logoEntityDao: CompanyDao
     private var selectedImagePath: String = ""
     private lateinit var viewref : View
+
+    private var lId: Int? = null
+
+    private var editOn: Boolean = false
+
+    private var imageNotChanged = true
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +69,20 @@ class AddLogoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_logo, container, false)
         viewref = view
+
         logoEntityDao = AppDatabase.getInstance(requireContext()).companyDao()
+
+        // check if now is edit mode
+        //var editOn : Boolean = false
+        if (arguments != null) {
+            Log.d("Check", "got id")
+            editOn = true
+            val logoId = requireArguments().getInt("ARG_PARAM1")
+            lId = logoId
+            lifecycleScope.launch{
+                initView(logoId, view)
+            }
+        }
 
         val descriptionEditText : EditText = view.findViewById(R.id.descriptionEditText)
 
@@ -77,67 +97,92 @@ class AddLogoFragment : Fragment() {
             val caption = view.findViewById<EditText>(R.id.captionEditText).text.toString()
             val description : String = descriptionEditText.text.toString()
 
-            if (selectedImagePath.isNotBlank() && caption.isNotBlank()) {
+            if ((selectedImagePath.isNotBlank() && caption.isNotBlank()) || imageNotChanged == true) {
                 //val imgBitmap = imageGetBitmap(selectedImagePath)
                 /*if(imgBitmap == null){
                     Toast.makeText(requireContext(), "Error decoding the image", Toast.LENGTH_SHORT).show()
                 }
                 else {*/
+                var outputPath : String = ""
+                if(!imageNotChanged || !editOn) {
 
-                val image_file_name = selectedImagePath.toString()
-                val new_image_file_name = caption + "." + get_file_type(image_file_name)
-                Log.d("File name", new_image_file_name)
+                    val image_file_name = selectedImagePath.toString()
+                    val new_image_file_name = caption + "." + get_file_type(image_file_name)
+                    Log.d("File name", new_image_file_name)
 
-                val dir_path = requireContext().filesDir
-                val file = File(dir_path, new_image_file_name)
+                    val dir_path = requireContext().filesDir
+                    val file = File(dir_path, new_image_file_name)
 
-                // Open an output stream to the destination file
-                // Open an output stream to the destination file
-                val outputStream: OutputStream = FileOutputStream(file)
+                    // Open an output stream to the destination file
+                    // Open an output stream to the destination file
+                    val outputStream: OutputStream = FileOutputStream(file)
 
-                // Copy the data from the input stream to the output stream
-                val uri = Uri.parse(selectedImagePath)
-
-                val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
-
-                if(inputStream != null){
                     // Copy the data from the input stream to the output stream
-                    FileUtils.copy(inputStream, outputStream)
-                    //outputStream.getChannel().transferFrom(inputStream, 0, inputStream.size());
-                }
-                else{
-                    Log.e("ERR", "empty input")
-                }
-                Log.d("ERR", "${uri}")
+                    val uri = Uri.parse(selectedImagePath)
 
-                val outputPath = file.absolutePath //dir_path.toString() + new_image_file_name;
+                    val inputStream: InputStream? =
+                        requireContext().contentResolver.openInputStream(uri)
 
-                /*Glide.with(requireContext())
+                    if (inputStream != null) {
+                        // Copy the data from the input stream to the output stream
+                        FileUtils.copy(inputStream, outputStream)
+                        //outputStream.getChannel().transferFrom(inputStream, 0, inputStream.size());
+                    } else {
+                        Log.e("ERR", "empty input")
+                    }
+                    Log.d("ERR", "${uri}")
+
+                    val outPath = file.absolutePath //dir_path.toString() + new_image_file_name;
+                    outputPath = outPath
+                    /*Glide.with(requireContext())
                     .load(outputPath)
                     .into(imageView2)*/
-                outputStream.close()
-                Log.d("File name", outputPath)
-
+                    outputStream.close()
+                    Log.d("File name", outputPath)
+                }
                 // prepare masked image
                 //maskLogo(outputPath);
+                if(editOn){
+                    val cId = lId
+                    lifecycleScope.launch {
+                        val item = logoEntityDao.getCompanyById(cId!!)
+                        if(!imageNotChanged){ // change image path if new
+                            item.imgOriginal = outputPath
+                            item.imgAltered = outputPath
+                        }
+                        item.companyName = caption
+                        item.companyDescription = description
+                        item.solved = false
+                        item.foundationDate = Date()
+                        item.categoryName = null
+                        item.countryOfOriginName = null
+                        item.gameState = null
+                        item.levelId = null
 
-                val photoPost = CompanyEntity(
-                    id = 0,
-                    imgOriginal = outputPath,//selectedImagePath,
-                    companyName = caption,
-                    companyDescription = description, //imageBitmap = imgBitmap
-                    solved = false,
-                    imgAltered = outputPath,
-                    foundationDate = Date(),
-                    userCreated = true,
-                    categoryName = null,
-                    countryOfOriginName = null,
-                    gameState = null,
-                    levelId = null
-                )
+                        updatePhotoPost(item)
+                    }
 
-                insertPhotoPost(photoPost)
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+                else{
+                    val photoPost = CompanyEntity(
+                        id = 0,
+                        imgOriginal = outputPath,//selectedImagePath,
+                        companyName = caption,
+                        companyDescription = description, //imageBitmap = imgBitmap
+                        solved = false,
+                        imgAltered = outputPath,
+                        foundationDate = Date(),
+                        userCreated = true,
+                        categoryName = null,
+                        countryOfOriginName = null,
+                        gameState = null,
+                        levelId = null
+                    )
+                    insertPhotoPost(photoPost)
+                }
+
+
+                requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
             } else {
                 Toast.makeText(requireContext(), "Please select an image and enter a caption", Toast.LENGTH_SHORT).show()
             }
@@ -164,20 +209,38 @@ class AddLogoFragment : Fragment() {
                 .load(selectedImageUri)
                 .into(imageView)
         }
+        imageNotChanged = false
     }
-    private fun clearFields() {
+    /*private fun clearFields() {
         viewref.findViewById<ImageView>(R.id.imageView).setImageResource(0)
         viewref.findViewById<EditText>(R.id.captionEditText).text.clear()
         selectedImagePath = ""
-    }
+    }*/
     private fun insertPhotoPost(photoPost: CompanyEntity) {
+        // coroutine to run db operations nonblocking
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
+
+                 // add logo to db
                 logoEntityDao.insert(photoPost)
+
             }
 
-            Toast.makeText(requireContext(), "Photo post saved successfully", Toast.LENGTH_SHORT).show()
-            clearFields()
+            Toast.makeText(requireContext(), "Logo saved successfully", Toast.LENGTH_SHORT).show()
+
+            //clearFields()
+        }
+    }
+
+    private fun updatePhotoPost(photoPost: CompanyEntity) {
+        // coroutine to run db operations nonblocking
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                // update item in db
+                logoEntityDao.update(photoPost)
+            }
+            Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
+            //clearFields()
         }
     }
 
@@ -202,5 +265,19 @@ class AddLogoFragment : Fragment() {
         } else {
             return null
         }
+    }
+    suspend fun initView(logoId: Int, view: View){
+         val editLogo = logoEntityDao.getCompanyById(logoId)
+
+        val imageView: ImageView = viewref.findViewById(R.id.imageView)
+        Glide.with(this)
+            .load(editLogo.imgOriginal)
+            .into(imageView)
+        val nameEditText = view.findViewById<EditText>(R.id.captionEditText)
+        val descriptionEditText = view.findViewById<EditText>(R.id.descriptionEditText)
+
+        nameEditText.setText(editLogo.companyName)
+        descriptionEditText.setText(editLogo.companyDescription)
+
     }
 }
