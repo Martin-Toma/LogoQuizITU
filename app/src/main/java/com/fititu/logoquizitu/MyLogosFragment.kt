@@ -53,7 +53,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
     private val SELECT_IMAGE_REQUEST = 1
     private lateinit var logoEntityDao: CompanyDao
-    private var selectedImagePath: String = ""
+    //private var selectedImagePath: String = ""
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImageAdapter
 
@@ -77,10 +77,6 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         plusButton?.setOnClickListener {
             (playPresenter as MainMenuController).onClickButton("toAdd")
         }
-        /*
-        plusButton?.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton("toCreateLogo")
-        }*/
 
         logoEntityDao = AppDatabase.getInstance(requireContext()).companyDao()
 
@@ -89,7 +85,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-
+/*
         val selectImageButton: Button = view.findViewById(R.id.selectImageButton)
         selectImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -164,7 +160,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
             } else {
                 Toast.makeText(requireContext(), "Please select an image and enter a caption", Toast.LENGTH_SHORT).show()
             }
-        }
+        }*/
         // Clear the database on fragment creation
         /*viewLifecycleOwner.lifecycleScope.launch {
             withContext(Dispatchers.IO) {
@@ -175,7 +171,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         return view
     }
 
-    fun get_file_type(whole_path : String?) : String?{
+    /*fun get_file_type(whole_path : String?) : String?{
         val uri = Uri.parse(whole_path)
 
         // Get the path from the URI
@@ -196,8 +192,8 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         } else {
             return null
         }
-    }
-
+    }*/
+/*
     // convert from bitmap to byte array
     fun getBytes(bitmap: Bitmap?): ByteArray? {
         if(bitmap != null){
@@ -206,7 +202,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
             return stream.toByteArray()
         }
         return null
-    }
+    }*/
 
     /*fun imageGetBitmap(path: String): ByteArray? {
         try {
@@ -232,7 +228,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         transaction.addToBackStack(null) // Optional: Add to back stack
         transaction.commit()
     }
-
+/*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
@@ -245,7 +241,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
                 .into(imageView)
         }
     }
-
+*//*
     private fun insertPhotoPost(photoPost: CompanyEntity) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
@@ -263,7 +259,7 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         viewref.findViewById<EditText>(R.id.captionEditText).text.clear()
         selectedImagePath = ""
     }
-
+*/
     private fun loadPhotoPosts() {
         lifecycleScope.launch {
             val photoList = withContext(Dispatchers.IO) {
