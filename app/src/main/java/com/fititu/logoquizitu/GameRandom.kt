@@ -68,7 +68,7 @@ class GameRandom : Fragment() {
         getRandomLogo()
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
-        var columns = min((randomLogo.companyName.length + 1) / 2, 8)
+        var columns = min((randomLogo.companyName.length + 1) / 2, 8) //todo could potentially create a row for each word in the logo name
         if (lettercount <= 12) {
             logoNameGridLayout.rowCount = 1
             logoNameGridLayout.columnCount = randomLogo.companyName.length + 1
@@ -116,7 +116,7 @@ class GameRandom : Fragment() {
         globalProfile = globalProfiles[0]
     }
 
-    fun addLogoLetterButtons(gridLayout: GridLayout) {
+    fun addLogoLetterButtons(gridLayout: GridLayout) { //todo add text when " "
         for (i in 0 until /*6*/randomLogo.companyName.length) {
             val button = Button(requireContext())
             button.setOnClickListener {
@@ -494,7 +494,9 @@ class GameRandom : Fragment() {
         val logoLetterCount = globalProfile.logoLetters.length
         val logoNameCharArray = globalProfile.logoLetters.toCharArray()
         val logoColorCharArray = globalProfile.logoColors.toCharArray()
-        if (logoLetterCount <= 12) {
+        val letterCharArray = globalProfile.letters.toCharArray()
+        val letterColorCharArray = globalProfile.letterColors.toCharArray()
+        if (letterCharArray.size <= 12) { //todo same here, create a row for each word
             logoNameGridLayout.rowCount = 1
             logoNameGridLayout.columnCount = logoLetterCount + 1
         } else {
@@ -502,8 +504,7 @@ class GameRandom : Fragment() {
             logoNameGridLayout.columnCount = min((logoLetterCount + 1) / 2, 8)
         }
         //create buttons and letter objects for logo name
-        val letterCharArray = globalProfile.letters.toCharArray()
-        val letterColorCharArray = globalProfile.letterColors.toCharArray()
+
         for (i in logoNameCharArray.indices) {
             createLogoButton(logoNameCharArray, i, logoColorCharArray, logoNameGridLayout)
             val buttonLetter = nameLetters[i]
@@ -542,7 +543,7 @@ class GameRandom : Fragment() {
         }
     }
 
-    private fun createLogoButton(
+    private fun createLogoButton( //todo add text when " ", will be tricky, mby with the help of color, i.e. space = red, space !=red if empty slot
         logoNameCharArray: CharArray,
         i: Int,
         logoColorCharArray: CharArray,
