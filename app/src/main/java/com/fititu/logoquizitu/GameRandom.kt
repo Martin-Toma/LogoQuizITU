@@ -26,7 +26,7 @@ import com.fititu.logoquizitu.Model.LogoEntityDao
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.List
-
+//todo address issue with ' ' in logo name
 class GameRandom : Fragment() {
     private lateinit var companyDao: CompanyDao
     private lateinit var logoEntityDao: LogoEntityDao
@@ -85,7 +85,7 @@ class GameRandom : Fragment() {
         lettersGridLayout.columnCount = columns
         // Add random letter buttons
         addRandomLetterButtons(lettersGridLayout)
-
+        UpdateSkipButton()
     }
 
 
@@ -242,6 +242,15 @@ class GameRandom : Fragment() {
         }
         newFragment.arguments = bundle
 
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+    private fun skipLogo(){
+        resetCurrentGameState()
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val newFragment = GameRandom()
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
@@ -519,6 +528,7 @@ class GameRandom : Fragment() {
         lettercount = letters.size
         addRandomLetterButtons(lettersGridLayout)
         createResetButton(view)
+        UpdateSkipButton()
         AssignLetters()
         jumpToFreeLetter()
     }
@@ -598,6 +608,15 @@ class GameRandom : Fragment() {
                 .load(path_UI)
                 .into(randomLogoImageView)
             //setImage(path_UI, bitmap)
+        }
+
+    }
+    private fun UpdateSkipButton(){
+        val skipButton = view?.findViewById<Button>(R.id.skipButton)
+        skipButton?.text = "Skip"
+        skipButton?.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
+        skipButton?.setOnClickListener {
+            skipLogo()
         }
 
     }
