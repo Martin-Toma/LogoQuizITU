@@ -25,6 +25,9 @@ class MainMenuModel(): IMainMenuModel {
             "toCreateLogo" -> {
                 fragment = CreateLogoFragment()
             }
+            "toSelectLogo" -> {
+                fragment = SelectLogoGameFragment()
+            }
         }
         return fragment
     }
