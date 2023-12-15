@@ -1,49 +1,32 @@
 package com.fititu.logoquizitu
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.FileUtils
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.PrimaryKey
-import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Controller.IMainMenuController
+import com.fititu.logoquizitu.Controller.ImageAdapter
 import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
-import com.fititu.logoquizitu.Model.Entity.CompanyEntity
-import com.fititu.logoquizitu.Model.LogoEntity
-import com.fititu.logoquizitu.Model.LogoEntityDao
 import com.fititu.logoquizitu.View.IMainMenuView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
-import java.util.Date
 
 
 class MyLogosFragment : Fragment(), IMainMenuView {
@@ -81,9 +64,17 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         logoEntityDao = AppDatabase.getInstance(requireContext()).companyDao()
 
         recyclerView = view.findViewById(R.id.photoRecyclerView)
-        adapter = ImageAdapter(emptyList()) // Initial empty list
+        adapter = ImageAdapter(emptyList(), requireContext()) // Initial empty list
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter.setOnEditButtonClickListener(object : ImageAdapter.OnEditButtonClickListener {
+            override fun onEditButtonClicked(position: Int, id: Int) {
+                Log.d("Check", "onEditButtonClicked was clicked")
+                (playPresenter as MainMenuController).editDbFragment("toAdd", id)
+            }
+        })
+
         recyclerView.adapter = adapter
 /*
         val selectImageButton: Button = view.findViewById(R.id.selectImageButton)
@@ -228,20 +219,28 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         transaction.addToBackStack(null) // Optional: Add to back stack
         transaction.commit()
     }
-/*
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            val selectedImageUri: Uri = data.data!!
-            selectedImagePath = selectedImageUri.toString()
+    override fun changeViewWithParam(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
-            val imageView: ImageView = viewref.findViewById(R.id.imageView)
-            Glide.with(this)
-                .load(selectedImageUri)
-                .into(imageView)
-        }
+        transaction.replace(R.id.mainMenuFragmentContainer, fragment)
+        transaction.addToBackStack(null) // Optional: Add to back stack
+        transaction.commit()
     }
-*//*
+
+    /*
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
+            if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+                val selectedImageUri: Uri = data.data!!
+                selectedImagePath = selectedImageUri.toString()
+
+                val imageView: ImageView = viewref.findViewById(R.id.imageView)
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .into(imageView)
+            }
+        }
+    *//*
     private fun insertPhotoPost(photoPost: CompanyEntity) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {

@@ -28,4 +28,13 @@ class MainMenuModel(): IMainMenuModel {
         }
         return fragment
     }
+    override fun nextFragmentWithParam(where: String, id: Int): Fragment? {
+        var fragment: Fragment? = null
+        when (where){
+            "toAdd" -> {
+                fragment = AddLogoFragment.newInstance(id)
+            }
+        }
+        return fragment
+    }
 }
