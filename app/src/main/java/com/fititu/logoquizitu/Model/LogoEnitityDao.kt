@@ -11,4 +11,7 @@ interface LogoEntityDao {
 
     @Query("SELECT * FROM logo_entity")
     fun getAllPhotoPosts(): List<LogoEntity>
+
+    @Query("SELECT * FROM logo_entity ORDER BY RANDOM() LIMIT 1")
+    fun getRandomPhotoPost(): LogoEntity?
 }

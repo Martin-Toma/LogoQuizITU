@@ -14,6 +14,8 @@ class MainMenuFragment : Fragment(), IMainMenuView {
 
     private var playButton: Button? = null
     private var myLogoButton: Button? = null
+    private var GameRandomButton: Button? = null
+    private var randomNameButton: Button? = null
     private var playPresenter: IMainMenuController? = null
 
     override fun onCreateView(
@@ -25,6 +27,8 @@ class MainMenuFragment : Fragment(), IMainMenuView {
 
         playButton = view.findViewById(R.id.PlayButton)
         myLogoButton = view.findViewById(R.id.MyLogos)
+        GameRandomButton = view.findViewById(R.id.GameRandomButton)
+        randomNameButton = view.findViewById(R.id.RandomName)
         playPresenter = MainMenuController(this)
 
         playButton?.setOnClickListener {
@@ -34,7 +38,12 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         myLogoButton?.setOnClickListener{
             (playPresenter as MainMenuController).onClickButton("toMyLogos")
         }
-
+        GameRandomButton?.setOnClickListener{
+            (playPresenter as MainMenuController).onClickButton("toGameRandom")
+        }
+        randomNameButton?.setOnClickListener{
+            (playPresenter as MainMenuController).onClickButton("toRandomName")
+        }
         // Inflate the layout for this fragment
         return view//inflater.inflate(R.layout.fragment_main_menu, container, false)
     }
@@ -45,6 +54,9 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         transaction.replace(R.id.mainMenuFragmentContainer, fragment)
         transaction.addToBackStack(null) // Optional: Add to back stack
         transaction.commit()
+    }
+
+    override fun changeViewWithParam(fragment: Fragment) {
     }
 
 

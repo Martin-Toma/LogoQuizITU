@@ -10,21 +10,21 @@ import java.util.Date
 @Entity
 data class CompanyEntity (
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val imgAltered : String,
-    val imgOriginal : String,
-    val solved : Boolean,
-    val companyName: String,
-    val companyDescription : String,
+    var imgAltered : String,
+    var imgOriginal : String,
+    var solved : Boolean,
+    var companyName: String,
+    var companyDescription : String,
 
-    val foundationDate : Date,
+    var foundationDate : Date,
 
     val userCreated : Boolean,
-    @Embedded val gameState : GameState?,
+    @Embedded var gameState : GameState?,
 
     // FKs
-    val countryOfOriginName : String?,
-    val categoryName : String?,
-    val levelId : Int?,
+    var countryOfOriginName : String?,
+    var categoryName : String?,
+    var levelId : Int?,
 )
 {
     // Ignored fields

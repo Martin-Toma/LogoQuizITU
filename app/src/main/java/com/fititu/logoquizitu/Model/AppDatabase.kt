@@ -7,6 +7,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fititu.logoquizitu.Model.Dao.CategoryDao
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Dao.CountryDao
@@ -31,7 +33,7 @@ import java.text.SimpleDateFormat
         GlobalProfileEntity::class,
         LevelEntity::class,
     ],
-    version = 1,
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -53,7 +55,10 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     DbConstants.DB_NAME
-                ).build()
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
+                    .build()
                 INSTANCE = instance
                 instance
             }
@@ -193,7 +198,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
 
             val globalProfileEntity = GlobalProfileEntity(
-                0, 5, 0, 0
+                0, 5, 0, 0, -1, "", "", "", ""
             )
 
 
@@ -206,6 +211,32 @@ abstract class AppDatabase : RoomDatabase() {
                     companies.forEach { companyDao.add(it) }
                     profileDao.add(globalProfileEntity)
                 }
+            }
+        }
+
+        private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE logo_entity ADD COLUMN imageBitmap BLOB NOT NULL DEFAULT ''")
+            }
+        }
+        private val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                //database.execSQL("DROP TABLE logo_entity")
+                //database.execSQL("CREATE TABLE logo_entity (id INTEGER PRIMARY KEY AUTOINCREMENT, imagePath TEXT NOT NULL, name TEXT NOT NULL, description TEXT NOT NULL, imageBitmap BLOB DEFAULT '')")
+                database.execSQL("CREATE TABLE temp_table " +
+                        "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "imagePath TEXT NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "description TEXT NOT NULL)")
+
+                // Copy data from the old table to the temporary table
+                database.execSQL("INSERT INTO temp_table (imagePath, name, description) SELECT imagePath, name, description FROM logo_entity")
+
+                // Drop the old table
+                database.execSQL("DROP TABLE logo_entity")
+
+                // Rename the temporary table to the original table name
+                database.execSQL("ALTER TABLE temp_table RENAME TO logo_entity")
             }
         }
     }
