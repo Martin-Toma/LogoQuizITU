@@ -97,8 +97,7 @@ class SelectLogoGameFragment : Fragment() {
         // set nameText to the to be guessed logo name - the to_be_guessed_idx-th from list of random logos
         nameText.setText(randomLogos[to_be_guessed_idx].companyName)
 
-
-
+        // set images to the imageButtons and set onClickListeners to the imageButtons
         for(i in 0 until grid.childCount){
             var imbtn : ImageButton = grid.getChildAt(i) as ImageButton //view.findViewById<ImageButton>(R.id.imageButton1)
 
@@ -106,6 +105,17 @@ class SelectLogoGameFragment : Fragment() {
                     .load(randomLogos[i].imgOriginal)
                     .into(imbtn)
 
+            if (i == to_be_guessed_idx) {
+                imbtn.setOnClickListener {
+                    nameText.setText("Correct")
+                }
+            }
+                else{
+                    imbtn.setOnClickListener {
+                        nameText.setText("Wrong")
+                }
+            }
         }
+
     }
 }
