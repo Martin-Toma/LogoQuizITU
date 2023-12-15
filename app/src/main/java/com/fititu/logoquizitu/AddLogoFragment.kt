@@ -36,6 +36,12 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Date
 import androidx.activity.addCallback
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 
 class AddLogoFragment : Fragment() {
 
@@ -97,7 +103,7 @@ class AddLogoFragment : Fragment() {
             val caption = view.findViewById<EditText>(R.id.captionEditText).text.toString()
             val description : String = descriptionEditText.text.toString()
 
-            if ((selectedImagePath.isNotBlank() && caption.isNotBlank()) || imageNotChanged == true) {
+            if ((selectedImagePath.isNotBlank() && caption.isNotBlank() )|| imageNotChanged == true) {
                 //val imgBitmap = imageGetBitmap(selectedImagePath)
                 /*if(imgBitmap == null){
                     Toast.makeText(requireContext(), "Error decoding the image", Toast.LENGTH_SHORT).show()
@@ -106,11 +112,20 @@ class AddLogoFragment : Fragment() {
                 var outputPath : String = ""
                 if(!imageNotChanged || !editOn) {
 
+                    Log.d("IMG", "GOt to image insert")
+
                     val image_file_name = selectedImagePath.toString()
                     val new_image_file_name = caption + "." + get_file_type(image_file_name)
                     Log.d("File name", new_image_file_name)
 
                     val dir_path = requireContext().filesDir
+
+                    val fileR = File(dir_path, new_image_file_name)
+
+                    if (fileR.exists()){
+                        fileR.delete()
+                    }
+
                     val file = File(dir_path, new_image_file_name)
 
                     // Open an output stream to the destination file
@@ -232,20 +247,56 @@ class AddLogoFragment : Fragment() {
             //clearFields()
         }
     }
-
-    private fun updatePhotoPost(photoPost: CompanyEntity) {
+    /*
+    suspend fun updatePhotoPost(photoPost: CompanyEntity) {
         // coroutine to run db operations nonblocking
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 // update item in db
                 logoEntityDao.update(photoPost)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
-                   // requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
-                }
             }
+            /*withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
+                requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+            }*/
             //clearFields()
+        }*/
+        // Await the completion of the deferred and then call onDatabaseUpdateComplete
+
+        // Launching an async coroutine
+        val deferredResult = GlobalScope.async {
+            logoEntityDao.update(photoPost)
         }
+
+        // Waiting for the result
+        runBlocking {
+            deferredResult.await()
+            onDBUpdateComplete()
+        }
+    }
+
+    fun onDBUpdateComplete(){
+        Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
+        requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+    }*/
+
+    suspend fun updatePhotoPost(photoPost: CompanyEntity) = coroutineScope {
+        // Launching a coroutine to run db operations nonblocking
+        val job = launch(Dispatchers.IO) {
+            // update item in db
+            logoEntityDao.update(photoPost)
+        }
+
+        // Waiting for the result
+        job.join()
+        withContext(Dispatchers.Main) {
+            onDBUpdateComplete()
+        }
+    }
+
+    fun onDBUpdateComplete() {
+        Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
+        //requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
     }
 
     fun get_file_type(whole_path : String?) : String?{
