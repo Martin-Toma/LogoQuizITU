@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import androidx.gridlayout.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -108,14 +110,30 @@ class SelectLogoGameFragment : Fragment() {
             if (i == to_be_guessed_idx) {
                 imbtn.setOnClickListener {
                     nameText.setText("Correct")
+                    change_fragment_with_delay()
                 }
             }
                 else{
                     imbtn.setOnClickListener {
                         nameText.setText("Wrong")
+                        change_fragment_with_delay()
                 }
             }
         }
 
+    }
+
+    private fun change_fragment_with_delay(){
+        lifecycleScope.launch{
+            delay(1000)
+            val currentFragment = requireActivity().supportFragmentManager.fragments.last()
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .detach(currentFragment)
+                .commit()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .attach(currentFragment)
+                .commit()
+        }
     }
 }
