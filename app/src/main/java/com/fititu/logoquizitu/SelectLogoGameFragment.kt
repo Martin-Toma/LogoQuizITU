@@ -1,10 +1,23 @@
 package com.fititu.logoquizitu
 
+import android.media.Image
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.gridlayout.widget.GridLayout
+import android.widget.ImageButton
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.fititu.logoquizitu.Model.AppDatabase
+import com.fititu.logoquizitu.Model.Dao.CompanyDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +34,7 @@ class SelectLogoGameFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var companyDao : CompanyDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,10 +49,7 @@ class SelectLogoGameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_select_logo_game, container, false)
-
-        /*for(){
-
-        }*/
+        companyDao = AppDatabase.getInstance(requireContext()).companyDao()
 
         return view
     }
@@ -61,5 +72,37 @@ class SelectLogoGameFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        init_grid(view)
+    }
+    fun init_grid(view : View){
+
+        val grid : GridLayout = view.findViewById(R.id.selectGrid)
+
+        for(i in 0 until grid.childCount){
+            var imbtn : ImageButton = grid.getChildAt(i) as ImageButton //view.findViewById<ImageButton>(R.id.imageButton1)
+
+            val randomLogo = runBlocking(Dispatchers.IO) {
+                companyDao.getRandomCompany()
+            }
+
+            lifecycleScope.launch {
+                var path_UI: String?
+                withContext(Dispatchers.Main) {
+                    val path = randomLogo.imgOriginal//randomLogo2.imagePath
+                    path_UI = path
+
+                    Log.d("Image Loading", "other ${Uri.parse(path)}")
+                }
+                Glide.with(requireContext())
+                    .load(path_UI)
+                    .into(imbtn)
+                //setImage(path_UI, bitmap)
+            }
+        }
     }
 }

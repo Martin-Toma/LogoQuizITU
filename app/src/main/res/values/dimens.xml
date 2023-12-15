@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="imageButtonWidth">100dp</dimen>
-    <dimen name="imageButtonHeight">100dp</dimen>
+    <dimen name="imageButtonWidth">90dp</dimen>
+    <dimen name="imageButtonHeight">90dp</dimen>
+    <dimen name="inGridMargins">5dp</dimen>
 </resources>
