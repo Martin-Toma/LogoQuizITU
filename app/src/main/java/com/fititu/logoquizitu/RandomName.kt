@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
@@ -72,10 +73,12 @@ class RandomNameFragment : Fragment() {
                 onButtonClicked(button)
             }
             button.setTextColor(Color.BLACK)
+            button.setPadding(30, 10, 30, 10)
             params.rowSpec =GridLayout.spec(i)
             params.columnSpec = GridLayout.spec(0)
             params.setMargins(10, 10, 10, 10)
             button.layoutParams = params
+            button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_white)
             gridLayout.addView(button)
             LogoNamesButtons.add(button)
 
@@ -85,17 +88,18 @@ class RandomNameFragment : Fragment() {
         if(button.text == RandomCompanyNames[0].companyName){
             for (button in LogoNamesButtons){
                 if(button.text == RandomCompanyNames[0].companyName){
-                    button.setBackgroundColor(Color.GREEN)
+                    button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_green)
                 }
             }
         }
         else{
             for (button in LogoNamesButtons){
                 if(button.text == RandomCompanyNames[0].companyName){
-                    button.setBackgroundColor(Color.GREEN)
+                    button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_green)
                 }
                 else{
-                    button.setBackgroundColor(Color.RED)
+                    button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
+
                 }
             }
         }
