@@ -11,10 +11,11 @@
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
-        <ImageView android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
+        <ImageView android:layout_width="300dp"
+                   android:layout_height="300dp"
                    android:contentDescription="LogoImage"
                    android:layout_marginBottom="20dp"
+                   android:id="@+id/randomLogoImage"
                    android:src="@drawable/ic_launcher_foreground"/>
         <GridLayout
                 android:id="@+id/LogoNamesGridLayout"
