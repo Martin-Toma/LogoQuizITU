@@ -1,7 +1,9 @@
 package com.fititu.logoquizitu
 
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,42 +11,53 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.fititu.logoquizitu.Model.Dao.CompanyDao
+import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import kotlinx.coroutines.*
 import java.io.File
 
 
 class RandomNameFragment : Fragment() {
     private var LogoNamesButtons = mutableListOf<Button>()
+    private lateinit var RandomCompanyNames: List<CompanyEntity>
+    private lateinit var CompanyDao: CompanyDao
+    private lateinit var randomLogoImageView: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //todo 1. Access the Room database and fetch a random LogoEntity
-        //todo fetch 3 more entities
-        //display the 4 entity names in the 4 buttons
-        //for now, use mock data
-
-        // Access the Room database and fetch a random LogoEntity
-        val logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
+        CompanyDao = AppDatabase.getInstance(requireContext()).companyDao()
+        randomLogoImageView = view.findViewById(R.id.randomLogoImage)
+        getRandomLogos()
         val logoNamesGridLayout: GridLayout = view.findViewById(R.id.LogoNamesGridLayout)
         GenerateLogoNameButtons(logoNamesGridLayout)
-        //    val randomLogoEntity = logoEntityDao.getRandomPhotoPost()
 
-        // Check if a random logo entity is retrieved
-        //   randomLogoEntity?.let {
-        // If a logo is found, you can now display the photo
-        //     displayLogoPhoto(it.imagePath)
-        //  }
+    }
+
+    private fun getRandomLogos(){
+        RandomCompanyNames = runBlocking(Dispatchers.IO){
+            CompanyDao.getRandomCompanies()
+        }
+        lifecycleScope.launch {
+            var path_UI: String?
+            withContext(Dispatchers.Main) {
+                val path = RandomCompanyNames[0].imgOriginal//randomLogo2.imagePath
+                path_UI = path
+
+                Log.d("Image Loading", "other ${Uri.parse(path)}")
+            }
+            Glide.with(requireContext())
+                .load(path_UI)
+                .into(randomLogoImageView)
+        }
     }
     private fun GenerateLogoNameButtons(gridLayout: GridLayout/*logo entities*/){
-        val array = arrayOf("Instagram","Google","Meta","Youtube")
         gridLayout.rowCount = 4
         gridLayout.columnCount = 1
 
@@ -53,10 +66,10 @@ class RandomNameFragment : Fragment() {
             val button = Button(requireContext())
             val params = GridLayout.LayoutParams()
 
-            button.text = array[i]
+            button.text = RandomCompanyNames[i].companyName
             button.setBackgroundColor(Color.WHITE)
             button.setOnClickListener {
-                onButtonClicked(button,array[i])
+                onButtonClicked(button)
             }
             button.setTextColor(Color.BLACK)
             params.rowSpec =GridLayout.spec(i)
@@ -68,17 +81,17 @@ class RandomNameFragment : Fragment() {
 
         }
     }
-    private fun onButtonClicked(button: Button,name: String){
-        if(name == "Meta"/*randomLogoEntity.name*/){
+    private fun onButtonClicked(button: Button){
+        if(button.text == RandomCompanyNames[0].companyName){
             for (button in LogoNamesButtons){
-                if(button.text == "Meta"){
+                if(button.text == RandomCompanyNames[0].companyName){
                     button.setBackgroundColor(Color.GREEN)
                 }
             }
         }
         else{
             for (button in LogoNamesButtons){
-                if(button.text == "Meta"){
+                if(button.text == RandomCompanyNames[0].companyName){
                     button.setBackgroundColor(Color.GREEN)
                 }
                 else{
@@ -101,18 +114,6 @@ class RandomNameFragment : Fragment() {
             fragmentTransaction.addToBackStack(null) // Optional: Add to back stack for back navigation
             fragmentTransaction.commit()//navigate to next fragment
         }
-    }
-    private fun displayLogoPhoto(imagePath: String) {
-        // Load and display the photo using an image loading library (e.g., Glide, Picasso)
-        // Here, you can use any library or method of your choice to load and display the image
-        // Note: Don't forget to handle permissions for external storage if needed
-        // For simplicity, I'm assuming you have an ImageView in your layout with the id "imageView"
-        val imageView: ImageView = requireView().findViewById(R.id.imageView)
-
-        // Use an image loading library (e.g., Glide) to load and display the image
-        /*Glide.with(this)
-            .load(File(imagePath))
-            .into(imageView)*/
     }
 
     override fun onCreateView(

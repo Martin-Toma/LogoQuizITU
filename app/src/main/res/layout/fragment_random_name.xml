@@ -15,6 +15,7 @@
                    android:layout_height="wrap_content"
                    android:contentDescription="LogoImage"
                    android:layout_marginBottom="20dp"
+                   android:id="@+id/randomLogoImage"
                    android:src="@drawable/ic_launcher_foreground"/>
         <GridLayout
                 android:id="@+id/LogoNamesGridLayout"

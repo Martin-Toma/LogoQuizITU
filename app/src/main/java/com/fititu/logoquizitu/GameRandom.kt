@@ -68,7 +68,7 @@ class GameRandom : Fragment() {
         getRandomLogo()
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
-        var columns = min((randomLogo.companyName.length + 1) / 2, 8) //todo could potentially create a row for each word in the logo name
+        var columns = min((randomLogo.companyName.length + 1) / 2, 8) //todo could potentially create a row for each word in the logo name - nope, just make ' ' invisible, set a unique color so i will know it should be disabled.
         if (lettercount <= 12) {
             logoNameGridLayout.rowCount = 1
             logoNameGridLayout.columnCount = randomLogo.companyName.length + 1
@@ -117,13 +117,21 @@ class GameRandom : Fragment() {
     }
 
     fun addLogoLetterButtons(gridLayout: GridLayout) { //todo add text when " "
-        for (i in 0 until /*6*/randomLogo.companyName.length) {
+        for (i in 0 until randomLogo.companyName.length) {
             val button = Button(requireContext())
             button.setOnClickListener {
                 onLogoLetterButtonClick(button)
             }
-            button.text = ""
-            button.setBackgroundColor(Color.WHITE)
+            if(randomLogo.companyName[i] != ' ') {
+                button.text = ""
+                button.setBackgroundColor(Color.WHITE)
+            }
+            else{
+                button.text = " "
+                button.setBackgroundColor(Color.RED)
+                button.isEnabled = false
+                button.isVisible = false
+            }
             button.setTextColor(Color.BLACK)
             // Add button to GridLayout
             val params = GridLayout.LayoutParams()
@@ -194,8 +202,6 @@ class GameRandom : Fragment() {
         saveCurrentGameState()
         if (logoNameString.length == randomLogo.companyName.length)
             checkLogoName()
-        /* if(logoNameButtons.indexOf(currentLogoNameButton)== logoNameButtons.size-1)//last letter
-             checkLogoName()*/
         else {
             jumpToFreeLetter()
         }
@@ -285,7 +291,11 @@ class GameRandom : Fragment() {
         for (letter in logName) {
             letters.add(Letter(1, null, letter, Color.WHITE, Color.WHITE))
         }
-        val existingChars = logName.lowercase(Locale.ROOT).toSet()
+        var existingChars = logName.lowercase(Locale.ROOT).toSet()
+        existingChars = existingChars.toMutableSet()
+        //exclude ' '
+        if(existingChars.contains(' '))
+            existingChars.remove(' ')
         val alphabet =
             "abcdefghijklmnopqrstuvwxyz".filter { !existingChars.contains(it) }//exclude letters from logo name
         for (i in 0 until (lettersToAdd - logName.length)) {
