@@ -125,10 +125,13 @@ class GameRandom : Fragment() {
             if(randomLogo.companyName[i] != ' ') {
                 button.text = ""
                 button.setBackgroundColor(Color.WHITE)
+                nameLetters.add(Letter(i, null, randomLogo.companyName[i], Color.WHITE, Color.WHITE))
             }
             else{
                 button.text = " "
                 button.setBackgroundColor(Color.RED)
+                nameLetters.add(Letter(i, null, randomLogo.companyName[i], Color.RED, Color.RED))
+
                 button.isEnabled = false
                 button.isVisible = false
             }
@@ -147,7 +150,6 @@ class GameRandom : Fragment() {
             gridLayout.addView(button)
             button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_letter)
             logoNameButtons.add(button)
-            nameLetters.add(Letter(i, null, randomLogo.companyName[i], Color.WHITE, Color.WHITE))
         }
         val resetButton = (view?.findViewById<Button>(R.id.resetButton))!!
         resetButton.text = "X"
@@ -271,6 +273,10 @@ class GameRandom : Fragment() {
         letterToFind.bgColor = letterToFind.defaultColor
         val buttonToChange = letterButtons[letters.indexOf(letterToFind)]
         //find a button with the same letter and gray background
+        if(letterToFind.defaultColor == Color.DKGRAY){
+            letterToFind.bgColor = Color.WHITE
+            letterToFind.defaultColor = Color.WHITE
+        }
         buttonToChange.setBackgroundColor(letterToFind.defaultColor)
         button.text = "" //reset the text
         button.setBackgroundColor(Color.WHITE)
@@ -282,23 +288,24 @@ class GameRandom : Fragment() {
     }
 
     private fun calculateLetterCount(logName: String) {
+        var companyName = logName.filter { !it.isWhitespace() }
         var lettersToAdd = logName.length + 4
         if (lettersToAdd < 8)
             lettersToAdd = 8
         if (lettersToAdd > 16)
             lettersToAdd = 16
         lettercount = lettersToAdd
-        for (letter in logName) {
+        for (letter in companyName) {
+         /*   if(letter == ' ')
+                continue*/
             letters.add(Letter(1, null, letter, Color.WHITE, Color.WHITE))
         }
-        var existingChars = logName.lowercase(Locale.ROOT).toSet()
+        var existingChars = companyName.lowercase(Locale.ROOT).toSet()
         existingChars = existingChars.toMutableSet()
-        //exclude ' '
-        if(existingChars.contains(' '))
-            existingChars.remove(' ')
+
         val alphabet =
             "abcdefghijklmnopqrstuvwxyz".filter { !existingChars.contains(it) }//exclude letters from logo name
-        for (i in 0 until (lettersToAdd - logName.length)) {
+        for (i in 0 until (lettersToAdd - companyName.length)) {
             val random = Random.Default
             val randomLetter = alphabet[random.nextInt(0, alphabet.length)]
             letters.add(Letter(1, null, randomLetter, Color.WHITE, Color.WHITE))
@@ -334,7 +341,12 @@ class GameRandom : Fragment() {
         var i = 0
         while (i < CorrectLogoName.length) {
             if (CorrectLogoName[i] == nameLetters[i].letter) {//correct letter on correct position
-
+                if(CorrectLogoName[i] == ' '){
+                    correctLogoNameModified =
+                        correctLogoNameModified.replaceFirst(correctLogoNameModified[i].toString(), ".")
+                    i++
+                    continue
+                }
                 nameLetters[i].bgColor = Color.GREEN
                 nameLetters[i].defaultColor = Color.GREEN
 
@@ -406,7 +418,7 @@ class GameRandom : Fragment() {
 
     private fun resetNameButtons() {
         for (letter in nameLetters) {
-            if (letter.bgColor == Color.YELLOW) {
+            if (letter.bgColor == Color.YELLOW || letter.bgColor == Color.WHITE) {
                 val logoNameButton = logoNameButtons[nameLetters.indexOf(letter)]
                 logoNameButton.text = ""
                 logoNameButton.setBackgroundColor(Color.WHITE)
@@ -466,6 +478,7 @@ class GameRandom : Fragment() {
                 Color.YELLOW -> logoColor += 'Y'
                 Color.GREEN -> logoColor += 'G'
                 Color.DKGRAY -> logoColor += 'D'
+                Color.RED -> logoColor += 'R'
 
             }
         }
@@ -532,6 +545,7 @@ class GameRandom : Fragment() {
                 'Y' -> Color.YELLOW
                 'G' -> Color.GREEN
                 'D' -> Color.DKGRAY
+                'R' -> Color.RED
                 else -> Color.WHITE
             }
             letters.add(Letter(i, null, letterCharArray[i], color, color))
@@ -563,7 +577,13 @@ class GameRandom : Fragment() {
         button.setOnClickListener {
             onLogoLetterButtonClick(button)
         }
-        if (logoNameCharArray[i] == ' ') {
+        if(randomLogo.companyName[i] == ' ' && logoColorCharArray[i] == 'R') {
+            button.text = " "
+            button.setBackgroundColor(Color.RED)
+            button.isEnabled = false
+            button.isVisible = false
+        }
+        else if (logoNameCharArray[i] == ' ') {
             button.text = ""
             button.isEnabled = false
         } else
@@ -571,6 +591,9 @@ class GameRandom : Fragment() {
         if(logoColorCharArray[i] == 'G'){
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.GREEN, Color.GREEN))
             button.isEnabled = false
+        }
+        else if(logoColorCharArray[i]== 'R'){
+            nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.RED, Color.RED))
         }
         else
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.WHITE, Color.WHITE))
@@ -588,6 +611,7 @@ class GameRandom : Fragment() {
         logoNameGridLayout.addView(button)
         button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_letter)
         logoNameButtons.add(button)
+        button.setBackgroundColor(nameLetters[i].bgColor)
 
     }
     private fun AssignLetters(){
