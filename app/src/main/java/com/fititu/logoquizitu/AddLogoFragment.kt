@@ -224,7 +224,7 @@ class AddLogoFragment : Fragment() {
                 logoEntityDao.insert(photoPost)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "Logo saved successfully", Toast.LENGTH_SHORT).show()
-                    requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+                    //requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
                 }
 
             }
@@ -241,7 +241,7 @@ class AddLogoFragment : Fragment() {
                 logoEntityDao.update(photoPost)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "Logo edited successfully", Toast.LENGTH_SHORT).show()
-                    requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+                   // requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
                 }
             }
             //clearFields()

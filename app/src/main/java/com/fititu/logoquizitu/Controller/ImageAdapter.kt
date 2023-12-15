@@ -80,7 +80,7 @@ class ImageAdapter(
 
     // Function to update the photoList in the adapter
     fun setPhotoList(newList: List<CompanyEntity>) {
-        photoList = newList
+        photoList = newList.filter{it.userCreated}
         notifyDataSetChanged() // Notify the adapter that the data set has changed
     }
     override fun getItemCount() = photoList.size
