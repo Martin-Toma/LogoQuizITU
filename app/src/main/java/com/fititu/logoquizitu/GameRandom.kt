@@ -86,6 +86,7 @@ class GameRandom : Fragment() {
         // Add random letter buttons
         addRandomLetterButtons(lettersGridLayout)
         UpdateSkipButton()
+        initReturnButton(view)
     }
 
 
@@ -152,7 +153,7 @@ class GameRandom : Fragment() {
             logoNameButtons.add(button)
         }
         val resetButton = (view?.findViewById<Button>(R.id.resetButton))!!
-        resetButton.text = "X"
+        resetButton.text = "RESET"
         resetButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
         resetButton.setOnClickListener {
             resetLogoLetters()
@@ -322,6 +323,8 @@ class GameRandom : Fragment() {
             letter.bgColor = Color.WHITE
         }
         for (logobutton in logoNameButtons) {
+            if(nameLetters[logoNameButtons.indexOf(logobutton)].defaultColor == Color.RED) // leave ' ' unchanged
+                continue
             logobutton.text = ""
             logobutton.setBackgroundColor(Color.WHITE)
             logobutton.isEnabled = false
@@ -553,6 +556,7 @@ class GameRandom : Fragment() {
         lettercount = letters.size
         addRandomLetterButtons(lettersGridLayout)
         createResetButton(view)
+        initReturnButton(view)
         UpdateSkipButton()
         AssignLetters()
         jumpToFreeLetter()
@@ -560,11 +564,29 @@ class GameRandom : Fragment() {
 
     private fun createResetButton(view: View) {
         val resetButton = (view.findViewById<Button>(R.id.resetButton))!!
-        resetButton.text = "X"
+        resetButton.text = "RESET"
+        resetButton.setBackgroundColor(Color.RED)
         resetButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
         resetButton.setOnClickListener {
             resetLogoLetters()
         }
+    }
+    private fun initReturnButton(view: View) {
+        val returnButton = (view.findViewById<Button>(R.id.returnButton))!!
+        returnButton.text = "MAIN MENU"
+        returnButton.setBackgroundColor(Color.RED)
+        returnButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
+        returnButton.setOnClickListener {
+           returnToMainMenu()
+        }
+    }
+    private fun returnToMainMenu(){
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val newFragment = MainMenuFragment()
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     private fun createLogoButton( //todo add text when " ", will be tricky, mby with the help of color, i.e. space = red, space !=red if empty slot
@@ -648,7 +670,7 @@ class GameRandom : Fragment() {
     }
     private fun UpdateSkipButton(){
         val skipButton = view?.findViewById<Button>(R.id.skipButton)
-        skipButton?.text = "Skip"
+        skipButton?.text = "SKIP"
         skipButton?.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
         skipButton?.setOnClickListener {
             skipLogo()
