@@ -2,5 +2,7 @@
 <resources>
     <dimen name="imageButtonWidth">90dp</dimen>
     <dimen name="imageButtonHeight">90dp</dimen>
-    <dimen name="inGridMargins">1dp</dimen>
+    <dimen name="inGridMargins">2dp</dimen>
+    <dimen name="relativeLayoutWidth">100dp</dimen>
+    <dimen name="relativeLayoutHeight">100dp</dimen>
 </resources>
