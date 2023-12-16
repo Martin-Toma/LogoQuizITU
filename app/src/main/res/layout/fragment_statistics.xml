@@ -91,7 +91,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/LogoQuizITU_Primary"
             android:text="Back To Menu"
+            android:textColor="@color/LogoQuizITU_Text"
             android:textSize="16sp" />
 
     </LinearLayout>
