@@ -13,28 +13,22 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
 import kotlin.math.min
 import kotlin.random.Random
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
-import com.fititu.logoquizitu.Model.Dao.GlobalProfileDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
-import com.fititu.logoquizitu.Model.Entity.GlobalProfileEntity
-import com.fititu.logoquizitu.Model.LogoEntityDao
+import com.fititu.logoquizitu.ViewModels.GameRandomViewModel
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.collections.List
 
 
 class GameRandom : Fragment() {
     private lateinit var companyDao: CompanyDao
-    private lateinit var logoEntityDao: LogoEntityDao
-    private lateinit var randomLogo: CompanyEntity
-    private lateinit var globalProfileDao: GlobalProfileDao
-    private lateinit var globalProfiles: List<GlobalProfileEntity>
-    private lateinit var globalProfile: GlobalProfileEntity
+    private lateinit var randomLogo: CompanyEntity //so i don't have to write viewModel.randomLogo every time
     private var letters = mutableListOf<Letter>()
     private var nameLetters = mutableListOf<Letter>()
     private var letterButtons = mutableListOf<Button>()
@@ -42,8 +36,7 @@ class GameRandom : Fragment() {
     private var logoNameButtons = mutableListOf<Button>()
     private lateinit var currentLogoNameButton: Button
     private lateinit var randomLogoImageView: ImageView
-    private lateinit var gameMode: String
-    private lateinit var gameModeParameter: String
+    private lateinit var viewModel: GameRandomViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -54,26 +47,26 @@ class GameRandom : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
+        viewModel = ViewModelProvider(this).get(GameRandomViewModel::class.java)
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
-        globalProfileDao = AppDatabase.getInstance(requireContext()).globalProfileDao()
-        gameMode = arguments?.getString("GameMode")!!
-        gameModeParameter = arguments?.getString("GameModeParameter")!!
-        //todo get the game mode from arguments
+        viewModel.gameMode = arguments?.getString("GameMode")!!
+        viewModel.gameModeParameter = arguments?.getString("GameModeParameter")!!
         return inflater.inflate(R.layout.fragment_game_random, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         randomLogoImageView = view.findViewById(R.id.logoImageView)
-        getGlobalProfile()
-        if (gameMode == "GameRandom") { // saving game state is only supported for GameRandom
-            if (globalProfile.currentCompanyId != -1) { //game in progress
+        viewModel.getGlobalProfile()
+        if (viewModel.gameMode == "GameRandom") { // saving game state is only supported for GameRandom
+            if (viewModel.globalProfile.currentCompanyId != -1) { //game in progress
                 initializeSavedGame(view)
                 return
             }
         }
-        getRandomLogo()
+        viewModel.getRandomLogo()
+        randomLogo = viewModel.randomLogo
+        setImage()
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
         var columns = min(
@@ -100,15 +93,15 @@ class GameRandom : Fragment() {
     }
 
 
-    private fun getRandomLogo() {
-        randomLogo = runBlocking(Dispatchers.IO) {
-            when (gameMode) {
+    private fun setImage() {
+      /*  randomLogo = runBlocking(Dispatchers.IO) {
+            when (viewModel.gameMode) {
                 "GameRandom" -> companyDao.getRandomCompany()
-                "Categories:" -> companyDao.getRandomCompanyOfCategory(gameModeParameter)
-                "Levels:" -> companyDao.getRandomCompanyOfLevel(gameModeParameter.toInt())
+                "Categories:" -> companyDao.getRandomCompanyOfCategory(viewModel.gameModeParameter)
+                "Levels:" -> companyDao.getRandomCompanyOfLevel(viewModel.gameModeParameter.toInt())
                 else -> companyDao.getRandomCompany()
             }
-        }
+        }*/
 
         lifecycleScope.launch {
             var pathUI: String?
@@ -122,14 +115,6 @@ class GameRandom : Fragment() {
                 .into(randomLogoImageView)
         }
     }
-
-    private fun getGlobalProfile() {
-        globalProfiles = runBlocking(Dispatchers.IO) {
-            globalProfileDao.get()
-        }
-        globalProfile = globalProfiles[0]
-    }
-
     private fun addLogoLetterButtons(gridLayout: GridLayout) { //todo add text when " "
         for (i in 0 until randomLogo.companyName.length) {
             val button = Button(requireContext())
@@ -219,7 +204,7 @@ class GameRandom : Fragment() {
         logoLetter.assignedLetter = letter.id
         logoLetter.letter = letter.letter
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
-        if (gameMode == "GameRandom")
+        if (viewModel.gameMode == "GameRandom")
             saveCurrentGameState()
         if (logoNameString.length == randomLogo.companyName.length)
             checkLogoName()
@@ -240,7 +225,7 @@ class GameRandom : Fragment() {
     private fun checkLogoName() {
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
         if (randomLogo.companyName == logoNameString) {
-            updateCompanySolved()
+            viewModel.updateCompanySolved()
             navigateToNextFragment()
             return
         }
@@ -248,7 +233,7 @@ class GameRandom : Fragment() {
         jumpToFreeLetter()
     }
 
-    private fun updateCompanySolved() {
+    private fun updateCompanySolved() { //todo delete this only if the viewmodel version is confirmed to work
         randomLogo.solved = true
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
@@ -258,7 +243,7 @@ class GameRandom : Fragment() {
     }
 
     private fun navigateToNextFragment() {
-        resetCurrentGameState()
+        viewModel.resetCurrentGameState()
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
@@ -266,7 +251,7 @@ class GameRandom : Fragment() {
         val bundle = Bundle().apply {
             putInt("CompanyId", randomLogo.id)
             putString("GameMode", "GameRandom")
-            putString("GameRandomMode", gameMode)
+            putString("GameRandomMode", viewModel.gameMode)
         }
         newFragment.arguments = bundle
 
@@ -276,13 +261,13 @@ class GameRandom : Fragment() {
     }
 
     private fun skipLogo() {
-        resetCurrentGameState()
+        viewModel.resetCurrentGameState()
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         val newFragment = GameRandom()
         val bundle = Bundle().apply {
-            putString("GameMode", gameMode)
-            putString("GameModeParameter", gameModeParameter)
+            putString("GameMode", viewModel.gameMode)
+            putString("GameModeParameter", viewModel.gameModeParameter)
         }
         newFragment.arguments = bundle
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
@@ -308,7 +293,7 @@ class GameRandom : Fragment() {
         button.setBackgroundColor(Color.WHITE)
         buttonToChange.isEnabled = true
         button.isEnabled = false
-        if (gameMode == "GameRandom")
+        if (viewModel.gameMode == "GameRandom")
             saveCurrentGameState()
         jumpToFreeLetter()
 
@@ -358,7 +343,7 @@ class GameRandom : Fragment() {
             letterButton.setBackgroundColor(Color.WHITE)
             letterButton.visibility = View.VISIBLE
         }
-        resetCurrentGameState()
+        viewModel.resetCurrentGameState()
         jumpToFreeLetter()
     }
 
@@ -440,7 +425,7 @@ class GameRandom : Fragment() {
         }
         resetNameButtons()
         resetUsedLetters()
-        if (gameMode == "GameRandom")
+        if (viewModel.gameMode == "GameRandom")
             saveCurrentGameState()
     }
 
@@ -469,25 +454,6 @@ class GameRandom : Fragment() {
                 letter.bgColor = Color.WHITE
                 letter.defaultColor = Color.WHITE
             }
-        }
-    }
-
-    private fun resetCurrentGameState() {
-        runBlocking(Dispatchers.IO) {
-            globalProfileDao.update(
-                GlobalProfileEntity(
-                    globalProfile.id,
-                    globalProfile.hintsCount,
-                    globalProfile.hintsUsedCount,
-                    globalProfile.gameTime,
-                    -1,
-                    "",
-                    "",
-                    "",
-                    ""
-                )
-            )
-            globalProfiles = globalProfileDao.get()
         }
     }
 
@@ -520,33 +486,19 @@ class GameRandom : Fragment() {
                 Color.DKGRAY -> nameColor += "D"
             }
         }
-        runBlocking(Dispatchers.IO) {
-            globalProfileDao.update(
-                GlobalProfileEntity(
-                    globalProfile.id,
-                    globalProfile.hintsCount,
-                    globalProfile.hintsUsedCount,
-                    globalProfile.gameTime,
-                    randomLogo.id,
-                    logoName,
-                    logoColor,
-                    letterstring,
-                    nameColor
-                )
-            )
-            globalProfiles = globalProfileDao.get()
-        }
-        globalProfile = globalProfiles[0] //update globalProfile
+        viewModel.saveStateToDb(logoName, logoColor, letterstring, nameColor, randomLogo.id)
     }
 
     private fun initializeSavedGame(view: View) {
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
-        loadLogo()
-        val logoLetterCount = globalProfile.logoLetters.length
-        val logoNameCharArray = globalProfile.logoLetters.toCharArray()
-        val logoColorCharArray = globalProfile.logoColors.toCharArray()
-        val letterCharArray = globalProfile.letters.toCharArray()
-        val letterColorCharArray = globalProfile.letterColors.toCharArray()
+        viewModel.getCompanyById()
+        randomLogo = viewModel.randomLogo
+        setImage()
+        val logoLetterCount = viewModel.globalProfile.logoLetters.length
+        val logoNameCharArray = viewModel.globalProfile.logoLetters.toCharArray()
+        val logoColorCharArray = viewModel.globalProfile.logoColors.toCharArray()
+        val letterCharArray = viewModel.globalProfile.letters.toCharArray()
+        val letterColorCharArray = viewModel.globalProfile.letterColors.toCharArray()
         if (letterCharArray.size <= 12) { //todo same here, create a row for each word
             logoNameGridLayout.rowCount = 1
             logoNameGridLayout.columnCount = logoLetterCount + 1
@@ -565,7 +517,7 @@ class GameRandom : Fragment() {
 
         val lettersGridLayout: GridLayout = view.findViewById(R.id.lettersGridLayout)
         lettersGridLayout.rowCount = 2
-        lettersGridLayout.columnCount = min((globalProfile.letters.length + 1) / 2, 8)
+        lettersGridLayout.columnCount = min((viewModel.globalProfile.letters.length + 1) / 2, 8)
         for (i in letterCharArray.indices) {
             //create letters
             val color = when (letterColorCharArray[i]) {
@@ -662,23 +614,6 @@ class GameRandom : Fragment() {
                 logoLetter.assignedLetter = letter?.id
             }
         }
-    }
-
-    private fun loadLogo() {
-        randomLogo = runBlocking(Dispatchers.IO) {
-            companyDao.getCompanyById(globalProfile.currentCompanyId)
-        }
-        lifecycleScope.launch {
-            var pathUI: String?
-            withContext(Dispatchers.Main) {
-                val path = randomLogo.imgOriginal//randomLogo2.imagePath
-                pathUI = path
-            }
-            Glide.with(requireContext())
-                .load(pathUI)
-                .into(randomLogoImageView)
-        }
-
     }
 
     private fun updateSkipButton() {
