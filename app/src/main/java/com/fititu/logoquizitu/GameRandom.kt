@@ -27,7 +27,6 @@ import java.util.*
 
 
 class GameRandom : Fragment() {
-    private lateinit var companyDao: CompanyDao
     private lateinit var randomLogo: CompanyEntity //so i don't have to write viewModel.randomLogo every time
     private var letters = mutableListOf<Letter>()
     private var nameLetters = mutableListOf<Letter>()
@@ -48,7 +47,6 @@ class GameRandom : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(GameRandomViewModel::class.java)
-        companyDao = AppDatabase.getInstance(requireContext()).companyDao()
         viewModel.gameMode = arguments?.getString("GameMode")!!
         viewModel.gameModeParameter = arguments?.getString("GameModeParameter")!!
         return inflater.inflate(R.layout.fragment_game_random, container, false)
@@ -94,15 +92,6 @@ class GameRandom : Fragment() {
 
 
     private fun setImage() {
-      /*  randomLogo = runBlocking(Dispatchers.IO) {
-            when (viewModel.gameMode) {
-                "GameRandom" -> companyDao.getRandomCompany()
-                "Categories:" -> companyDao.getRandomCompanyOfCategory(viewModel.gameModeParameter)
-                "Levels:" -> companyDao.getRandomCompanyOfLevel(viewModel.gameModeParameter.toInt())
-                else -> companyDao.getRandomCompany()
-            }
-        }*/
-
         lifecycleScope.launch {
             var pathUI: String?
             withContext(Dispatchers.Main) {
@@ -115,7 +104,8 @@ class GameRandom : Fragment() {
                 .into(randomLogoImageView)
         }
     }
-    private fun addLogoLetterButtons(gridLayout: GridLayout) { //todo add text when " "
+
+    private fun addLogoLetterButtons(gridLayout: GridLayout) {
         for (i in 0 until randomLogo.companyName.length) {
             val button = Button(requireContext())
             button.setOnClickListener {
@@ -226,50 +216,54 @@ class GameRandom : Fragment() {
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
         if (randomLogo.companyName == logoNameString) {
             viewModel.updateCompanySolved()
-            navigateToNextFragment()
+            navigateToNextFragment("CompanyInfo")
             return
         }
         analyzeLogoName(logoNameString)
         jumpToFreeLetter()
     }
 
-    private fun updateCompanySolved() { //todo delete this only if the viewmodel version is confirmed to work
-        randomLogo.solved = true
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                companyDao.update(randomLogo)
+    /*  private fun updateCompanySolved() { //todo delete this only if the viewmodel version is confirmed to work
+          randomLogo.solved = true
+          lifecycleScope.launch {
+              withContext(Dispatchers.IO) {
+                  companyDao.update(randomLogo) // need to get dao again
+              }
+          }
+      }*/
+
+    private fun navigateToNextFragment(fragment: String) {
+        if(fragment != "MainMenu")
+            viewModel.resetCurrentGameState()
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val newFragment: Fragment
+        val bundle: Bundle
+        when (fragment) {
+            "CompanyInfo" -> {
+                newFragment = CompanyInfo()
+                bundle = Bundle().apply {
+                    putInt("CompanyId", randomLogo.id)
+                    putString("GameMode", "GameRandom")
+                    putString("GameRandomMode", viewModel.gameMode)
+                }
+            }
+
+            "GameRandom" -> {
+                newFragment = GameRandom()
+                bundle = Bundle().apply {
+                    putString("GameMode", viewModel.gameMode)
+                    putString("GameModeParameter", viewModel.gameModeParameter)
+                }
+            }
+
+            else -> {
+                newFragment = MainMenuFragment()
+                bundle = Bundle().apply {}
             }
         }
-    }
-
-    private fun navigateToNextFragment() {
-        viewModel.resetCurrentGameState()
-        val fragmentManager = requireActivity().supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-
-        val newFragment = CompanyInfo()
-        val bundle = Bundle().apply {
-            putInt("CompanyId", randomLogo.id)
-            putString("GameMode", "GameRandom")
-            putString("GameRandomMode", viewModel.gameMode)
-        }
         newFragment.arguments = bundle
 
-        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
-    }
-
-    private fun skipLogo() {
-        viewModel.resetCurrentGameState()
-        val fragmentManager = requireActivity().supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val newFragment = GameRandom()
-        val bundle = Bundle().apply {
-            putString("GameMode", viewModel.gameMode)
-            putString("GameModeParameter", viewModel.gameModeParameter)
-        }
-        newFragment.arguments = bundle
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
@@ -559,17 +553,8 @@ class GameRandom : Fragment() {
         returnButton.setBackgroundColor(Color.RED)
         returnButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
         returnButton.setOnClickListener {
-            returnToMainMenu()
+            navigateToNextFragment("MainMenu")
         }
-    }
-
-    private fun returnToMainMenu() {
-        val fragmentManager = requireActivity().supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val newFragment = MainMenuFragment()
-        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
     }
 
     private fun createLogoButton(
@@ -595,11 +580,13 @@ class GameRandom : Fragment() {
         if (logoColorCharArray[i] == 'G') {
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.GREEN, Color.GREEN))
             button.isEnabled = false
-        } else if (logoColorCharArray[i] == 'R') {
+        } else if (logoColorCharArray[i] == 'R')
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.RED, Color.RED))
-        } else
+         else
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.WHITE, Color.WHITE))
         addLogoLetterButtonToLayout(button, logoNameGridLayout, i)
+        if(logoNameCharArray[i] != ' ' && (logoColorCharArray[i] == 'W' || logoColorCharArray[i] == 'Y'))
+            button.isEnabled = true
     }
 
     private fun assignLetters() {
@@ -623,7 +610,7 @@ class GameRandom : Fragment() {
         }
         skipButton?.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner)
         skipButton?.setOnClickListener {
-            skipLogo()
+            navigateToNextFragment("GameRandom")
         }
 
     }
