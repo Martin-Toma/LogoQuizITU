@@ -10,11 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.gridlayout.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
+import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -77,32 +81,59 @@ class SelectLogoGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        init_grid(view)
+        init_game(view)
     }
-    fun init_grid(view : View){
+    fun init_game(view : View){
 
+        // get view components
+        val nameText : TextView = view.findViewById(R.id.logo_to_be_guessed)
         val grid : GridLayout = view.findViewById(R.id.selectGrid)
 
+        // choose random logo name
+        val randomLogos: List<CompanyEntity> = runBlocking(Dispatchers.IO) {
+            companyDao.getRandomLogos()
+        }
+
+        val to_be_guessed_idx = (0..7).random()
+
+        // set nameText to the to be guessed logo name - the to_be_guessed_idx-th from list of random logos
+        nameText.setText(randomLogos[to_be_guessed_idx].companyName)
+
+        // set images to the imageButtons and set onClickListeners to the imageButtons
         for(i in 0 until grid.childCount){
             var imbtn : ImageButton = grid.getChildAt(i) as ImageButton //view.findViewById<ImageButton>(R.id.imageButton1)
 
-            val randomLogo = runBlocking(Dispatchers.IO) {
-                companyDao.getRandomCompany()
-            }
-
-            lifecycleScope.launch {
-                var path_UI: String?
-                withContext(Dispatchers.Main) {
-                    val path = randomLogo.imgOriginal//randomLogo2.imagePath
-                    path_UI = path
-
-                    Log.d("Image Loading", "other ${Uri.parse(path)}")
-                }
-                Glide.with(requireContext())
-                    .load(path_UI)
+            Glide.with(requireContext())
+                    .load(randomLogos[i].imgOriginal)
                     .into(imbtn)
-                //setImage(path_UI, bitmap)
+
+            if (i == to_be_guessed_idx) {
+                imbtn.setOnClickListener {
+                    nameText.setText("Correct")
+                    change_fragment_with_delay()
+                }
             }
+                else{
+                    imbtn.setOnClickListener {
+                        nameText.setText("Wrong")
+                        change_fragment_with_delay()
+                }
+            }
+        }
+
+    }
+
+    private fun change_fragment_with_delay(){
+        lifecycleScope.launch{
+            delay(1000)
+            val currentFragment = requireActivity().supportFragmentManager.fragments.last()
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .detach(currentFragment)
+                .commit()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .attach(currentFragment)
+                .commit()
         }
     }
 }
