@@ -26,7 +26,9 @@ import com.fititu.logoquizitu.Model.LogoEntityDao
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.List
-//todo address issue with ' ' in logo name
+
+
+
 class GameRandom : Fragment() {
     private lateinit var companyDao: CompanyDao
     private lateinit var logoEntityDao: LogoEntityDao
@@ -41,6 +43,8 @@ class GameRandom : Fragment() {
     private var logoNameButtons = mutableListOf<Button>()
     private lateinit var currentLogoNameButton: Button
     private lateinit var randomLogoImageView: ImageView
+    private lateinit var gameMode: String
+    private lateinit var gameModeParameter: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -54,6 +58,9 @@ class GameRandom : Fragment() {
         logoEntityDao = AppDatabase.getInstance(requireContext()).logoEntityDao()
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
         globalProfileDao = AppDatabase.getInstance(requireContext()).globalProfileDao()
+        gameMode = arguments?.getString("GameMode")!!
+        gameModeParameter = arguments?.getString("GameModeParameter")!!
+        //todo get the game mode from arguments
         return inflater.inflate(R.layout.fragment_game_random, container, false)
     }
 
@@ -61,10 +68,13 @@ class GameRandom : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         randomLogoImageView = view.findViewById(R.id.logoImageView)
         getGlobalProfile()
+        //if(gameMode == "GameRandom"){ // saving game state is only supported for GameRandom
         if (globalProfile.currentCompanyId != -1) { //no game in progress
             initializeSavedGame(view)
             return
         }
+        //}
+        //todo if(gameMode == "GameRandom") { , else if(gameMode == "Categories:") getRandomLogoFromCategory(gameModeParameter)
         getRandomLogo()
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
         calculateLetterCount(randomLogo.companyName)
@@ -202,6 +212,7 @@ class GameRandom : Fragment() {
         logoLetter.assignedLetter = letter.id
         logoLetter.letter = letter.letter
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
+        //if(gameMode == "GameRandom") //todo uncomment
         saveCurrentGameState()
         if (logoNameString.length == randomLogo.companyName.length)
             checkLogoName()
@@ -283,6 +294,7 @@ class GameRandom : Fragment() {
         button.setBackgroundColor(Color.WHITE)
         buttonToChange.isEnabled = true
         button.isEnabled = false
+        //if(gameMode == "GameRandom") //todo uncomment
         saveCurrentGameState()
         jumpToFreeLetter()
 
@@ -416,6 +428,7 @@ class GameRandom : Fragment() {
         }
         resetNameButtons()
         resetUsedLetters()
+        //if(gameMode == "GameRandom") //todo uncomment
         saveCurrentGameState()
     }
 
