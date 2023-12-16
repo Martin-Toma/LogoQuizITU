@@ -1,6 +1,5 @@
 package com.fititu.logoquizitu
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,21 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.fititu.logoquizitu.Model.AppDatabase
-import com.fititu.logoquizitu.Model.Dao.CompanyDao
-import com.fititu.logoquizitu.Model.Entity.CompanyEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import com.fititu.logoquizitu.ViewModels.CompanyInfoViewModel
 import java.io.File
-import java.io.FileOutputStream
 
-class CompanyInfo() : Fragment() {
-    private var companyId: Int = 0
-    private lateinit var gameMode: String
-    private lateinit var companyDao : CompanyDao
-    private lateinit var company : CompanyEntity
-    private lateinit var gameRandomMode: String
+class CompanyInfo : Fragment() {
+    private lateinit var viewModel: CompanyInfoViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -36,17 +28,15 @@ class CompanyInfo() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_company_info, container, false)
-        companyId = arguments?.getInt("CompanyId")!!
-        gameMode = arguments?.getString("GameMode")!!
-        gameRandomMode = arguments?.getString("GameRandomMode")!!
-        companyDao = AppDatabase.getInstance(requireContext()).companyDao()
-        retrieveCompany(companyId!!)
+        viewModel = ViewModelProvider(this)[CompanyInfoViewModel::class.java]
+        viewModel.setParameters(arguments?.getInt("CompanyId")!!, arguments?.getString("GameMode")!!, arguments?.getString("GameRandomMode")!!)
+        viewModel.retrieveCompany()
         return view
     }
 
     private fun setCompanyDescription(view: View) {
         val descriptionText = view.findViewById<TextView>(R.id.Description)
-        descriptionText.text = company.companyDescription
+        descriptionText.text = viewModel.company.companyDescription
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,7 +47,7 @@ class CompanyInfo() : Fragment() {
     }
     private fun loadImage(){
         val imageView = view?.findViewById<ImageView>(R.id.logoImageView)
-        val lmao = Uri.parse(company.imgAltered)
+        val lmao = Uri.parse(viewModel.company.imgAltered)
         val xd = File(lmao.path!!)
         Glide.with(this)
             .load(xd)
@@ -71,32 +61,24 @@ class CompanyInfo() : Fragment() {
             navigateToNextFragment()
         }
     }
-
-    private fun retrieveCompany(id : Int) {
-        company = runBlocking(Dispatchers.IO){
-            companyDao.getCompanyById(id)
-        }
-    }
     private fun navigateToNextFragment(){
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val newFragment = when(gameMode){
+        val newFragment = when(viewModel.gameMode){
             "mainMenu" -> MainMenuFragment()
             "GameRandom" -> GameRandom()
             "companyInfo" -> CompanyInfo()
             else -> MainMenuFragment()
         }
-        if(gameMode == "GameRandom"){
-            val parameter: String
-            if(gameRandomMode == "Category")
-                parameter = company.categoryName!!
-            else if (gameRandomMode == "Level")
-                parameter = company.levelId.toString()
-            else
-                parameter = ""
+        if(viewModel.gameMode == "GameRandom"){
+            val parameter: String = when(viewModel.gameRandomMode){
+                "Category" -> viewModel.company.categoryName!!
+                "Level" -> viewModel.company.levelId.toString()
+                else -> ""
+            }
             val bundle = Bundle().apply {
-                putString("GameMode", gameRandomMode)
+                putString("GameMode", viewModel.gameRandomMode)
                 putString("GameModeParameter", parameter)
             }
             newFragment.arguments = bundle

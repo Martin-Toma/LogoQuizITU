@@ -16,10 +16,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.fititu.logoquizitu.Model.AppDatabase
 import kotlin.math.min
 import kotlin.random.Random
-import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.ViewModels.GameRandomViewModel
 import kotlinx.coroutines.*
@@ -46,7 +44,7 @@ class GameRandom : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(GameRandomViewModel::class.java)
+        viewModel = ViewModelProvider(this)[GameRandomViewModel::class.java]
         viewModel.gameMode = arguments?.getString("GameMode")!!
         viewModel.gameModeParameter = arguments?.getString("GameModeParameter")!!
         return inflater.inflate(R.layout.fragment_game_random, container, false)
