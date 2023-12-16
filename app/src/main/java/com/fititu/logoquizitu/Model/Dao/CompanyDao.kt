@@ -29,18 +29,22 @@ interface CompanyDao {
     @Query("SELECT * FROM CompanyEntity WHERE levelId = :level")
     suspend fun getCompaniesOfLevel(level : Int) : List<CompanyEntity>
 
+    @Query("SELECT * FROM CompanyEntity WHERE levelId = :level ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomCompanyOfLevel(level : Int) : CompanyEntity
+
     @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName")
     suspend fun getCompaniesOfCategory(categoryName: String) : List<CompanyEntity>
 
+    @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomCompanyOfCategory(categoryName: String) : CompanyEntity
     @Query("SELECT * FROM CompanyEntity WHERE countryOfOriginName = :countryName")
     suspend fun getCompaniesOfCountry(countryName : String) : List<CompanyEntity>
 
     @Query("SELECT * FROM CompanyEntity/* WHERE solved=0*/ ORDER BY RANDOM() LIMIT 1") //todo uncomment solved=0, this excludes solved companies
     suspend fun getRandomCompany() : CompanyEntity
-    //select entity with id as parameter
 
-    @Query("SELECT * FROM CompanyEntity ORDER BY RANDOM() LIMIT 4")
-    suspend fun getRandomCompanies() : List<CompanyEntity>
+    @Query("SELECT * FROM CompanyEntity ORDER BY RANDOM() LIMIT :limit")
+    suspend fun getRandomCompanies(limit:Int) : List<CompanyEntity>
 
     @Query("SELECT * FROM CompanyEntity WHERE id = :id")
     suspend fun getCompanyById(id : Int) : CompanyEntity

@@ -67,7 +67,7 @@ class MainMenuFragment : Fragment(), IMainMenuView {
 
         val newFragment = GameRandom()
         val bundle = Bundle().apply {
-            putString("GameMode", "MainMenu")
+            putString("GameMode", "GameRandom")
             putString("GameModeParameter", "")
         }
         newFragment.arguments = bundle

@@ -41,7 +41,7 @@ class RandomNameFragment : Fragment() {
 
     private fun getRandomLogos() {
         randomCompanyNames = runBlocking(Dispatchers.IO) {
-            companyDao.getRandomCompanies()
+            companyDao.getRandomCompanies(4)
         }
         lifecycleScope.launch {
             var path_UI: String?
