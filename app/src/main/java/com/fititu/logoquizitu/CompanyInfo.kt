@@ -66,9 +66,7 @@ class CompanyInfo() : Fragment() {
 
     private fun updateModeButton(view: View) {
         val modeButton = view.findViewById<Button>(R.id.ModeButton)
-        modeButton.text = "Next"
-        modeButton.setBackgroundColor(Color.GREEN)
-        modeButton.setTextColor(Color.BLACK)
+        modeButton.text = "NEXT"
         modeButton.setOnClickListener {
             navigateToNextFragment()
         }
