@@ -7,23 +7,41 @@ class MainMenuModel(): IMainMenuModel {
     override fun nextFragment(where: String): Fragment? {
         var fragment: Fragment? = null
         when (where){
-            "toModeMenu" -> {
-                 fragment = ModeMenuFragment()
-            }
-            "toMyLogos" -> {
-                fragment = MyLogosFragment()
-            }
+//            "toModeMenu" -> {
+//                 fragment = ModeMenuFragment()
+//            }
+//            "toMyLogos" -> {
+//                fragment = MyLogosFragment()
+//            }
             "toAdd" -> {
                 fragment = AddLogoFragment()
             }
-            "toGameRandom" -> {
-                fragment = GameRandom()
+//            "toGameRandom" -> {
+//                fragment = GameRandom()
+//            }
+//            "toRandomName" -> {
+//                fragment = RandomNameFragment()
+//            }
+//            "toCreateLogo" -> {
+//                fragment = CreateLogoFragment()
+//            }
+            FragmentConstants.TO_SELECT_MODE -> {
+                fragment = SelectModeFragment()
             }
-            "toRandomName" -> {
-                fragment = RandomNameFragment()
+            FragmentConstants.TO_SETTINGS -> {
+                fragment = SettingsFragment()
             }
-            "toCreateLogo" -> {
-                fragment = CreateLogoFragment()
+            FragmentConstants.TO_GALLERY -> {
+                fragment = GalleryFragment()
+            }
+            FragmentConstants.TO_STATISTICS -> {
+                fragment = StatisticsFragment()
+            }
+            FragmentConstants.TO_MY_LOGOS -> {
+                fragment = MyLogosFragment()
+            }
+            FragmentConstants.TO_MAIN_MENU -> {
+                fragment = MainMenuFragment()
             }
         }
         return fragment

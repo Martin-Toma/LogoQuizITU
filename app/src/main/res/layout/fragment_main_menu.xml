@@ -30,4 +30,34 @@
             android:id="@+id/RandomName"
             android:text="DO NOT CLICK" />
 
+    <Button
+        android:id="@+id/btn_select_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_select_mode_text" />
+
+    <Button
+        android:id="@+id/btn_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_settings_text" />
+
+    <Button
+        android:id="@+id/btn_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_gallery_text" />
+
+    <Button
+        android:id="@+id/btn_statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_statistics_text" />
+
+    <Button
+        android:id="@+id/btn_mylogos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_mylogos_text" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>
