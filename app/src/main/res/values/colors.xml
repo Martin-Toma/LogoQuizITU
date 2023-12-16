@@ -7,6 +7,7 @@
     <color name="LogoQuizITU_BackgroundText">#FFE9F3E8</color>
     <color name="LogoQuizITU_Primary">#FF7BB4E2</color>
     <color name="LogoQuizITU_Text">#FF000000</color>
-    <color name="LogoQuizITU_BackgroundDarker">#FFF9FBF8</color>
+    <color name="LogoQuizITU_BackgroundDarker">#FFC2DDBF</color>
+    <color name="LogoQuizITU_BackgroundLighter">#FFF9FBF8</color>
     <color name="LogoQuizITU_TextBox">#FFA6C4A8</color>
 </resources>

@@ -25,6 +25,7 @@ class MainMenuModel(): IMainMenuModel {
 //            "toCreateLogo" -> {
 //                fragment = CreateLogoFragment()
 //            }
+            // main menu navigation
             FragmentConstants.TO_SELECT_MODE -> {
                 fragment = SelectModeFragment()
             }
@@ -42,6 +43,26 @@ class MainMenuModel(): IMainMenuModel {
             }
             FragmentConstants.TO_MAIN_MENU -> {
                 fragment = MainMenuFragment()
+            }
+
+            // select mode navigation
+            FragmentConstants.TO_RANDOM ->{
+                fragment = GameRandom()
+            }
+            FragmentConstants.TO_LEVEL ->{
+                fragment = SelectLevelFragment()
+            }
+            FragmentConstants.TO_SELECT ->{
+                fragment = TODO()
+            }
+            FragmentConstants.TO_NAME ->{
+                fragment = RandomNameFragment()
+            }
+            FragmentConstants.TO_CATEGORY ->{
+                fragment = SelectCategoryFragment()
+            }
+            FragmentConstants.TO_MY_LOGOS ->{
+                fragment = TODO()
             }
         }
         return fragment

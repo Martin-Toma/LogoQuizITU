@@ -6,15 +6,177 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="174dp"
-        android:layout_marginTop="79dp"
-        android:layout_marginEnd="179dp"
-        android:text="Welcome to select mode"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:dividerPadding="10.0sp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:showDividers="middle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/Random"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LogoQuizITU_BackgroundText"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_Random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
+                android:text="Random"
+                android:textColor="@color/LogoQuizITU_Text" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Solve a random logo. "
+                android:textAlignment="center"
+                android:textColor="@color/LogoQuizITU_Text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LogoQuizITU_BackgroundText"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_Level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
+                android:text="Level Mode"
+                android:textColor="@color/LogoQuizITU_Text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select a collection of logos based on difficulty and solve them one by one. "
+                android:textAlignment="center"
+                android:textColor="@color/LogoQuizITU_Text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LogoQuizITU_BackgroundText"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
+                android:text="Select Logo"
+                android:textColor="@color/LogoQuizITU_Text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guess which logo does a company have based on the companies name. "
+                android:textAlignment="center"
+                android:textColor="@color/LogoQuizITU_Text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LogoQuizITU_BackgroundText"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
+                android:text="Name Options"
+                android:textColor="@color/LogoQuizITU_Text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pick a company name from 4 options that has the displayed logo."
+                android:textAlignment="center"
+                android:textColor="@color/LogoQuizITU_Text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LogoQuizITU_BackgroundText"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
+                android:text="Category Mode"
+                android:textColor="@color/LogoQuizITU_Text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select a collection of logos based on their primary business area and solve them one by one. "
+                android:textAlignment="center"
+                android:textColor="@color/LogoQuizITU_Text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mylogos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LogoQuizITU_BackgroundText"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_play_my_logos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
+                android:text="My Logos Mode"
+                android:textColor="@color/LogoQuizITU_Text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guess names of logos that you added in section My Logos."
+                android:textAlignment="center"
+                android:textColor="@color/LogoQuizITU_Text" />
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
