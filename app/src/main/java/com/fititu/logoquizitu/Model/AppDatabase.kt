@@ -78,10 +78,10 @@ abstract class AppDatabase : RoomDatabase() {
             val dateParser = SimpleDateFormat("yyyy")
 
             val categories = listOf(
-                CategoryEntity("E-commerce", ""),
-                CategoryEntity("Fast-food", ""),
-                CategoryEntity("Furniture", ""),
-                CategoryEntity("Technology", ""),
+                CategoryEntity("E-commerce", "./category_imgs/E-commerce.png"),
+                CategoryEntity("Fast-food", "./category_imgs/fast-food.jpg"),
+                CategoryEntity("Furniture", "./category_imgs/Furniture.jpg"),
+                CategoryEntity("Technology", "./category_imgs/Technology.jpg"),
             )
 
             val companies = listOf<CompanyEntity>(
