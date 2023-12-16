@@ -113,18 +113,28 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
-    fun delete_file(dirPath: File, fileName : String) : Boolean{
-        val fileR = File(dirPath, fileName)
-
-        if (fileR.exists()){
-            if(fileR.delete()){
-                Log.d("Test out", "File deleted")
-                return true
+    fun delete_file(dirPath: File, fileName : String, dirEmpty : Boolean) : Boolean{
+        lateinit var fileR : File
+        if(dirEmpty){
+            fileR = File(fileName)
+        }
+        else {
+            fileR = File(dirPath, fileName)
+        }
+        try {
+            if (fileR.exists()) {
+                if (fileR.delete()) {
+                    Log.d("Test out", "File deleted")
+                    return true
+                } else {
+                    Log.d("Test out", "File not deleted")
+                    return false
+                }
+            } else {
+                Toast.makeText(appContext, "Error file not exist the image", Toast.LENGTH_SHORT).show()
             }
-            else{
-                Log.d("Test out", "File not deleted")
-                return false
-            }
+        } catch (e : Exception){
+            Toast.makeText(appContext, "Error deleting the image", Toast.LENGTH_SHORT).show()
         }
         return false
     }
@@ -139,6 +149,8 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         lId : Int?)
     {
         Log.d("Test out", "caption = ${caption} desc ${description}")
+        Log.d("Test out", "All: selectedImagePath = $selectedImagePath, caption = $caption, imageNotChanged = $imageNotChanged, editOn = $editOn, lId = $lId")
+
         if ((selectedImagePath.isNotBlank() && caption.isNotBlank() )|| (imageNotChanged == false)) {
             //val imgBitmap = imageGetBitmap(selectedImagePath)
             /*if(imgBitmap == null){
@@ -156,7 +168,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                 Log.d("File name", new_image_file_name)
 
                 val dir_path = appContext.filesDir
-                delete_file(dir_path, new_image_file_name)
+                delete_file(dir_path, new_image_file_name, false)
 
                 val file = File(dir_path, new_image_file_name)
 
@@ -171,8 +183,14 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                     appContext.contentResolver.openInputStream(uri)
 
                 if (inputStream != null) {
-                    // Copy the data from the input stream to the output stream
-                    FileUtils.copy(inputStream, outputStream)
+                    // Copy the data from the input stream to the output stream in chunks
+                    val bufferSize = 1024
+                    val buffer = ByteArray(bufferSize)
+                    var bytesRead: Int?
+                    while (inputStream?.read(buffer, 0, bufferSize).also { bytesRead = it } != -1) {
+                        outputStream.write(buffer, 0, bytesRead!!)
+                    }
+                    //FileUtils.copy(inputStream, outputStream)
                     //outputStream.getChannel().transferFrom(inputStream, 0, inputStream.size());
                 } else {
                     Log.e("ERR", "empty input")
@@ -194,8 +212,11 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                 val dirPath = appContext.filesDir
                 viewModelScope.launch {
                     val item = logoEntityDao.getCompanyById(cId!!)
-                    delete_file(dirPath, item.imgOriginal)
-                    if(!imageNotChanged){ // change image path if new
+                    if(!delete_file(dirPath, item.imgOriginal, true)){
+                        Toast.makeText(appContext, "Error deleting image", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    if(!imageNotChanged && (item.companyName != caption)){ // change image path if new
                         item.imgOriginal = outputPath
                         item.imgAltered = outputPath
                     }

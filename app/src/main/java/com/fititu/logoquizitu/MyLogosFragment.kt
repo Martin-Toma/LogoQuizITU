@@ -18,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.Controller.IMainMenuController
-import com.fititu.logoquizitu.Controller.ImageAdapter
+import com.fititu.logoquizitu.View.ImageAdapter
 import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao

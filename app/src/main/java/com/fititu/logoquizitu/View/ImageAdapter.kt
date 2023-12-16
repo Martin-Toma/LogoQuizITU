@@ -1,4 +1,4 @@
-package com.fititu.logoquizitu.Controller
+package com.fititu.logoquizitu.View
 
 import android.content.Context
 import android.net.Uri
