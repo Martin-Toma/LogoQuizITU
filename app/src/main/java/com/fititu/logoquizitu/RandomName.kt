@@ -2,6 +2,7 @@ package com.fititu.logoquizitu
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,10 +25,8 @@ class RandomNameFragment : Fragment() {
     private lateinit var companyDao: CompanyDao
     private lateinit var randomLogoImageView: ImageView
     private lateinit var correctName: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,6 +36,7 @@ class RandomNameFragment : Fragment() {
         getRandomLogos()
         val logoNamesGridLayout: GridLayout = view.findViewById(R.id.LogoNamesGridLayout)
         generateLogoNameButtons(logoNamesGridLayout)
+        updateHomeButton()
     }
 
     private fun getRandomLogos() {
@@ -61,7 +61,6 @@ class RandomNameFragment : Fragment() {
         correctName = randomCompanyNames[0].companyName
         randomCompanyNames = randomCompanyNames.shuffled()
         for (i in 0..3) {
-            //todo generate 4 buttons with the 4 logo names
             val button = Button(requireContext())
             val params = GridLayout.LayoutParams()
             button.text = randomCompanyNames[i].companyName
@@ -75,9 +74,11 @@ class RandomNameFragment : Fragment() {
             params.columnSpec = GridLayout.spec(0)
             params.setMargins(10, 10, 10, 10)
             button.layoutParams = params
+            params.setGravity(Gravity.CENTER_HORIZONTAL) // Center horizontally within the cell
             button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_white)
             gridLayout.addView(button)
             logoNamesButtons.add(button)
+
         }
     }
 
@@ -111,6 +112,21 @@ class RandomNameFragment : Fragment() {
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
+    }
+    private fun updateHomeButton(){
+        val homeButton = view?.findViewById<Button>(R.id.HomeButton)
+        homeButton?.text = "HOME"
+        homeButton?.setOnClickListener {
+            returnToMainMenu()
+        }
+    }
+    private fun returnToMainMenu(){
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val newFragment = MainMenuFragment()
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     override fun onCreateView(

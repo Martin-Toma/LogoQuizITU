@@ -259,6 +259,7 @@ class GameRandom : Fragment() {
         val bundle = Bundle().apply {
             putInt("CompanyId", randomLogo.id)
             putString("GameMode", "GameRandom")
+            putString("GameRandomMode", gameMode)
         }
         newFragment.arguments = bundle
 
@@ -271,6 +272,11 @@ class GameRandom : Fragment() {
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         val newFragment = GameRandom()
+        val bundle = Bundle().apply {
+            putString("GameMode", gameMode)
+            putString("GameModeParameter", gameModeParameter)
+        }
+        newFragment.arguments = bundle
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()

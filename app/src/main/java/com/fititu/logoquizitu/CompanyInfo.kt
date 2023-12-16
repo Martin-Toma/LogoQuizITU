@@ -24,6 +24,7 @@ class CompanyInfo() : Fragment() {
     private lateinit var gameMode: String
     private lateinit var companyDao : CompanyDao
     private lateinit var company : CompanyEntity
+    private lateinit var gameRandomMode: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -37,6 +38,7 @@ class CompanyInfo() : Fragment() {
         val view = inflater.inflate(R.layout.fragment_company_info, container, false)
         companyId = arguments?.getInt("CompanyId")!!
         gameMode = arguments?.getString("GameMode")!!
+        gameRandomMode = arguments?.getString("GameRandomMode")!!
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
         retrieveCompany(companyId!!)
         return view
@@ -87,6 +89,21 @@ class CompanyInfo() : Fragment() {
             "companyInfo" -> CompanyInfo()
             else -> MainMenuFragment()
         }
+        if(gameMode == "GameRandom"){
+            val parameter: String
+            if(gameRandomMode == "Category")
+                parameter = company.categoryName!!
+            else if (gameRandomMode == "Level")
+                parameter = company.levelId.toString()
+            else
+                parameter = ""
+            val bundle = Bundle().apply {
+                putString("GameMode", gameRandomMode)
+                putString("GameModeParameter", parameter)
+            }
+            newFragment.arguments = bundle
+        }
+        //add handling for other modes if necessary
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
