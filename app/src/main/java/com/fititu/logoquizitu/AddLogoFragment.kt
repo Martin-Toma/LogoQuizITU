@@ -191,7 +191,9 @@ class AddLogoFragment : Fragment() {
                         categoryName = null,
                         countryOfOriginName = null,
                         gameState = null,
-                        levelId = null
+                        levelId = null,
+                        imgAlteredRsc = 0, // not used for user defined logos
+                        imgOriginalRsc = 0, // not used for user defined logos
                     )
                     insertPhotoPost(photoPost)
                 }

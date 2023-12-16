@@ -10,8 +10,13 @@ import java.util.Date
 @Entity
 data class CompanyEntity (
     @PrimaryKey(autoGenerate = true) val id: Int,
+    // for images from users
     var imgAltered : String,
     var imgOriginal : String,
+    // for images from resources
+    var imgAlteredRsc: Int,
+    var imgOriginalRsc : Int,
+
     var solved : Boolean,
     var companyName: String,
     var companyDescription : String,

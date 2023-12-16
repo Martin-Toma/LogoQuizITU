@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = false) val name : String,
-    val imgCategory: String,
+    val imgCategory: Int,
 )
 {
     // Ignored fields

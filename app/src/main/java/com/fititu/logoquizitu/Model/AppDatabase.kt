@@ -20,6 +20,7 @@ import com.fititu.logoquizitu.Model.Entity.Conv
 import com.fititu.logoquizitu.Model.Entity.CountryEntity
 import com.fititu.logoquizitu.Model.Entity.GlobalProfileEntity
 import com.fititu.logoquizitu.Model.Entity.LevelEntity
+import com.fititu.logoquizitu.R
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
@@ -78,17 +79,19 @@ abstract class AppDatabase : RoomDatabase() {
             val dateParser = SimpleDateFormat("yyyy")
 
             val categories = listOf(
-                CategoryEntity("E-commerce", "./category_imgs/E-commerce.png"),
-                CategoryEntity("Fast-food", "./category_imgs/fast-food.jpg"),
-                CategoryEntity("Furniture", "./category_imgs/Furniture.jpg"),
-                CategoryEntity("Technology", "./category_imgs/Technology.jpg"),
+                CategoryEntity("E-commerce", R.drawable.e_commerce),
+                CategoryEntity("Fast-food", R.drawable.fast_food),
+                CategoryEntity("Furniture", R.drawable.furniture),
+                CategoryEntity("Technology", R.drawable.technology),
             )
 
             val companies = listOf<CompanyEntity>(
                 CompanyEntity(
                     0,
-                    "./logos/alter/Amazon.png",
-                    "./logos/orig/Amazon.png",
+                    "",
+                    "",
+                    R.drawable.amazon_logo_hidden,
+                    R.drawable.amazon_logo,
                     false,
                     "Amazon",
                     "American multinational technology company focusing on " +
@@ -103,8 +106,10 @@ abstract class AppDatabase : RoomDatabase() {
                 ),
                 CompanyEntity(
                     0,
-                    "./logos/alter/Burger King.png",
-                    "./logos/orig/Burger King.png",
+                    "",
+                    "",
+                    R.drawable.burger_king_logo_hidden,
+                    R.drawable.burger_king_logo,
                     false,
                     "Burger King",
                     "American multinational chain of hamburger fast food " +
@@ -118,8 +123,10 @@ abstract class AppDatabase : RoomDatabase() {
                 ),
                 CompanyEntity(
                     0,
-                    "./logos/alter/Fanta.png",
-                    "./logos/orig/Fanta.png",
+                    "",
+                    "",
+                    R.drawable.fanta_logo_hidden,
+                    R.drawable.fanta_logo,
                     false,
                     "Fanta",
                     "Fanta is an American-owned brand of fruit-flavored " +
@@ -134,8 +141,10 @@ abstract class AppDatabase : RoomDatabase() {
                 ),
                 CompanyEntity(
                     0,
-                    "./logos/alter/IKEA.png",
-                    "./logos/orig/IKEA.png",
+                    "",
+                    "",
+                    R.drawable.ikea_logo_hidden,
+                    R.drawable.ikea_logo,
                     false,
                     "IKEA",
                     "Swedish multinational conglomerate that designs and sells" +
@@ -150,8 +159,10 @@ abstract class AppDatabase : RoomDatabase() {
                 ),
                 CompanyEntity(
                     0,
-                    "./logos/alter/McDonalds.png",
-                    "./logos/orig/McDonalds.png",
+                    "",
+                    "",
+                    R.drawable.mcdonalds_logo_hidden,
+                    R.drawable.mcdonalds_logo,
                     false,
                     "McDonald's",
                     "American multinational fast food chain, founded " +
@@ -165,8 +176,10 @@ abstract class AppDatabase : RoomDatabase() {
                 ),
                 CompanyEntity(
                     0,
-                    "./logos/alter/Microsoft.png",
-                    "./logos/orig/Microsoft.png",
+                    "",
+                    "",
+                    R.drawable.microsoft_logo_hidden,
+                    R.drawable.microsoft_logo_hidden,
                     false,
                     "Microsoft",
                     "American multinational technology corporation " +
