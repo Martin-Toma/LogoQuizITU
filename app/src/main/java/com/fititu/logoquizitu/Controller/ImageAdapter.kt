@@ -66,6 +66,9 @@ class ImageAdapter(
             // Run the delete operation in a coroutine
             CoroutineScope(Dispatchers.IO).launch {
                 val companyDao = AppDatabase.getInstance(context).companyDao()
+
+                removeLogoImgFiles(companyDao)
+
                 companyDao.delete(itemToDelete)
 
                 withContext(Dispatchers.Main) {
@@ -84,4 +87,8 @@ class ImageAdapter(
         notifyDataSetChanged() // Notify the adapter that the data set has changed
     }
     override fun getItemCount() = photoList.size
+
+    private fun removeLogoImgFiles(companyDao : CompanyDao){
+
+    }
 }
