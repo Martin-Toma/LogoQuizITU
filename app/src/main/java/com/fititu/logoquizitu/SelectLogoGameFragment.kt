@@ -1,5 +1,6 @@
 package com.fititu.logoquizitu
 
+import android.graphics.Color
 import android.media.Image
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.gridlayout.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -111,7 +113,8 @@ class SelectLogoGameFragment : Fragment() {
 
             // Update the images in the grid
             for (i in 0 until grid.childCount) {
-                val imbtn: ImageButton = grid.getChildAt(i) as ImageButton
+                val rel: RelativeLayout = grid.getChildAt(i) as RelativeLayout
+                val imbtn: ImageButton = rel.getChildAt(0) as ImageButton
 
                 Glide.with(requireContext())
                     .load(randomLogos[i].imgOriginal)
@@ -120,12 +123,15 @@ class SelectLogoGameFragment : Fragment() {
                 // Set onClickListeners for the image buttons
                 if (i == toBeGuessedIdx) {
                     imbtn.setOnClickListener {
-                        nameText.text = "Correct"
+                        rel.setBackgroundColor(Color.GREEN)
                         change_fragment_with_delay()
                     }
                 } else {
                     imbtn.setOnClickListener {
-                        nameText.text = "Wrong"
+                        rel.setBackgroundColor(Color.RED)
+                        val relc: RelativeLayout = grid.getChildAt(toBeGuessedIdx) as RelativeLayout
+                        //val imbtnCorrect: ImageButton = relc.getChildAt(0) as ImageButton
+                        relc.setBackgroundColor(Color.GREEN)
                         change_fragment_with_delay()
                     }
                 }

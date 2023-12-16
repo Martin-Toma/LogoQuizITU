@@ -24,7 +24,7 @@
             android:id="@+id/captionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Insert logo name" />
+            android:hint="*Insert logo name" />
 
         <EditText
             android:id="@+id/descriptionEditText"

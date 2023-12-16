@@ -110,8 +110,9 @@ class AddLogoFragment : Fragment() {
         imageButton.setOnClickListener {
             val caption = view.findViewById<EditText>(R.id.captionEditText).text.toString()
             val description : String = descriptionEditText.text.toString()
-            viewModel.updateDB(caption, description, selectedImagePath, imageNotChanged, editOn, lId)
-
+            if(viewModel.updateDB(caption, description, selectedImagePath, imageNotChanged, editOn, lId, requireActivity())){
+                requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
+            }
         }
         // Clear the database on fragment creation
         /*viewLifecycleOwner.lifecycleScope.launch {

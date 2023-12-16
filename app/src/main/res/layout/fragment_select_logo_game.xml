@@ -26,50 +26,70 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <ImageButton
-            android:id="@+id/imageButton1"
-            android:layout_width="@dimen/imageButtonWidth"
-            android:layout_height="@dimen/imageButtonHeight"
-            android:src="@drawable/ic_launcher_background"
-            android:scaleType="fitXY"
-            android:layout_marginBottom="@dimen/inGridMargins"
-            android:layout_marginEnd="@dimen/inGridMargins"
-            android:layout_marginStart="@dimen/inGridMargins"
-            android:layout_marginTop="@dimen/inGridMargins"
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
             app:layout_column="0"
-            app:layout_row="0"/>
+            app:layout_row="0">
+            <ImageButton
+                android:id="@+id/imageButton1"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:src="@drawable/ic_launcher_background"
+                android:background="@color/white"
+                android:scaleType="fitXY"
 
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="1"
+            app:layout_row="0">
         <ImageButton
             android:id="@+id/imageButton2"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
             android:layout_marginStart="@dimen/inGridMargins"
             android:layout_marginTop="@dimen/inGridMargins"
-            app:layout_column="1"
-            app:layout_row="0" />
-
+             />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="2"
+            app:layout_row="0">
         <ImageButton
             android:id="@+id/imageButton3"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
             android:layout_marginStart="@dimen/inGridMargins"
             android:layout_marginTop="@dimen/inGridMargins"
-            app:layout_column="2"
-            app:layout_row="0" />
+             />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins">
         <ImageButton
             android:id="@+id/imageButton4"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
@@ -77,59 +97,87 @@
             android:layout_marginTop="@dimen/inGridMargins"
             app:layout_column="3"
             app:layout_row="0" />
-
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="0"
+            app:layout_row="1">
         <ImageButton
             android:id="@+id/imageButton5"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
             android:layout_marginStart="@dimen/inGridMargins"
             android:layout_marginTop="@dimen/inGridMargins"
-            app:layout_column="0"
-            app:layout_row="1"
+
             />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="1"
+            app:layout_row="1">
         <ImageButton
             android:id="@+id/imageButton6"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
             android:layout_marginStart="@dimen/inGridMargins"
             android:layout_marginTop="@dimen/inGridMargins"
-            app:layout_column="1"
-            app:layout_row="1"
+
             />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="2"
+            app:layout_row="1">
         <ImageButton
             android:id="@+id/imageButton7"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
             android:layout_marginStart="@dimen/inGridMargins"
             android:layout_marginTop="@dimen/inGridMargins"
-            app:layout_column="2"
-            app:layout_row="1"
+
             />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="3"
+            app:layout_row="1">
         <ImageButton
             android:id="@+id/imageButton8"
             android:layout_width="@dimen/imageButtonWidth"
             android:layout_height="@dimen/imageButtonHeight"
             android:src="@drawable/ic_launcher_background"
+            android:background="@color/white"
             android:scaleType="fitXY"
             android:layout_marginBottom="@dimen/inGridMargins"
             android:layout_marginEnd="@dimen/inGridMargins"
             android:layout_marginStart="@dimen/inGridMargins"
             android:layout_marginTop="@dimen/inGridMargins"
-            app:layout_column="3"
-            app:layout_row="1"
+
             />
+        </RelativeLayout>
     </androidx.gridlayout.widget.GridLayout>
 
     <!--GridView

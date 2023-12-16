@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.Model.FileManagement
 import com.fititu.logoquizitu.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,16 +68,21 @@ class ImageAdapter(
             CoroutineScope(Dispatchers.IO).launch {
                 val companyDao = AppDatabase.getInstance(context).companyDao()
 
-                removeLogoImgFiles(companyDao)
+                if(removeLogoImgFiles(itemToDelete)){
+                    companyDao.delete(itemToDelete)
 
-                companyDao.delete(itemToDelete)
-
-                withContext(Dispatchers.Main) {
-                    // Update the RecyclerView
-                    photoList = companyDao.getAll()
-                    notifyDataSetChanged()
-                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
+                    withContext(Dispatchers.Main) {
+                        // Update the RecyclerView
+                        photoList = companyDao.getAll()
+                        notifyDataSetChanged()
+                        //Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
+                    }
                 }
+                else{
+                    Log.e("ERR", "Error deleting")
+                    //Toast.makeText(context, "Item not deleted due to file deletion error", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
     }
@@ -88,7 +94,8 @@ class ImageAdapter(
     }
     override fun getItemCount() = photoList.size
 
-    private fun removeLogoImgFiles(companyDao : CompanyDao){
-
+    private fun removeLogoImgFiles(itemToDelete : CompanyEntity) : Boolean{
+        val fileMan = FileManagement()
+        return fileMan.delete_file(context.filesDir, itemToDelete.imgOriginal, context)
     }
 }
