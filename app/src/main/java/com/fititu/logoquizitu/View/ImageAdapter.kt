@@ -28,7 +28,12 @@ class ImageAdapter(
         fun onEditButtonClicked(position: Int, id: Int)
     }
 
+    interface OnDeleteButtonClickListener {
+        fun onDeleteButtonClicked(position: Int)
+    }
+
     private var editListener: OnEditButtonClickListener? = null
+    private var deleteListener: OnDeleteButtonClickListener? = null
 
     fun setOnEditButtonClickListener(listener: OnEditButtonClickListener) {
         this.editListener = listener
@@ -46,7 +51,9 @@ class ImageAdapter(
             .inflate(R.layout.item_image, parent, false)
         return PhotoViewHolder(itemView)
     }
-
+    fun setOnDeleteButtonClickListener(listener: OnDeleteButtonClickListener) {
+        this.deleteListener = listener
+    }
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val currentPhoto = photoList[position]
         val context = holder.itemView.context
@@ -64,29 +71,7 @@ class ImageAdapter(
             editListener?.onEditButtonClicked(position, currentPhoto.id)
         }
         holder.deleteButton.setOnClickListener {
-            val itemToDelete = photoList[position]
-
-            // Run the delete operation in a coroutine
-            CoroutineScope(Dispatchers.IO).launch {
-                val companyDao = AppDatabase.getInstance(context).companyDao()
-
-                //if(removeLogoImgFiles(itemToDelete)){
-                removeLogoImgFiles(itemToDelete)
-                companyDao.delete(itemToDelete)
-
-                    withContext(Dispatchers.Main) {
-                        // Update the RecyclerView
-                        photoList = companyDao.getAll()
-                        notifyDataSetChanged()
-                        //Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
-                    }
-                /*}
-                else{
-                    Log.e("ERR", "Error deleting")
-                    //Toast.makeText(context, "Item not deleted due to file deletion error", Toast.LENGTH_SHORT).show()
-                }*/
-
-            }
+            deleteListener?.onDeleteButtonClicked(position)
         }
     }
 
@@ -96,10 +81,4 @@ class ImageAdapter(
         notifyDataSetChanged() // Notify the adapter that the data set has changed
     }
     override fun getItemCount() = photoList.size
-
-    private fun removeLogoImgFiles(itemToDelete: CompanyEntity): Boolean {
-        val fileMan = FileManagement()
-        return (fileMan.delete_file(context.filesDir, itemToDelete.imgOriginal, context)
-                && fileMan.delete_file(context.filesDir, itemToDelete.imgAltered, context))
-    }
 }

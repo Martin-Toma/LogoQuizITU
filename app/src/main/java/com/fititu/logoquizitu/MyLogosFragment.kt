@@ -79,6 +79,12 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
         recyclerView.adapter = adapter
 
+        adapter.setOnDeleteButtonClickListener(object : ImageAdapter.OnDeleteButtonClickListener {
+            override fun onDeleteButtonClicked(position: Int) {
+                viewModel.onDelete(position)
+            }
+        })
+
         observeViewModel()
         return view
     }
