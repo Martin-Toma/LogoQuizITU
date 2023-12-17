@@ -2,6 +2,7 @@ package com.fititu.logoquizitu.myviewmodels
 
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import com.fititu.logoquizitu.FragmentConstants
@@ -18,7 +19,13 @@ class SelectModeViewModel(application: Application) : AndroidViewModel(applicati
         var fragment: Fragment? = null
         fragment = when (fragmentTo) {
             FragmentConstants.TO_RANDOM ->{
-                GameRandom()
+                val gameRandomFragment = GameRandom()
+                val bundle = Bundle().apply {
+                    putString("GameMode", "GameRandom")
+                    putString("GameModeParameter", "")
+                }
+                gameRandomFragment.arguments = bundle
+                gameRandomFragment
             }
             FragmentConstants.TO_LEVEL ->{
                 SelectLevelFragment()
