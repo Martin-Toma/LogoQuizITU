@@ -122,10 +122,15 @@ class SelectLogoGameFragment : Fragment() {
             for (i in 0 until grid.childCount) {
                 val rel: RelativeLayout = grid.getChildAt(i) as RelativeLayout
                 val imbtn: ImageButton = rel.getChildAt(0) as ImageButton
+                if(randomLogos[i].userCreated){
+                    Glide.with(requireContext())
+                        .load(randomLogos[i].imgAltered)
+                        .into(imbtn)
+                }
+                else{
+                    imbtn.setImageResource(randomLogos[i].imgAlteredRsc)
+                }
 
-                Glide.with(requireContext())
-                    .load(randomLogos[i].imgAltered)
-                    .into(imbtn)
 
                 // Set onClickListeners for the image buttons
                 if (i == toBeGuessedIdx) {
