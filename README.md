@@ -13,3 +13,11 @@ Uses 3 key components:
 * Data access object (DAO) --> Service with queries.
 
 
+## Installation
+
+* download apk file to your Android device to Downloads folder
+* click on the downloaded .apk file
+* confirm installing from unknown source
+* click on Install anyway
+* confirm
+* app should be now installed
