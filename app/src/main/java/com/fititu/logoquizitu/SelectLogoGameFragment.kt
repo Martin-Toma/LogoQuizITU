@@ -124,7 +124,7 @@ class SelectLogoGameFragment : Fragment() {
                 val imbtn: ImageButton = rel.getChildAt(0) as ImageButton
 
                 Glide.with(requireContext())
-                    .load(randomLogos[i].imgOriginal)
+                    .load(randomLogos[i].imgAltered)
                     .into(imbtn)
 
                 // Set onClickListeners for the image buttons
