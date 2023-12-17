@@ -41,15 +41,4 @@ class MyLogosViewModel(application: Application) : AndroidViewModel(application)
             _photoList.value = list
         }
     }
-
-
-    /*
-    fun loadPhotoPosts(onPhotoListLoaded: (List<CompanyEntity>) -> Unit) {
-        viewModelScope.launch {
-            val photoList = withContext(Dispatchers.IO) {
-                logoEntityDao.getAllPhotoPostsC()
-            }
-            adapter.setPhotoList(photoList)
-        }
-    }*/
 }

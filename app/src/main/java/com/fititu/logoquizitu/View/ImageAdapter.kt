@@ -70,8 +70,9 @@ class ImageAdapter(
             CoroutineScope(Dispatchers.IO).launch {
                 val companyDao = AppDatabase.getInstance(context).companyDao()
 
-                if(removeLogoImgFiles(itemToDelete)){
-                    companyDao.delete(itemToDelete)
+                //if(removeLogoImgFiles(itemToDelete)){
+                removeLogoImgFiles(itemToDelete)
+                companyDao.delete(itemToDelete)
 
                     withContext(Dispatchers.Main) {
                         // Update the RecyclerView
@@ -79,11 +80,11 @@ class ImageAdapter(
                         notifyDataSetChanged()
                         //Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
                     }
-                }
+                /*}
                 else{
                     Log.e("ERR", "Error deleting")
                     //Toast.makeText(context, "Item not deleted due to file deletion error", Toast.LENGTH_SHORT).show()
-                }
+                }*/
 
             }
         }

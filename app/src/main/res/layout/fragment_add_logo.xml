@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,26 +37,52 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="300dp"
-            android:layout_height="300dp" />
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center" />
 
         <EditText
             android:id="@+id/captionEditText"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:background="@color/background_darker"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
             android:hint="*Insert logo name" />
 
         <EditText
             android:id="@+id/descriptionEditText"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:background="@color/background_darker"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
             android:hint="Insert logo description"
             android:inputType="textMultiLine"
             android:lines="5"
             android:maxLines="7"
             android:minLines="5"
             android:scrollbars="vertical" />
-
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp">
+            <EditText
+                android:id="@+id/countryEditText"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:background="@color/background_darker"
+                android:hint="Country" />
+            <EditText
+                android:id="@+id/categoryEditText"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:background="@color/background_darker"
+                android:hint="Category" />
+        </LinearLayout>
         <Button
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"

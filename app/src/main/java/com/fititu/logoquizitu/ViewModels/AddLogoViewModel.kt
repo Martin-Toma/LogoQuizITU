@@ -119,16 +119,21 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
             .into(imageView)
         val nameEditText = view.findViewById<EditText>(R.id.captionEditText)
         val descriptionEditText = view.findViewById<EditText>(R.id.descriptionEditText)
+        val countryEditText = view.findViewById<EditText>(R.id.countryEditText)
+        val categoryEditText = view.findViewById<EditText>(R.id.categoryEditText)
 
         nameEditText.setText(editLogo.companyName)
         descriptionEditText.setText(editLogo.companyDescription)
-
+        countryEditText.setText(editLogo.countryOfOriginName)
+        categoryEditText.setText(editLogo.categoryName)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun updateDB(
         caption : String,
         description : String,
+        country : String,
+        category : String,
         selectedImagePath : String,
         imageNotChanged : Boolean,
         editOn : Boolean,
@@ -137,6 +142,16 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
     {
         Log.d("Test out", "caption = ${caption} desc ${description}")
         Log.d("Test out", "All: selectedImagePath = $selectedImagePath, caption = $caption, imageNotChanged = $imageNotChanged, editOn = $editOn, lId = $lId")
+
+        // if category or country is an empty string store null value
+        var countryS : String? = country
+        var categoryS : String? = category
+        if(country == ""){
+            countryS = null
+        }
+        if(category == ""){
+            categoryS = null
+        }
 
         if ((selectedImagePath.isNotBlank() && caption.isNotBlank()) || !imageNotChanged || editOn) {
 
@@ -182,16 +197,18 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
                     val item = logoEntityDao.getCompanyById(cId!!)
                     if (!imageNotChanged) {
-                        if (!fileManagement.delete_file(dirPath, item.imgOriginal, appContext)) {
+                       /* if (!) {
                             Toast.makeText(appContext, "Error deleting image", Toast.LENGTH_SHORT)
                                 .show()
                             return@launch
-                        }
-                        if (!fileManagement.delete_file(dirPath, item.imgAltered, appContext)) {
+                        }*/
+                        fileManagement.delete_file(dirPath, item.imgOriginal, appContext)
+                        fileManagement.delete_file(dirPath, item.imgAltered, appContext)
+                        /*if (!) {
                             Toast.makeText(appContext, "Error deleting hidden image", Toast.LENGTH_SHORT)
                                 .show()
                             return@launch
-                        }
+                        }*/
                         //Toast.makeText(appContext, "Deleted image file", Toast.LENGTH_SHORT).show()
                         val got = imageChange(selectedImagePath, caption, editOn)
                         outputPath = got.first
@@ -200,15 +217,15 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                     }
                     if(!imageNotChanged){ // change image path if new
                         Log.d("IMG", "Should change from ${item.imgOriginal} to ${outputPath}")
-                        item.imgOriginal = outputPath
-                        item.imgAltered = out2
+                        item.imgOriginal = out2
+                        item.imgAltered = outputPath
                     }
                     item.companyName = caption
                     item.companyDescription = description
                     item.solved = false
                     item.foundationDate = Date()
-                    item.categoryName = null
-                    item.countryOfOriginName = null
+                    item.countryOfOriginName = countryS
+                    item.categoryName = categoryS
                     item.gameState = null
                     item.levelId = null
 
@@ -219,15 +236,15 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
             else{ // create new DB item
                 val photoPost = CompanyEntity(
                     id = 0,
-                    imgOriginal = outputPath,//selectedImagePath,
+                    imgOriginal = out2,//selectedImagePath,
                     companyName = caption,
                     companyDescription = description, //imageBitmap = imgBitmap
                     solved = false,
-                    imgAltered = out2,
+                    imgAltered = outputPath,
                     foundationDate = Date(),
                     userCreated = true,
-                    categoryName = null,
-                    countryOfOriginName = null,
+                    countryOfOriginName = countryS,
+                    categoryName = categoryS,
                     gameState = null,
                     levelId = null
                 )

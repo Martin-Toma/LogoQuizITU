@@ -101,6 +101,8 @@ class AddLogoFragment : Fragment() {
         }
 
         val descriptionEditText : EditText = view.findViewById(R.id.descriptionEditText)
+        val countryEditText : EditText = view.findViewById(R.id.countryEditText)
+        val categoryEditText : EditText = view.findViewById(R.id.categoryEditText)
 
         val selectImageButton: Button = view.findViewById(R.id.selectImageButton)
         selectImageButton.setOnClickListener {
@@ -112,7 +114,9 @@ class AddLogoFragment : Fragment() {
         imageButton.setOnClickListener {
             val caption = view.findViewById<EditText>(R.id.captionEditText).text.toString()
             val description : String = descriptionEditText.text.toString()
-            if(viewModel.updateDB(caption, description, selectedImagePath, imageNotChanged, editOn, lId, requireActivity())){
+            val country : String = countryEditText.text.toString()
+            val category: String = categoryEditText.text.toString()
+            if(viewModel.updateDB(caption, description, country, category, selectedImagePath, imageNotChanged, editOn, lId, requireActivity())){
                 requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
             }
         }
