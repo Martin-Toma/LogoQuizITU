@@ -5,4 +5,9 @@
     <string name="play">Play</string>
     <string name="mylogos">MyLogos</string>
     <string name="plus">+</string>
+    <string name="btn_select_mode_text">Select Mode</string>
+    <string name="btn_settings_text">Settings</string>
+    <string name="btn_gallery_text">Gallery</string>
+    <string name="btn_statistics_text">Statistics</string>
+    <string name="btn_mylogos_text">My Logos</string>
 </resources>

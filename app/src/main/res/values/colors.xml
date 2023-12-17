@@ -2,6 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="LogoQuizITU_True">#FF46B17A</color>
+    <color name="LogoQuizITU_False">#FFCE2D4F</color>
+    <color name="LogoQuizITU_BackgroundText">#FFE9F3E8</color>
+    <color name="LogoQuizITU_Primary">#FF7BB4E2</color>
+    <color name="LogoQuizITU_Text">#FF000000</color>
+    <color name="LogoQuizITU_BackgroundDarker">#FFC2DDBF</color>
+    <color name="LogoQuizITU_BackgroundLighter">#FFF9FBF8</color>
+    <color name="LogoQuizITU_TextBox">#FFA6C4A8</color>
     <color name="background_darker">#C2DDBF</color>
     <color name="background_lighter">#E2F0DB</color>
     <color name="primeGreen">#7FE774</color>

@@ -19,13 +19,15 @@ interface CompanyDao {
 
     @Delete
     suspend fun delete(companyEntity: CompanyEntity)
-
-    @Query("SELECT * FROM CompanyEntity")
-    suspend fun getAll() : List<CompanyEntity>
-
     @Query("SELECT * FROM CompanyEntity")
     fun getAllCompanies() : List<CompanyEntity>
 
+    // ************************************ filter queries for gallery ************************************
+    // no param
+    @Query("SELECT * FROM CompanyEntity")
+    suspend fun getAll() : List<CompanyEntity>
+
+    // one param
     @Query("SELECT * FROM CompanyEntity WHERE levelId = :level")
     suspend fun getCompaniesOfLevel(level : Int) : List<CompanyEntity>
 
@@ -40,8 +42,25 @@ interface CompanyDao {
     @Query("SELECT * FROM CompanyEntity WHERE countryOfOriginName = :countryName")
     suspend fun getCompaniesOfCountry(countryName : String) : List<CompanyEntity>
 
-    @Query("SELECT * FROM CompanyEntity/* WHERE solved=0 */ORDER BY RANDOM() LIMIT 1") //todo uncomment solved=0, this excludes solved companies
-    suspend fun getRandomCompany() : CompanyEntity?
+    // two params
+    @Query("SELECT * FROM CompanyEntity WHERE levelId = :level AND countryOfOriginName = :countryName")
+    suspend fun getCompaniesOfLevelAndCountry(level : Int, countryName: String) : List<CompanyEntity>
+
+    @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName AND countryOfOriginName = :countryName")
+    suspend fun getCompaniesOfCategoryAndCountry(countryName: String, categoryName: String) : List<CompanyEntity>
+
+    @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName AND levelId = :level")
+    suspend fun getCompaniesOfLevelAndCategory(level: Int, categoryName: String) : List<CompanyEntity>
+
+    // all params
+    @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName AND levelId = :level AND countryOfOriginName = :countryName")
+    suspend fun getCompaniesAllFilters(level: Int, countryName: String, categoryName: String) : List<CompanyEntity>
+    // ************************************ filter queries for gallery end ************************************
+
+    @Query("SELECT * FROM CompanyEntity/* WHERE solved=0*/ ORDER BY RANDOM() LIMIT 1") //todo uncomment solved=0, this excludes solved companies
+    suspend fun getRandomCompany() : CompanyEntity
+    //select entity with id as parameter
+
 
     @Query("SELECT * FROM CompanyEntity ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandomCompanies(limit:Int) : List<CompanyEntity>

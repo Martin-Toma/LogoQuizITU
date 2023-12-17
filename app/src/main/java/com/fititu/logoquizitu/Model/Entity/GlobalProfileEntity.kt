@@ -9,6 +9,8 @@ data class GlobalProfileEntity(
     val hintsCount: Int,
     val hintsUsedCount: Int,
     val gameTime: Long, // Duration in seconds
+
+    // ?
     val currentCompanyId : Int,
     val logoLetters : String,
     val logoColors : String,

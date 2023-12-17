@@ -8,6 +8,7 @@ import com.fititu.logoquizitu.Model.MainMenuModel
 import com.fititu.logoquizitu.R
 import com.fititu.logoquizitu.View.IMainMenuView
 
+// controllers are not in the MVVM architecure
 class MainMenuController(
     private val menuView: IMainMenuView
 ) : IMainMenuController {
@@ -18,8 +19,8 @@ class MainMenuController(
         menuView.changeView(fragment = newFragment!!)
     }
     override fun editDbFragment(where: String, entityId: Int){
-        val mainMenuModel = MainMenuModel()
-        val newFragment = mainMenuModel.nextFragmentWithParam(where, entityId)
-        menuView.changeViewWithParam(fragment = newFragment!!);
+//        val mainMenuModel = MainMenuModel()
+//        val newFragment = mainMenuModel.nextFragmentWithParam(where, entityId)
+//        menuView.changeViewWithParam(fragment = newFragment!!);
     }
 }
