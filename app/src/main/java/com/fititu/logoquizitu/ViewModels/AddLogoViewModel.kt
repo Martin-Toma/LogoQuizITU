@@ -110,22 +110,8 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
             return null
         }
     }
-    suspend fun initView(logoId: Int, view: View){
-        val editLogo = logoEntityDao.getCompanyById(logoId)
-
-        val imageView: ImageView = view.findViewById(R.id.imageView)
-        Glide.with(appContext)
-            .load(editLogo.imgAltered)
-            .into(imageView)
-        val nameEditText = view.findViewById<EditText>(R.id.captionEditText)
-        val descriptionEditText = view.findViewById<EditText>(R.id.descriptionEditText)
-        val countryEditText = view.findViewById<EditText>(R.id.countryEditText)
-        val categoryEditText = view.findViewById<EditText>(R.id.categoryEditText)
-
-        nameEditText.setText(editLogo.companyName)
-        descriptionEditText.setText(editLogo.companyDescription)
-        countryEditText.setText(editLogo.countryOfOriginName)
-        categoryEditText.setText(editLogo.categoryName)
+    suspend fun initViewData(logoId: Int) : CompanyEntity{
+        return logoEntityDao.getCompanyById(logoId)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)

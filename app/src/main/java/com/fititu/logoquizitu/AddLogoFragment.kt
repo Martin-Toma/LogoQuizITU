@@ -96,7 +96,7 @@ class AddLogoFragment : Fragment() {
             val logoId = requireArguments().getInt("ARG_PARAM1")
             lId = logoId
             lifecycleScope.launch{
-                viewModel.initView(logoId, view)
+                initView(viewModel.initViewData(logoId), viewref)
             }
         }
 
@@ -153,5 +153,21 @@ class AddLogoFragment : Fragment() {
 
             imageNotChanged = false // signalize there is new image
         }
+    }
+
+    suspend fun initView(editLogo : CompanyEntity, view: View){
+        val imageView: ImageView = view.findViewById(R.id.imageView)
+        Glide.with(requireContext())
+            .load(editLogo.imgAltered)
+            .into(imageView)
+        val nameEditText = view.findViewById<EditText>(R.id.captionEditText)
+        val descriptionEditText = view.findViewById<EditText>(R.id.descriptionEditText)
+        val countryEditText = view.findViewById<EditText>(R.id.countryEditText)
+        val categoryEditText = view.findViewById<EditText>(R.id.categoryEditText)
+
+        nameEditText.setText(editLogo.companyName)
+        descriptionEditText.setText(editLogo.companyDescription)
+        countryEditText.setText(editLogo.countryOfOriginName)
+        categoryEditText.setText(editLogo.categoryName)
     }
 }
