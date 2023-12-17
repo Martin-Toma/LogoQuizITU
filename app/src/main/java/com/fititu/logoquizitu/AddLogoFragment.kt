@@ -73,6 +73,8 @@ class AddLogoFragment : Fragment() {
 
     private var imageNotChanged = true
 
+    private lateinit var backButton : Button
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,6 +123,11 @@ class AddLogoFragment : Fragment() {
             }
         }*/
         // Inflate the layout for this fragment
+
+        backButton = view.findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed() // go back to menu fragment
+        }
         return view
     }
 

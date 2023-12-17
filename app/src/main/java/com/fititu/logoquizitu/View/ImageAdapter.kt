@@ -9,11 +9,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
-import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.Model.FileManagement
 import com.fititu.logoquizitu.R
@@ -37,6 +35,7 @@ class ImageAdapter(
     }
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.itemImageView)
+        val imageView2: ImageView = itemView.findViewById(R.id.image2)
         val captionTextView: TextView = itemView.findViewById(R.id.itemCaptionTextView)
         val editButton : Button = itemView.findViewById(R.id.editBtn)
         val deleteButton : Button = itemView.findViewById(R.id.deleteBtn)
@@ -56,6 +55,9 @@ class ImageAdapter(
         Glide.with(context)
             .load(currentPhoto.imgOriginal)//Uri.parse(currentPhoto.imagePath))
             .into(holder.imageView)
+        Glide.with(context)
+            .load(currentPhoto.imgAltered)//Uri.parse(currentPhoto.imagePath))
+            .into(holder.imageView2)
 
         holder.captionTextView.text = currentPhoto.companyName
         holder.editButton.setOnClickListener {
@@ -94,8 +96,9 @@ class ImageAdapter(
     }
     override fun getItemCount() = photoList.size
 
-    private fun removeLogoImgFiles(itemToDelete : CompanyEntity) : Boolean{
+    private fun removeLogoImgFiles(itemToDelete: CompanyEntity): Boolean {
         val fileMan = FileManagement()
-        return fileMan.delete_file(context.filesDir, itemToDelete.imgOriginal, context)
+        return (fileMan.delete_file(context.filesDir, itemToDelete.imgOriginal, context)
+                && fileMan.delete_file(context.filesDir, itemToDelete.imgAltered, context))
     }
 }

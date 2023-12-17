@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -27,6 +28,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import androidx.activity.OnBackPressedDispatcher
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,6 +51,8 @@ class SelectLogoGameFragment : Fragment() {
 
     private lateinit var nameText : TextView
     private lateinit var grid : GridLayout
+
+    private lateinit var backButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -95,7 +99,10 @@ class SelectLogoGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application))[SelectLogoGameViewModel::class.java]
         //init_game(view)
-
+        backButton = view.findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed() // go back to menu fragment
+        }
         //viewModel.initGame()
         observeViewModelSelectGame()
     }

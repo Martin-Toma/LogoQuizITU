@@ -3,6 +3,11 @@ package com.fititu.logoquizitu.ViewModels
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.FileUtils
@@ -135,8 +140,11 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
             Log.d("Test out", "Image not changed value ${imageNotChanged}")
             var outputPath : String = ""
+            var out2 : String = ""
             if(!editOn) {
-                outputPath = imageChange(selectedImagePath, caption, editOn)
+                val got = imageChange(selectedImagePath, caption, editOn)
+                outputPath = got.first
+                out2 = got.second
                 /*if(editOn){
                     viewModelScope.launch {
                         val item = logoEntityDao.getCompanyById(lId!!)
@@ -177,14 +185,21 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                                 .show()
                             return@launch
                         }
+                        if (!fileManagement.delete_file(dirPath, item.imgAltered, appContext)) {
+                            Toast.makeText(appContext, "Error deleting hidden image", Toast.LENGTH_SHORT)
+                                .show()
+                            return@launch
+                        }
                         //Toast.makeText(appContext, "Deleted image file", Toast.LENGTH_SHORT).show()
-                        outputPath = imageChange(selectedImagePath, caption, editOn)
+                        val got = imageChange(selectedImagePath, caption, editOn)
+                        outputPath = got.first
+                        out2 = got.second
                         //Toast.makeText(appContext, "Created image file", Toast.LENGTH_SHORT).show()
                     }
                     if(!imageNotChanged){ // change image path if new
                         Log.d("IMG", "Should change from ${item.imgOriginal} to ${outputPath}")
                         item.imgOriginal = outputPath
-                        item.imgAltered = outputPath
+                        item.imgAltered = out2
                     }
                     item.companyName = caption
                     item.companyDescription = description
@@ -206,7 +221,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                     companyName = caption,
                     companyDescription = description, //imageBitmap = imgBitmap
                     solved = false,
-                    imgAltered = outputPath,
+                    imgAltered = out2,
                     foundationDate = Date(),
                     userCreated = true,
                     categoryName = null,
@@ -223,7 +238,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         return false
     }
 
-    fun imageChange(selectedImagePath : String, caption : String, editOn : Boolean) : String{
+    fun imageChange(selectedImagePath : String, caption : String, editOn : Boolean) : Pair<String, String>{
 
 
         var outputPath : String = ""
@@ -232,6 +247,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
         val image_file_name = selectedImagePath
         val new_image_file_name = generateUniqueFileName(caption + "." + get_file_type(image_file_name))
+        val new_image_file_name_hidden = generateUniqueFileName(caption + "H" + "." + get_file_type(image_file_name))
         Log.d("File name", new_image_file_name)
 
         val dir_path = appContext.filesDir
@@ -244,12 +260,18 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
         val file = File(dir_path, new_image_file_name)
         file.createNewFile()
+
+        // open hidden image file
+        val fileH = File(dir_path, new_image_file_name_hidden)
+        fileH.createNewFile()
             // Open an output stream to the destination file
             // Open an output stream to the destination file
         val outputStream: OutputStream = FileOutputStream(file)
 
             // Copy the data from the input stream to the output stream
         val uri = Uri.parse(selectedImagePath)
+
+        generateHiddenImg(uri, fileH) // to store the hidden image
 
         val inputStream: InputStream? = appContext.contentResolver.openInputStream(uri)
 
@@ -274,8 +296,9 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         outputStream.close()
         Log.d("File name", outputPath)
 
+        val out2 = fileH.absolutePath
 
-        return outputPath
+        return Pair(outputPath, out2)
     }
 
     fun generateUniqueFileName(originalFileName: String): String {
@@ -284,6 +307,41 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         val uuid = UUID.randomUUID().toString()
 
         return "$fileName-$uuid.$extension"
+    }
+
+    fun generateHiddenImg(uri : Uri, fileHidden : File){
+        val bm = getBitmapFromInputStream(appContext, uri)
+        if(bm != null){
+            val dbm = drawLineOnBitmap(bm)
+            val outputStream: OutputStream = FileOutputStream(fileHidden)
+            dbm.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+        }
+    }
+    fun getBitmapFromInputStream(context: Context, uri: Uri): Bitmap? {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            return BitmapFactory.decodeStream(inputStream)
+        }
+        return null
+    }
+
+    fun drawLineOnBitmap(bitmap: Bitmap): Bitmap {
+        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(mutableBitmap)
+
+        val paint = Paint().apply {
+            color = Color.RED
+            strokeWidth = 10f
+        }
+
+        val startX = 0f
+        val startY = mutableBitmap.height / 2f
+        val stopX = mutableBitmap.width.toFloat()
+        val stopY = startY
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        return mutableBitmap
     }
 
 }
