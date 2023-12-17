@@ -31,7 +31,7 @@ class MainMenuViewModel(application: Application) : AndroidViewModel(application
                 SettingsFragment()
             }
             FragmentConstants.TO_GALLERY -> {
-                GalleryFragment(null, null, null, SortBy.LEVEL)
+                GalleryFragment(null, null, null, SortBy.LEVEL, false)
             }
             FragmentConstants.TO_STATISTICS -> {
                 StatisticsFragment()

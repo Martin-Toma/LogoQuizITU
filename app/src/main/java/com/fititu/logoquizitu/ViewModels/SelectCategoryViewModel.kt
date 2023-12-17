@@ -34,7 +34,7 @@ class SelectCategoryViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun navigateToCategory(view: ICategoryView, categoryName: String) {
-        val fragment = GalleryFragment(null, categoryName, null, SortBy.LEVEL)
+        val fragment = GalleryFragment(null, categoryName, null, SortBy.LEVEL, true)
         view.navigateToCategory(fragment = fragment)
     }
 }

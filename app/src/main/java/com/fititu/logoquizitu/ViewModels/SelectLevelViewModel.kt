@@ -31,7 +31,7 @@ class SelectLevelViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun navigateToLevel(view: ILevelView, level: Int) {
-        val fragment = GalleryFragment(null, null, level, SortBy.LEVEL)
+        val fragment = GalleryFragment(null, null, level, SortBy.LEVEL, true)
         view.navigateToLevel(fragment = fragment)
     }
 }
