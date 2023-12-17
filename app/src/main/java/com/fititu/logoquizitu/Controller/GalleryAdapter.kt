@@ -7,10 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.GalleryFragment
 import com.fititu.logoquizitu.R
 import com.fititu.logoquizitu.ViewModels.GalleryViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class GalleryAdapter(private val context: Context, private val viewModel : GalleryViewModel)
     :RecyclerView.Adapter<GalleryAdapter.ViewHolder>()
@@ -36,7 +44,16 @@ class GalleryAdapter(private val context: Context, private val viewModel : Galle
             val currentCompany = viewModel.companies[position]
 
             if (currentCompany.userCreated){
-                // TODO set the img using the method for displaying user defined images
+                view.lifecycleScope.launch {
+                    var pathUI: String?
+                    withContext(Dispatchers.Main) {
+                        val path = currentCompany.imgOriginal
+                        pathUI = path
+                    }
+                    Glide.with(context)
+                        .load(pathUI)
+                        .into(imgButton)
+                }
             }
             else{
                 if (currentCompany.solved){
