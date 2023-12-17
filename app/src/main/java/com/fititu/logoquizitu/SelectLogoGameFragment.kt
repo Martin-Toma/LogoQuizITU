@@ -135,11 +135,13 @@ class SelectLogoGameFragment : Fragment() {
                 // Set onClickListeners for the image buttons
                 if (i == toBeGuessedIdx) {
                     imbtn.setOnClickListener {
+                        disableAllButtons(grid)
                         rel.setBackgroundColor(Color.GREEN)
                         change_fragment_with_delay()
                     }
                 } else {
                     imbtn.setOnClickListener {
+                        disableAllButtons(grid)
                         rel.setBackgroundColor(Color.RED)
                         val relc: RelativeLayout = grid.getChildAt(toBeGuessedIdx) as RelativeLayout
                         //val imbtnCorrect: ImageButton = relc.getChildAt(0) as ImageButton
@@ -153,7 +155,14 @@ class SelectLogoGameFragment : Fragment() {
         // Initialize the game when the ViewModel is created
         viewModel.initGame()
     }
-
+    // disable image buttons
+    fun disableAllButtons(grid: GridLayout){
+        for(i in 0 until grid.childCount) {
+            val rel: RelativeLayout = grid.getChildAt(i) as RelativeLayout
+            val ibtn: ImageButton = rel.getChildAt(0) as ImageButton
+            ibtn.isEnabled = false
+        }
+    }
     /*fun init_game(view : View){
         viewModel.randomLogos
         // get view components
