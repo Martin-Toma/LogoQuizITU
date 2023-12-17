@@ -38,8 +38,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.lang.Math.min
 import java.util.Date
 import java.util.UUID
+import kotlin.math.round
 
 class AddLogoViewModel(application: Application) : AndroidViewModel(application) {
     // TODO: Implement the ViewModel
@@ -328,16 +330,70 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
     fun drawLineOnBitmap(bitmap: Bitmap): Bitmap {
         val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(mutableBitmap)
-
-        val paint = Paint().apply {
+        // red stripe horizontal center
+        var paint = Paint().apply {
             color = Color.RED
-            strokeWidth = 10f
+            strokeWidth = round((mutableBitmap.height.coerceAtMost(mutableBitmap.width) /10).toFloat())
         }
 
-        val startX = 0f
-        val startY = mutableBitmap.height / 2f
-        val stopX = mutableBitmap.width.toFloat()
-        val stopY = startY
+        var startX = 0f
+        var startY = mutableBitmap.height / 2f
+        var stopX = mutableBitmap.width.toFloat()
+        var stopY = startY
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        // green stripe cross left bottom
+        paint.color = Color.GREEN
+
+        startX = 0f
+        startY = mutableBitmap.height.toFloat()
+        stopX = mutableBitmap.width.toFloat()
+        stopY = 0f
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        // blue stripe cross left top
+        paint.color = Color.BLUE
+
+        startX = 0f
+        startY = 0f
+        stopX = mutableBitmap.width.toFloat()
+        stopY = mutableBitmap.height.toFloat()
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        // 2 black horizontal stripes
+        paint.color = Color.BLACK
+
+        startX = 0f
+        startY = mutableBitmap.height * 0.25f
+        stopX = mutableBitmap.width.toFloat()
+        stopY = startY
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        startX = 0f
+        startY = mutableBitmap.height * 0.75f
+        stopX = mutableBitmap.width.toFloat()
+        stopY = startY
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        // 2 whit vertical stripes
+        paint.color = Color.WHITE
+
+        startX = mutableBitmap.width * 0.25f
+        startY = mutableBitmap.height.toFloat()
+        stopX = startX
+        stopY = 0f
+
+        canvas.drawLine(startX, startY, stopX, stopY, paint)
+
+        startX = mutableBitmap.width * 0.75f
+        startY = mutableBitmap.height.toFloat()
+        stopX = startX
+        stopY = 0f
 
         canvas.drawLine(startX, startY, stopX, stopY, paint)
 
