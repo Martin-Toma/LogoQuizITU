@@ -47,6 +47,8 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
     private lateinit var viewModel : MyLogosViewModel
 
+    private lateinit var backButton : Button
+
     //private lateinit var imageView2 : ImageView
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -86,6 +88,11 @@ class MyLogosFragment : Fragment(), IMainMenuView {
                 viewModel.onDelete(position)
             }
         })
+
+        backButton = view.findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed() // go back to menu fragment
+        }
 
         observeViewModel()
         return view
