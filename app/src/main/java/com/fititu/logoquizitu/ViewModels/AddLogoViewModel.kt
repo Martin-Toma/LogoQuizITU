@@ -115,7 +115,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
         val imageView: ImageView = view.findViewById(R.id.imageView)
         Glide.with(appContext)
-            .load(editLogo.imgOriginal)
+            .load(editLogo.imgAltered)
             .into(imageView)
         val nameEditText = view.findViewById<EditText>(R.id.captionEditText)
         val descriptionEditText = view.findViewById<EditText>(R.id.descriptionEditText)
