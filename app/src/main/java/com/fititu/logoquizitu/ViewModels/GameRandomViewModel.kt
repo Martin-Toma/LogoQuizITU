@@ -58,6 +58,7 @@ class GameRandomViewModel(application: Application) : AndroidViewModel(applicati
                     "GameRandom" -> companyDao.getRandomCompany()
                     "Categories" -> companyDao.getRandomCompanyOfCategory(gameModeParameter)
                     "Levels" -> companyDao.getRandomCompanyOfLevel(gameModeParameter.toInt())
+                    "UserCreated" -> companyDao.getRandomCompanyCreatedByUser()
                     else -> companyDao.getRandomCompany()
                 }
             }

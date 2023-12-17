@@ -10,8 +10,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.ViewModels.CompanyInfoViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class CompanyInfo : Fragment() {
@@ -47,11 +51,19 @@ class CompanyInfo : Fragment() {
     }
     private fun loadImage(){
         val imageView = view?.findViewById<ImageView>(R.id.logoImageView)
-        val lmao = Uri.parse(viewModel.company.imgAltered)
-        val xd = File(lmao.path!!)
-        Glide.with(this)
-            .load(xd)
-            .into(imageView!!)
+        if (viewModel.company.userCreated) {
+            lifecycleScope.launch {
+                var pathUI: String?
+                withContext(Dispatchers.Main) {
+                    val path = viewModel.company.imgOriginal
+                    pathUI = path
+                }
+                Glide.with(requireContext())
+                    .load(pathUI)
+                    .into(imageView!!)
+            }
+        } else
+            imageView!!.setImageResource(viewModel.company.imgAlteredRsc)
     }
 
     private fun updateModeButton(view: View) {

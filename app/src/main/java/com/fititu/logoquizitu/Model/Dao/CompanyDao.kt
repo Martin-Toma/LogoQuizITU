@@ -52,6 +52,8 @@ interface CompanyDao {
     @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName AND levelId = :level")
     suspend fun getCompaniesOfLevelAndCategory(level: Int, categoryName: String) : List<CompanyEntity>
 
+    @Query("SELECT * FROM CompanyEntity WHERE userCreated = 1 ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomCompanyCreatedByUser() : CompanyEntity?
     // all params
     @Query("SELECT * FROM CompanyEntity WHERE categoryName = :categoryName AND levelId = :level AND countryOfOriginName = :countryName")
     suspend fun getCompaniesAllFilters(level: Int, countryName: String, categoryName: String) : List<CompanyEntity>

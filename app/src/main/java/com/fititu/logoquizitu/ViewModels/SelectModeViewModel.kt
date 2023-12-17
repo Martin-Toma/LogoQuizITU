@@ -42,7 +42,14 @@ class SelectModeViewModel(application: Application) : AndroidViewModel(applicati
                 SelectCategoryFragment()
             }
             FragmentConstants.TO_PLAY_MY_LOGOS ->{
-                TODO()
+                val gameRandomFragment = GameRandom()
+                val bundle = Bundle().apply {
+                    putString("GameMode", "UserCreated")
+                    putString("GameModeParameter", "")
+                    putInt("CompanyId", -1)
+                }
+                gameRandomFragment.arguments = bundle
+                gameRandomFragment
             }
             else -> {
                 null
