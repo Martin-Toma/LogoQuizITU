@@ -33,9 +33,21 @@
         android:text="@string/btn_statistics_text" />
 
     <Button
+
         android:id="@+id/btn_mylogos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_mylogos_text" />
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SelectLogo"
+        android:text="Select Logo mode" />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/RandomName"
+            android:text="Random Name" />
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>

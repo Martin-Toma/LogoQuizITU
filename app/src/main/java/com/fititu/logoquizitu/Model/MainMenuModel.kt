@@ -64,6 +64,9 @@ class MainMenuModel(): IMainMenuModel {
             FragmentConstants.TO_MY_LOGOS ->{
                 fragment = TODO()
             }
+            "toSelectLogo" -> {
+                fragment = SelectLogoGameFragment()
+            }
         }
         return fragment
     }

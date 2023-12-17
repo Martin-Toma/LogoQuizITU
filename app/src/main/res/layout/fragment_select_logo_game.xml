@@ -7,50 +7,187 @@
     tools:context=".SelectLogoGameFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        app:icon="?attr/actionModeCloseDrawable"
+        app:iconPadding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+        android:id="@+id/logo_to_be_guessed"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/hello_blank_fragment"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.247" />
 
     <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/selectGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:columnCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo_to_be_guessed"
+        app:rowCount="3">
+
+        <RelativeLayout
+            android:layout_width="@dimen/relativeLayoutWidth"
+            android:layout_height="@dimen/relativeLayoutHeight"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="0"
+            app:layout_row="0">
+
+            <ImageButton
+                android:id="@+id/imageButton1"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/inGridMargins"
+                android:layout_marginTop="@dimen/inGridMargins"
+                android:layout_marginBottom="@dimen/inGridMargins"
+                android:background="@color/white"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="@dimen/relativeLayoutWidth"
+            android:layout_height="@dimen/relativeLayoutHeight"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="1"
+            app:layout_row="0">
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/inGridMargins"
+                android:layout_marginTop="@dimen/inGridMargins"
+                android:layout_marginEnd="@dimen/inGridMargins"
+                android:layout_marginBottom="@dimen/inGridMargins"
+                android:background="@color/white"
+
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="@dimen/relativeLayoutWidth"
+            android:layout_height="@dimen/relativeLayoutHeight"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="2"
+            app:layout_row="0">
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/inGridMargins"
+                android:layout_marginTop="@dimen/inGridMargins"
+                android:layout_marginEnd="@dimen/inGridMargins"
+                android:layout_marginBottom="@dimen/inGridMargins"
+
+                android:background="@color/white"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="@dimen/relativeLayoutWidth"
+            android:layout_height="@dimen/relativeLayoutHeight"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="0"
+            app:layout_row="1">
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/inGridMargins"
+                android:layout_marginTop="@dimen/inGridMargins"
+                android:layout_marginEnd="@dimen/inGridMargins"
+                android:layout_marginBottom="@dimen/inGridMargins"
+                android:background="@color/white"
+
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="@dimen/relativeLayoutWidth"
+            android:layout_height="@dimen/relativeLayoutHeight"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="1"
+            app:layout_row="1">
+
+            <ImageButton
+                android:id="@+id/imageButton5"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/inGridMargins"
+                android:layout_marginTop="@dimen/inGridMargins"
+                android:layout_marginEnd="@dimen/inGridMargins"
+                android:layout_marginBottom="@dimen/inGridMargins"
+                android:background="@color/white"
+
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="@dimen/relativeLayoutWidth"
+            android:layout_height="@dimen/relativeLayoutHeight"
+            android:layout_margin="@dimen/inGridMargins"
+            app:layout_column="2"
+            app:layout_row="1">
+
+            <ImageButton
+                android:id="@+id/imageButton6"
+                android:layout_width="@dimen/imageButtonWidth"
+                android:layout_height="@dimen/imageButtonHeight"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/inGridMargins"
+                android:layout_marginTop="@dimen/inGridMargins"
+                android:layout_marginEnd="@dimen/inGridMargins"
+                android:layout_marginBottom="@dimen/inGridMargins"
+                android:background="@color/white"
+
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background"
+
+                />
+        </RelativeLayout>
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <!--GridView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1100dp"
+        tools:layout_editor_absoluteY="1620dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/imageButton1"
-            android:layout_width="@dimen/imageButtonWidth"
-            android:layout_height="@dimen/imageButtonHeight"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_column="0"
-            app:layout_row="0" />
-
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="@dimen/imageButtonWidth"
-            android:layout_height="@dimen/imageButtonHeight"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_column="1"
-            app:layout_row="0" />
-
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="@dimen/imageButtonWidth"
-            android:layout_height="@dimen/imageButtonHeight"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_column="2"
-            app:layout_row="0" />
-
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="@dimen/imageButtonWidth"
-            android:layout_height="@dimen/imageButtonHeight"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_column="3"
-            app:layout_row="0" />
-    </androidx.gridlayout.widget.GridLayout>
-
+    </GridView-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

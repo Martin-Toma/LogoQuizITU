@@ -14,12 +14,21 @@ import com.fititu.logoquizitu.View.IMainMenuView
 import com.fititu.logoquizitu.myviewmodels.MainMenuViewModel
 
 class MainMenuFragment : Fragment(), IMainMenuView {
+  
     private lateinit var viewModel: MainMenuViewModel
     private var btnSelectMode: Button? = null
     private var btnSettings: Button? = null
     private var btnGallery: Button? = null
     private var btnStatistics: Button? = null
     private var btnMylogos: Button? = null
+
+    private var playButton: Button? = null
+    private var myLogoButton: Button? = null
+    private var GameRandomButton: Button? = null
+    private var randomNameButton: Button? = null
+    private var SelectLogoButton: Button? = null
+    private var playPresenter: IMainMenuController? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,20 +45,38 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         btnStatistics = view.findViewById(R.id.btn_statistics)
         btnMylogos = view.findViewById(R.id.btn_mylogos)
 
+        playButton = view.findViewById(R.id.PlayButton)
+        myLogoButton = view.findViewById(R.id.MyLogos)
+        GameRandomButton = view.findViewById(R.id.GameRandomButton)
+        randomNameButton = view.findViewById(R.id.RandomName)
+        SelectLogoButton = view.findViewById(R.id.SelectLogo)
+        playPresenter = MainMenuController(this)
+
         btnSelectMode?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_SELECT_MODE)
         }
         btnSettings?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_SETTINGS)
         }
+
         btnGallery?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_GALLERY)
+
+        GameRandomButton?.setOnClickListener{
+            navigateToGameRandomFragment()
+
         }
         btnStatistics?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_STATISTICS)
         }
+
         btnMylogos?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_MY_LOGOS)
+        }
+
+
+        SelectLogoButton?.setOnClickListener {
+            (playPresenter as MainMenuController).onClickButton("toSelectLogo")
         }
 
         // Inflate the layout for this fragment
@@ -63,4 +90,22 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         transaction.addToBackStack(null) // Optional: Add to back stack
         transaction.commit()
     }
+
+    private fun navigateToGameRandomFragment() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val newFragment = GameRandom()
+        val bundle = Bundle().apply {
+            putString("GameMode", "GameRandom")
+            putString("GameModeParameter", "")
+        }
+        newFragment.arguments = bundle
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+    override fun changeViewWithParam(fragment: Fragment) {
+    }
+
 }

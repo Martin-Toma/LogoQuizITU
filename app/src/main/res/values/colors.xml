@@ -10,4 +10,8 @@
     <color name="LogoQuizITU_BackgroundDarker">#FFC2DDBF</color>
     <color name="LogoQuizITU_BackgroundLighter">#FFF9FBF8</color>
     <color name="LogoQuizITU_TextBox">#FFA6C4A8</color>
+    <color name="background_darker">#C2DDBF</color>
+    <color name="background_lighter">#E2F0DB</color>
+    <color name="primeGreen">#7FE774</color>
+    <color name="hintGrey">#7F7F7F</color>
 </resources>

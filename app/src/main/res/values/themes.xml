@@ -2,7 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.LogoQuizITU" parent="Theme.Material3.Light">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primeGreen</item>
+        <item name="android:windowBackground">@color/background_lighter</item>
     </style>
 
     <style name="Theme.LogoQuizITU" parent="Base.Theme.LogoQuizITU" />
