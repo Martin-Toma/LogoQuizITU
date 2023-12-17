@@ -1,4 +1,4 @@
-package com.fititu.logoquizitu.Controller
+package com.fititu.logoquizitu.View
 
 import android.content.Context
 import android.net.Uri
@@ -9,12 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
-import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.Model.FileManagement
 import com.fititu.logoquizitu.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,13 +28,19 @@ class ImageAdapter(
         fun onEditButtonClicked(position: Int, id: Int)
     }
 
+    interface OnDeleteButtonClickListener {
+        fun onDeleteButtonClicked(position: Int)
+    }
+
     private var editListener: OnEditButtonClickListener? = null
+    private var deleteListener: OnDeleteButtonClickListener? = null
 
     fun setOnEditButtonClickListener(listener: OnEditButtonClickListener) {
         this.editListener = listener
     }
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.itemImageView)
+        val imageView2: ImageView = itemView.findViewById(R.id.image2)
         val captionTextView: TextView = itemView.findViewById(R.id.itemCaptionTextView)
         val editButton : Button = itemView.findViewById(R.id.editBtn)
         val deleteButton : Button = itemView.findViewById(R.id.deleteBtn)
@@ -46,7 +51,9 @@ class ImageAdapter(
             .inflate(R.layout.item_image, parent, false)
         return PhotoViewHolder(itemView)
     }
-
+    fun setOnDeleteButtonClickListener(listener: OnDeleteButtonClickListener) {
+        this.deleteListener = listener
+    }
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val currentPhoto = photoList[position]
         val context = holder.itemView.context
@@ -55,26 +62,16 @@ class ImageAdapter(
         Glide.with(context)
             .load(currentPhoto.imgOriginal)//Uri.parse(currentPhoto.imagePath))
             .into(holder.imageView)
+        Glide.with(context)
+            .load(currentPhoto.imgAltered)//Uri.parse(currentPhoto.imagePath))
+            .into(holder.imageView2)
 
         holder.captionTextView.text = currentPhoto.companyName
         holder.editButton.setOnClickListener {
             editListener?.onEditButtonClicked(position, currentPhoto.id)
         }
         holder.deleteButton.setOnClickListener {
-            val itemToDelete = photoList[position]
-
-            // Run the delete operation in a coroutine
-            CoroutineScope(Dispatchers.IO).launch {
-                val companyDao = AppDatabase.getInstance(context).companyDao()
-                companyDao.delete(itemToDelete)
-
-                withContext(Dispatchers.Main) {
-                    // Update the RecyclerView
-                    photoList = companyDao.getAll()
-                    notifyDataSetChanged()
-                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
-                }
-            }
+            deleteListener?.onDeleteButtonClicked(position)
         }
     }
 

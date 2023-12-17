@@ -6,54 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".AddLogoFragment">
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        app:icon="?attr/actionModeCloseDrawable"
+        app:iconPadding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectImageButton">
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/selectImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Select Image"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="300sp"
-            android:layout_height="300sp" />
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center" />
 
         <EditText
             android:id="@+id/captionEditText"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="Insert logo name" />
+            android:background="@color/background_darker"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:hint="*Insert logo name" />
 
         <EditText
             android:id="@+id/descriptionEditText"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:background="@color/background_darker"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:hint="Insert logo description"
             android:inputType="textMultiLine"
             android:lines="5"
             android:maxLines="7"
             android:minLines="5"
             android:scrollbars="vertical" />
-
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp">
+            <EditText
+                android:id="@+id/countryEditText"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:background="@color/background_darker"
+                android:hint="Country" />
+            <EditText
+                android:id="@+id/categoryEditText"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:background="@color/background_darker"
+                android:hint="Category" />
+        </LinearLayout>
         <Button
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Confirm &amp;Add"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:text="Confirm &amp;Add" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/selectImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Select Image"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

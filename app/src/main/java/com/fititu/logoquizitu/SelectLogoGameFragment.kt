@@ -1,5 +1,6 @@
 package com.fititu.logoquizitu
 
+import android.graphics.Color
 import android.media.Image
 import android.net.Uri
 import android.os.Bundle
@@ -8,20 +9,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.ViewModels.AddLogoViewModel
+import com.fititu.logoquizitu.ViewModels.SelectLogoGameViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import androidx.activity.OnBackPressedDispatcher
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,7 +45,14 @@ class SelectLogoGameFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var viewModel: SelectLogoGameViewModel
+
     private lateinit var companyDao : CompanyDao
+
+    private lateinit var nameText : TextView
+    private lateinit var grid : GridLayout
+
+    private lateinit var backButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -54,6 +68,9 @@ class SelectLogoGameFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_select_logo_game, container, false)
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
+
+        nameText = view.findViewById(R.id.logo_to_be_guessed)
+        grid = view.findViewById(R.id.selectGrid)
 
         return view
     }
@@ -80,11 +97,60 @@ class SelectLogoGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        init_game(view)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application))[SelectLogoGameViewModel::class.java]
+        //init_game(view)
+        backButton = view.findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed() // go back to menu fragment
+        }
+        //viewModel.initGame()
+        observeViewModelSelectGame()
     }
-    fun init_game(view : View){
 
+    private fun observeViewModelSelectGame() {
+        // Observe changes in the randomLogos LiveData
+        viewModel.randomLogos.observe(viewLifecycleOwner) { randomLogos ->
+            // This block of code is executed when the randomLogos LiveData changes
+
+            // Do something with the random logos
+            val toBeGuessedIdx = (0 until randomLogos.size).random()
+
+            // Update the UI with the logo to be guessed
+            nameText.text = randomLogos[toBeGuessedIdx].companyName
+
+            // Update the images in the grid
+            for (i in 0 until grid.childCount) {
+                val rel: RelativeLayout = grid.getChildAt(i) as RelativeLayout
+                val imbtn: ImageButton = rel.getChildAt(0) as ImageButton
+
+                Glide.with(requireContext())
+                    .load(randomLogos[i].imgAltered)
+                    .into(imbtn)
+
+                // Set onClickListeners for the image buttons
+                if (i == toBeGuessedIdx) {
+                    imbtn.setOnClickListener {
+                        rel.setBackgroundColor(Color.GREEN)
+                        change_fragment_with_delay()
+                    }
+                } else {
+                    imbtn.setOnClickListener {
+                        rel.setBackgroundColor(Color.RED)
+                        val relc: RelativeLayout = grid.getChildAt(toBeGuessedIdx) as RelativeLayout
+                        //val imbtnCorrect: ImageButton = relc.getChildAt(0) as ImageButton
+                        relc.setBackgroundColor(Color.GREEN)
+                        change_fragment_with_delay()
+                    }
+                }
+            }
+        }
+
+        // Initialize the game when the ViewModel is created
+        viewModel.initGame()
+    }
+
+    /*fun init_game(view : View){
+        viewModel.randomLogos
         // get view components
         val nameText : TextView = view.findViewById(R.id.logo_to_be_guessed)
         val grid : GridLayout = view.findViewById(R.id.selectGrid)
@@ -121,7 +187,7 @@ class SelectLogoGameFragment : Fragment() {
             }
         }
 
-    }
+    }*/
 
     private fun change_fragment_with_delay(){
         lifecycleScope.launch{
