@@ -14,11 +14,12 @@ import com.fititu.logoquizitu.Controller.SelectCategoryAdapter
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CategoryDao
 import com.fititu.logoquizitu.Model.Entity.Relation.CategoryWithCompanies
+import com.fititu.logoquizitu.View.ICategoryView
 import com.fititu.logoquizitu.myviewmodels.SelectCategoryViewModel
 import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
 import kotlinx.coroutines.launch
 
-class SelectCategoryFragment : Fragment() {
+class SelectCategoryFragment : Fragment(), ICategoryView {
     private lateinit var viewModel: SelectCategoryViewModel
 
     private lateinit var recyclerView: RecyclerView
@@ -37,11 +38,21 @@ class SelectCategoryFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycleView_category)
 //        categoryDao = AppDatabase.getInstance(requireContext()).categoryDao()
 
-        lifecycleScope.launch {
+//        lifecycleScope.launch {
 //            val categories : List<CategoryWithCompanies> = categoryDao.getCategoriesWithCompanies()
-            recyclerView.adapter = SelectCategoryAdapter(requireContext(), viewModel)
-            recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
-        }
+        val adapter = SelectCategoryAdapter(requireContext(), viewModel)
+        adapter.view = this
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
+//        }
         return view
+    }
+
+    override fun navigateToCategory(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+        transaction.replace(R.id.mainMenuFragmentContainer, fragment)
+        transaction.addToBackStack(null) // Optional: Add to back stack
+        transaction.commit()
     }
 }

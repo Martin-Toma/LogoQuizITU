@@ -14,11 +14,12 @@ import com.fititu.logoquizitu.Controller.SelectLevelAdapter
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.LevelDao
 import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
+import com.fititu.logoquizitu.View.ILevelView
 import com.fititu.logoquizitu.myviewmodels.MainMenuViewModel
 import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
 import kotlinx.coroutines.launch
 
-class SelectLevelFragment : Fragment() {
+class SelectLevelFragment : Fragment(), ILevelView {
     private lateinit var viewModel: SelectLevelViewModel
 
     private lateinit var recyclerView: RecyclerView
@@ -39,9 +40,19 @@ class SelectLevelFragment : Fragment() {
 
 //        lifecycleScope.launch {
 //            val levels : List<LevelWithCompanies> = levelDao.getLevelsWithCompanies()
-        recyclerView.adapter = SelectLevelAdapter(requireContext(), viewModel)
+        val adapter = SelectLevelAdapter(requireContext(), viewModel)
+        adapter.view = this
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
 //        }
         return view
+    }
+
+    override fun navigateToLevel(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+        transaction.replace(R.id.mainMenuFragmentContainer, fragment)
+        transaction.addToBackStack(null) // Optional: Add to back stack
+        transaction.commit()
     }
 }

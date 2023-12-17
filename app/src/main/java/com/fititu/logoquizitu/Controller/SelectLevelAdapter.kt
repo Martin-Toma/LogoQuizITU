@@ -10,11 +10,15 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.R
 import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
+import com.fititu.logoquizitu.SelectLevelFragment
 import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
 
-class SelectLevelAdapter(private val context : Context, private val viewModel: SelectLevelViewModel) :
-    RecyclerView.Adapter<SelectLevelAdapter.ViewHolder>()
-{
+class SelectLevelAdapter(
+    private val context: Context,
+    private val viewModel: SelectLevelViewModel
+) :
+    RecyclerView.Adapter<SelectLevelAdapter.ViewHolder>() {
+    lateinit var view: SelectLevelFragment
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.select_level_card, parent, false)
@@ -29,13 +33,13 @@ class SelectLevelAdapter(private val context : Context, private val viewModel: S
         holder.bind(position)
     }
 
-    inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val btnLevelCard = itemView.findViewById<CardView>(R.id.level_card)
         private val textLevelCardName = itemView.findViewById<TextView>(R.id.level_card_name)
         private val textLevelCardLogos = itemView.findViewById<TextView>(R.id.level_card_logo_count)
         private val textLevelCardStars = itemView.findViewById<TextView>(R.id.level_card_stars)
 
-        fun bind(position: Int){
+        fun bind(position: Int) {
             // update the text inside of this card to reflect the info
             val thisLevel = viewModel.levels[position]
 
@@ -45,11 +49,11 @@ class SelectLevelAdapter(private val context : Context, private val viewModel: S
 
             textLevelCardName.text = "Level ${thisLevel.levelEntity.id}"
             textLevelCardLogos.text = "$logosSolved / $logosCount logos"
-            textLevelCardStars.text = "${logosSolved*3} / ${logosCount*3} stars"
+            textLevelCardStars.text = "${logosSolved * 3} / ${logosCount * 3} stars"
 
-            btnLevelCard.setOnClickListener{
+            btnLevelCard.setOnClickListener {
                 Log.i("Level card", "clicked on level card $position")
-                // TODO call the gallery fragment change from here
+                viewModel.navigateToLevel(view, thisLevel.levelEntity.id)
             }
         }
     }
