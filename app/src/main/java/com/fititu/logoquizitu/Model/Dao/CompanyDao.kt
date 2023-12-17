@@ -73,6 +73,6 @@ interface CompanyDao {
     @Insert
     suspend fun insert(photoPost: CompanyEntity)
 
-    @Query("SELECT * FROM CompanyEntity")
+    @Query("SELECT * FROM CompanyEntity WHERE userCreated = 1")
     fun getAllPhotoPostsC(): List<CompanyEntity>
 }
