@@ -7,11 +7,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.fititu.logoquizitu.Controller.IMainMenuController
-import com.fititu.logoquizitu.Controller.MainMenuController
+//import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.View.IMainMenuView
+import com.fititu.logoquizitu.View.ISelectModeView
+import com.fititu.logoquizitu.myviewmodels.MainMenuViewModel
+import com.fititu.logoquizitu.myviewmodels.SelectModeViewModel
 
-class SelectModeFragment : Fragment(), IMainMenuView {
+class SelectModeFragment : Fragment(), ISelectModeView {
+    private lateinit var viewModel: SelectModeViewModel
+
     private lateinit var btnRandom: Button
     private lateinit var btnLevel: Button
     private lateinit var btnSelect: Button
@@ -19,7 +25,6 @@ class SelectModeFragment : Fragment(), IMainMenuView {
     private lateinit var btnCategory: Button
     private lateinit var btnPlayMyLogs: Button
 
-    private var playPresenter: IMainMenuController? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,6 +32,7 @@ class SelectModeFragment : Fragment(), IMainMenuView {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_select_mode, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.show() // to show the action bar
+        viewModel = ViewModelProvider(this)[SelectModeViewModel::class.java]
 
         btnRandom = view.findViewById(R.id.btn_Random)
         btnLevel = view.findViewById(R.id.btn_Level)
@@ -35,25 +41,23 @@ class SelectModeFragment : Fragment(), IMainMenuView {
         btnCategory = view.findViewById(R.id.btn_category)
         btnPlayMyLogs = view.findViewById(R.id.btn_play_my_logos) // the id is play_my_logos !!!
 
-        playPresenter = MainMenuController(this)
-
         btnRandom.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton(FragmentConstants.TO_RANDOM)
+            viewModel.navigateTo(this, FragmentConstants.TO_RANDOM)
         }
         btnLevel.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton(FragmentConstants.TO_LEVEL)
+            viewModel.navigateTo(this, FragmentConstants.TO_LEVEL)
         }
         btnSelect.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton(FragmentConstants.TO_SELECT)
+            viewModel.navigateTo(this, FragmentConstants.TO_SELECT)
         }
         btnName.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton(FragmentConstants.TO_NAME)
+            viewModel.navigateTo(this, FragmentConstants.TO_NAME)
         }
         btnCategory.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton(FragmentConstants.TO_CATEGORY)
+            viewModel.navigateTo(this, FragmentConstants.TO_CATEGORY)
         }
         btnPlayMyLogs.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton(FragmentConstants.TO_PLAY_MY_LOGOS)
+            viewModel.navigateTo(this, FragmentConstants.TO_PLAY_MY_LOGOS)
         }
         return view
     }
@@ -64,8 +68,5 @@ class SelectModeFragment : Fragment(), IMainMenuView {
         transaction.replace(R.id.mainMenuFragmentContainer, fragment)
         transaction.addToBackStack(null) // Optional: Add to back stack
         transaction.commit()
-    }
-
-    override fun changeViewWithParam(fragment: Fragment) {
     }
 }

@@ -10,8 +10,9 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.R
 import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
+import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
 
-class SelectLevelAdapter(private val context : Context, private val levels: List<LevelWithCompanies>) :
+class SelectLevelAdapter(private val context : Context, private val viewModel: SelectLevelViewModel) :
     RecyclerView.Adapter<SelectLevelAdapter.ViewHolder>()
 {
 
@@ -21,7 +22,7 @@ class SelectLevelAdapter(private val context : Context, private val levels: List
     }
 
     override fun getItemCount(): Int {
-        return levels.size
+        return viewModel.levels.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -36,7 +37,7 @@ class SelectLevelAdapter(private val context : Context, private val levels: List
 
         fun bind(position: Int){
             // update the text inside of this card to reflect the info
-            val thisLevel = levels[position]
+            val thisLevel = viewModel.levels[position]
 
             var logosSolved = 0
             val logosCount = thisLevel.companies.size

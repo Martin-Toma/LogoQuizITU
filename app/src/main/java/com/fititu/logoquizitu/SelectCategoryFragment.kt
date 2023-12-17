@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,12 +14,15 @@ import com.fititu.logoquizitu.Controller.SelectCategoryAdapter
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CategoryDao
 import com.fititu.logoquizitu.Model.Entity.Relation.CategoryWithCompanies
+import com.fititu.logoquizitu.myviewmodels.SelectCategoryViewModel
+import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
 import kotlinx.coroutines.launch
 
 class SelectCategoryFragment : Fragment() {
+    private lateinit var viewModel: SelectCategoryViewModel
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var categoryDao: CategoryDao
+//    private lateinit var categoryDao: CategoryDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,13 +31,15 @@ class SelectCategoryFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_select_category, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
+        viewModel = ViewModelProvider(this)[SelectCategoryViewModel::class.java]
+        viewModel.getCategories()
 
         recyclerView = view.findViewById(R.id.recycleView_category)
-        categoryDao = AppDatabase.getInstance(requireContext()).categoryDao()
+//        categoryDao = AppDatabase.getInstance(requireContext()).categoryDao()
 
         lifecycleScope.launch {
-            val categories : List<CategoryWithCompanies> = categoryDao.getCategoriesWithCompanies()
-            recyclerView.adapter = SelectCategoryAdapter(requireContext(), categories)
+//            val categories : List<CategoryWithCompanies> = categoryDao.getCategoriesWithCompanies()
+            recyclerView.adapter = SelectCategoryAdapter(requireContext(), viewModel)
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         }
         return view

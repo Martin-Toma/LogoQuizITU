@@ -18,13 +18,14 @@ import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.Model.Entity.Relation.CategoryWithCompanies
 import com.fititu.logoquizitu.R
 import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
+import com.fititu.logoquizitu.myviewmodels.SelectCategoryViewModel
 import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.FileDescriptor
 import java.io.FileReader
 import java.nio.file.Paths
 
-class SelectCategoryAdapter(private val context : Context, private val categories: List<CategoryWithCompanies>) :
+class SelectCategoryAdapter(private val context : Context, private val viewModel: SelectCategoryViewModel) :
     RecyclerView.Adapter<SelectCategoryAdapter.ViewHolder>()
 {
 
@@ -34,7 +35,7 @@ class SelectCategoryAdapter(private val context : Context, private val categorie
     }
 
     override fun getItemCount(): Int {
-        return categories.size
+        return viewModel.categories.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -50,7 +51,7 @@ class SelectCategoryAdapter(private val context : Context, private val categorie
 
         fun bind(position: Int){
             // update the text inside of this card to reflect the info
-            val thisCategory = categories[position]
+            val thisCategory = viewModel.categories[position]
 
             var logosSolved = 0
             val logosCount = thisCategory.companies.size

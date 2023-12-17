@@ -219,13 +219,13 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         transaction.addToBackStack(null) // Optional: Add to back stack
         transaction.commit()
     }
-    override fun changeViewWithParam(fragment: Fragment) {
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-
-        transaction.replace(R.id.mainMenuFragmentContainer, fragment)
-        transaction.addToBackStack(null) // Optional: Add to back stack
-        transaction.commit()
-    }
+//    override fun changeViewWithParam(fragment: Fragment) {
+//        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+//
+//        transaction.replace(R.id.mainMenuFragmentContainer, fragment)
+//        transaction.addToBackStack(null) // Optional: Add to back stack
+//        transaction.commit()
+//    }
 
     /*
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

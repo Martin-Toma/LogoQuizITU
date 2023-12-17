@@ -9,28 +9,6 @@
     android:orientation="vertical">
 
     <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/GameRandomButton"
-            android:text="Main mode" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/PlayButton"
-        android:text="@string/play" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/MyLogos"
-        android:text="@string/mylogos" />
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/RandomName"
-            android:text="DO NOT CLICK" />
-
-    <Button
         android:id="@+id/btn_select_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
