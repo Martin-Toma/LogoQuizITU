@@ -24,6 +24,10 @@ class GameRandomViewModel(application: Application) : AndroidViewModel(applicati
     val logoNull: LiveData<Boolean> get() = _logoNull
     private val _logoSolved = MutableLiveData<Boolean>()
     val logoSolved: LiveData<Boolean> get() = _logoSolved
+    var receivedCompanyId : Int = -1
+        set(value) {
+            field = value
+        }
 
 
     var gameMode: String = ""
@@ -49,11 +53,16 @@ class GameRandomViewModel(application: Application) : AndroidViewModel(applicati
     // Coroutine scope for background tasks
     fun getRandomLogo() {
         val randomLogoFromDb = runBlocking(Dispatchers.IO) {
-            when (gameMode) {
-                "GameRandom" -> companyDao.getRandomCompany()
-                "Categories:" -> companyDao.getRandomCompanyOfCategory(gameModeParameter)
-                "Levels:" -> companyDao.getRandomCompanyOfLevel(gameModeParameter.toInt())
-                else -> companyDao.getRandomCompany()
+            if(receivedCompanyId == -1) {
+                when (gameMode) {
+                    "GameRandom" -> companyDao.getRandomCompany()
+                    "Categories:" -> companyDao.getRandomCompanyOfCategory(gameModeParameter)
+                    "Levels:" -> companyDao.getRandomCompanyOfLevel(gameModeParameter.toInt())
+                    else -> companyDao.getRandomCompany()
+                }
+            }
+            else{
+                companyDao.getCompanyById(receivedCompanyId)
             }
         }
         if (randomLogoFromDb != null) {

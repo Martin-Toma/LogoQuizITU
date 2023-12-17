@@ -24,6 +24,7 @@ class SelectModeViewModel(application: Application) : AndroidViewModel(applicati
                 val bundle = Bundle().apply {
                     putString("GameMode", "GameRandom")
                     putString("GameModeParameter", "")
+                    putInt("CompanyId", -1)
                 }
                 gameRandomFragment.arguments = bundle
                 gameRandomFragment

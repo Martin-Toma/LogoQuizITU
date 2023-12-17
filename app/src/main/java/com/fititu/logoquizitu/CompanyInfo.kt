@@ -80,10 +80,10 @@ class CompanyInfo : Fragment() {
             val bundle = Bundle().apply {
                 putString("GameMode", viewModel.gameRandomMode)
                 putString("GameModeParameter", parameter)
+                putInt("CompanyId", -1)
             }
             newFragment.arguments = bundle
         }
-        //add handling for other modes if necessary
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
