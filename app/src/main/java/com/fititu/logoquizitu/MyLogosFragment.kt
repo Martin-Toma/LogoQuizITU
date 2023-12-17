@@ -68,10 +68,12 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // redirect to the edit logo fragment
         adapter.setOnEditButtonClickListener(object : ImageAdapter.OnEditButtonClickListener {
             override fun onEditButtonClicked(position: Int, id: Int) {
                 Log.d("Check", "onEditButtonClicked was clicked")
-                (playPresenter as MainMenuController).editDbFragment("toAdd", id)
+                val fragment = AddLogoFragment.newInstance(id)
+                changeViewWithParam(fragment)
             }
         })
 
@@ -97,13 +99,13 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         transaction.commit()
     }
 
-    /*override fun changeViewWithParam(fragment: Fragment) {
+    fun changeViewWithParam(fragment: Fragment) {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
         transaction.replace(R.id.mainMenuFragmentContainer, fragment)
         transaction.addToBackStack(null) // Optional - Add to back stack
         transaction.commit()
-    }*/
+    }
     override fun onResume() {
         super.onResume()
 
