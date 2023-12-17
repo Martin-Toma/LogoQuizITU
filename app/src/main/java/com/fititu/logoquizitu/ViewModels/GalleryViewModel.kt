@@ -151,16 +151,17 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
             if (level != null && level != "any"){
                 putString("GameMode", "Levels")
                 putString("GameModeParameter", level)
-                putString("CompanyId", clickedCompanyId.toString())
+                putInt("CompanyId", clickedCompanyId)
             }
             else if (category != null && category != "any"){
                 putString("GameMode", "Categories")
                 putString("GameModeParameter", category)
-                putString("CompanyId", clickedCompanyId.toString())
+                putInt("CompanyId", clickedCompanyId)
             }
             else{
                 putString("GameMode", "GameRandom")
                 putString("GameModeParameter", "")
+                putInt("CompanyId", -1)
             }
         }
         gameRandomFragment.arguments = bundle

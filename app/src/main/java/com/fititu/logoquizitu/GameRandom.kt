@@ -54,7 +54,7 @@ class GameRandom : Fragment() {
         }
         viewModel.gameMode = arguments?.getString("GameMode")!!
         viewModel.gameModeParameter = arguments?.getString("GameModeParameter")!!
-        viewModel.receivedCompanyId = arguments?.getString("CompanyId")!!.toInt()
+        viewModel.receivedCompanyId = arguments?.getInt("CompanyId")!!
         return inflater.inflate(R.layout.fragment_game_random, container, false)
     }
 
