@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.R
-import com.fititu.logoquizitu.myviewmodels.GalleryViewModel
+import com.fititu.logoquizitu.ViewModels.GalleryViewModel
 
 class GalleryAdapter(private val context: Context, private val viewModel : GalleryViewModel)
     :RecyclerView.Adapter<GalleryAdapter.ViewHolder>()

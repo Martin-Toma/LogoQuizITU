@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.fititu.logoquizitu.Controller.IMainMenuController
 //import com.fititu.logoquizitu.Controller.MainMenuController
 import com.fititu.logoquizitu.View.IMainMenuView
-import com.fititu.logoquizitu.myviewmodels.MainMenuViewModel
+import com.fititu.logoquizitu.ViewModels.MainMenuViewModel
 
 class MainMenuFragment : Fragment(), IMainMenuView {
   

@@ -1,4 +1,4 @@
-package com.fititu.logoquizitu.myviewmodels
+package com.fititu.logoquizitu.ViewModels
 
 import android.app.Application
 import android.content.Context
@@ -8,30 +8,33 @@ import com.fititu.logoquizitu.FragmentConstants
 import com.fititu.logoquizitu.GalleryFragment
 import com.fititu.logoquizitu.GameRandom
 import com.fititu.logoquizitu.Model.AppDatabase
+import com.fititu.logoquizitu.Model.Dao.CategoryDao
 import com.fititu.logoquizitu.Model.Dao.LevelDao
+import com.fititu.logoquizitu.Model.Entity.Relation.CategoryWithCompanies
 import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
 import com.fititu.logoquizitu.Model.SortBy
 import com.fititu.logoquizitu.RandomNameFragment
 import com.fititu.logoquizitu.SelectCategoryFragment
 import com.fititu.logoquizitu.SelectLevelFragment
+import com.fititu.logoquizitu.View.ICategoryView
 import com.fititu.logoquizitu.View.ILevelView
 import com.fititu.logoquizitu.View.ISelectModeView
 import kotlinx.coroutines.runBlocking
 
-class SelectLevelViewModel(application: Application) : AndroidViewModel(application) {
+class SelectCategoryViewModel(application: Application) : AndroidViewModel(application) {
     private val appContext: Context = application.applicationContext
-    lateinit var levels: List<LevelWithCompanies>
-    private lateinit var levelDao: LevelDao
+    lateinit var categories: List<CategoryWithCompanies>
+    private lateinit var categoryDao: CategoryDao
 
-    fun getLevels() {
-        levelDao = AppDatabase.getInstance(appContext).levelDao()
+    fun getCategories() {
+        categoryDao = AppDatabase.getInstance(appContext).categoryDao()
         runBlocking {
-            levels = levelDao.getLevelsWithCompanies()
+            categories = categoryDao.getCategoriesWithCompanies()
         }
     }
 
-    fun navigateToLevel(view: ILevelView, level: Int) {
-        val fragment = GalleryFragment(null, null, level, SortBy.LEVEL)
-        view.navigateToLevel(fragment = fragment)
+    fun navigateToCategory(view: ICategoryView, categoryName: String) {
+        val fragment = GalleryFragment(null, categoryName, null, SortBy.LEVEL)
+        view.navigateToCategory(fragment = fragment)
     }
 }

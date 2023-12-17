@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Dao.GlobalProfileDao
-import com.fititu.logoquizitu.myviewmodels.StatisticsViewModel
+import com.fititu.logoquizitu.ViewModels.StatisticsViewModel
 import kotlinx.coroutines.launch
 
 class StatisticsFragment : Fragment() {
