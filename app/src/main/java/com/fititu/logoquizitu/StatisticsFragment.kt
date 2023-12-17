@@ -43,7 +43,7 @@ class StatisticsFragment : Fragment() {
         textRemainingLogos = view.findViewById(R.id.text_remaining_logos)
         textAllLogos = view.findViewById(R.id.text_all_logos)
         textTimeSpent = view.findViewById(R.id.text_time_spent)
-        textHintsUsed = view.findViewById(R.id.text_hints_used)
+//        textHintsUsed = view.findViewById(R.id.text_hints_used)
         btnGoBack = view.findViewById(R.id.btn_statistics_back)
 
         companyDao = AppDatabase.getInstance(requireContext()).companyDao()
@@ -58,8 +58,8 @@ class StatisticsFragment : Fragment() {
         lifecycleScope.launch {
 
             (textTimeSpent as TextView).text = "TIME SPENT: " + viewModel.duration.toString()
-            (textHintsUsed as TextView).text =
-                "HINTS USED: " + viewModel.profile.hintsUsedCount.toString()
+//            (textHintsUsed as TextView).text =
+//                "HINTS USED: " + viewModel.profile.hintsUsedCount.toString()
             (textGuessedLogos as TextView).text =
                 "GUESSED LOGOS: " + viewModel.solvedCount.toString()
             (textRemainingLogos as TextView).text =
