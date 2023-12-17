@@ -22,6 +22,8 @@ class GameRandomViewModel(application: Application) : AndroidViewModel(applicati
     lateinit var randomLogo: CompanyEntity
     private val _logoNull = MutableLiveData<Boolean>()
     val logoNull: LiveData<Boolean> get() = _logoNull
+    private val _logoSolved = MutableLiveData<Boolean>()
+    val logoSolved: LiveData<Boolean> get() = _logoSolved
 
 
     var gameMode: String = ""
@@ -37,6 +39,11 @@ class GameRandomViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun triggerNavigation() {
         _logoNull.value = true
+    }
+    fun checkLogoSolution(logoName: String) {
+        if (logoName == randomLogo.companyName) {
+            _logoSolved.value = true
+        }
     }
 
     // Coroutine scope for background tasks

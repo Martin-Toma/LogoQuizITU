@@ -223,7 +223,8 @@ class GameRandom : Fragment() {
 
     private fun checkLogoName() {
         val logoNameString = logoNameButtons.joinToString("") { it.text.toString() }
-        if (randomLogo.companyName == logoNameString) {
+        viewModel.checkLogoSolution(logoNameString)
+        if (viewModel.logoSolved.value == true) {
             viewModel.updateCompanySolved()
             navigateToNextFragment("CompanyInfo")
             return
