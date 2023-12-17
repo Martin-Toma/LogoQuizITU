@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class SelectLogoGameViewModel (application: Application) : AndroidViewModel(application) {
 
+    private val MAX_LOGOS = 6
     @SuppressLint("StaticFieldLeak")
     private val appContext: Context = application.applicationContext
     val logoEntityDao : CompanyDao = AppDatabase.getInstance(appContext).companyDao()
@@ -24,7 +25,7 @@ class SelectLogoGameViewModel (application: Application) : AndroidViewModel(appl
 
     fun initGame() {
         viewModelScope.launch(Dispatchers.IO) {
-            val logos = logoEntityDao.getRandomLogos()
+            val logos = logoEntityDao.getRandomCompanies(MAX_LOGOS)
             _randomLogos.postValue(logos)
         }
     }

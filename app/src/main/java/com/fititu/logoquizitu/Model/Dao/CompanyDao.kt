@@ -56,7 +56,4 @@ interface CompanyDao {
 
     @Query("SELECT * FROM CompanyEntity")
     fun getAllPhotoPostsC(): List<CompanyEntity>
-
-    @Query("SELECT * FROM CompanyEntity ORDER BY RANDOM() LIMIT 9")
-    fun getRandomLogos(): List<CompanyEntity>
 }
