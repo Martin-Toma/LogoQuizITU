@@ -46,7 +46,8 @@ class GameRandom : Fragment() {
     ): View? {
         viewModel = ViewModelProvider(this)[GameRandomViewModel::class.java]
         //if logo is null, navigate to main menu
-        viewModel.logoNull.observe(viewLifecycleOwner
+        viewModel.logoNull.observe(
+            viewLifecycleOwner
         ) {
             if (it) {
                 navigateToNextFragment("MainMenu")
@@ -68,7 +69,7 @@ class GameRandom : Fragment() {
             }
         }
         viewModel.getRandomLogo()
-        if(viewModel.logoNull.value == true) {
+        if (viewModel.logoNull.value == true) {
             navigateToNextFragment("MainMenu")
             return
         }
@@ -101,17 +102,19 @@ class GameRandom : Fragment() {
 
 
     private fun setImage() {
-        lifecycleScope.launch {
-            var pathUI: String?
-            withContext(Dispatchers.Main) {
-                val path = randomLogo.imgOriginal//randomLogo2.imagePath
-                pathUI = path
-                Log.d("Image Loading", "other ${Uri.parse(path)}")
+        if (randomLogo.userCreated) {
+            lifecycleScope.launch {
+                var pathUI: String?
+                withContext(Dispatchers.Main) {
+                    val path = randomLogo.imgOriginal
+                    pathUI = path
+                }
+                Glide.with(requireContext())
+                    .load(pathUI)
+                    .into(randomLogoImageView)
             }
-            Glide.with(requireContext())
-                .load(pathUI)
-                .into(randomLogoImageView)
-        }
+        } else
+            randomLogoImageView.setImageResource(randomLogo.imgAlteredRsc)
     }
 
     private fun addLogoLetterButtons(gridLayout: GridLayout) {
@@ -243,7 +246,7 @@ class GameRandom : Fragment() {
       }*/
 
     private fun navigateToNextFragment(fragment: String) {
-        if(fragment != "MainMenu")
+        if (fragment != "MainMenu")
             viewModel.resetCurrentGameState()
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -595,10 +598,10 @@ class GameRandom : Fragment() {
             button.isEnabled = false
         } else if (logoColorCharArray[i] == 'R')
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.RED, Color.RED))
-         else
+        else
             nameLetters.add(Letter(i, null, logoNameCharArray[i], Color.WHITE, Color.WHITE))
         addLogoLetterButtonToLayout(button, logoNameGridLayout, i)
-        if(logoNameCharArray[i] != ' ' && (logoColorCharArray[i] == 'W' || logoColorCharArray[i] == 'Y'))
+        if (logoNameCharArray[i] != ' ' && (logoColorCharArray[i] == 'W' || logoColorCharArray[i] == 'Y'))
             button.isEnabled = true
     }
 

@@ -19,6 +19,9 @@ class RandomNameViewModel(application: Application): AndroidViewModel(applicatio
             companyDao.getRandomCompanies(4)
         }
     }
+    fun checkAnswer(answer: String): Boolean {
+        return answer == correctName
+    }
     fun setCorrectName(){
         correctName = randomCompanyNames[0].companyName
     }

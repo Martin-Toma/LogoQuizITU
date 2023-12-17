@@ -71,6 +71,7 @@ class ImageAdapter(
             editListener?.onEditButtonClicked(position, currentPhoto.id)
         }
         holder.deleteButton.setOnClickListener {
+            holder.deleteButton.isEnabled = false
             deleteListener?.onDeleteButtonClicked(position)
         }
     }
