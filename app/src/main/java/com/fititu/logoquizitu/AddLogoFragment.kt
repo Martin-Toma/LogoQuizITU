@@ -126,12 +126,6 @@ class AddLogoFragment : Fragment() {
 
             }
         }
-        // Clear the database on fragment creation
-        /*viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                AppDatabase.getInstance(requireContext()).clearAllTables()
-            }
-        }*/
         // Inflate the layout for this fragment
 
         backButton = view.findViewById(R.id.backButton)
@@ -146,6 +140,7 @@ class AddLogoFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
+    // when image from modile selected
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
@@ -161,6 +156,7 @@ class AddLogoFragment : Fragment() {
         }
     }
 
+    // initializes view when in edit mode
     suspend fun initView(editLogo : CompanyEntity, view: View){
         val imageView: ImageView = view.findViewById(R.id.imageView)
         Glide.with(requireContext())
