@@ -1,18 +1,23 @@
 package com.fititu.logoquizitu.Controller
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
+import com.fititu.logoquizitu.GalleryFragment
+import com.fititu.logoquizitu.GameRandom
 import com.fititu.logoquizitu.R
 import com.fititu.logoquizitu.ViewModels.GalleryViewModel
 
 class GalleryAdapter(private val context: Context, private val viewModel : GalleryViewModel)
     :RecyclerView.Adapter<GalleryAdapter.ViewHolder>()
 {
+    lateinit var view:GalleryFragment
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.gallery_card, parent, false)
 
@@ -51,7 +56,7 @@ class GalleryAdapter(private val context: Context, private val viewModel : Galle
 
             imgButton.setOnClickListener {
                 Log.i("Gallery Card", "Clicked on card on position $position")
-                // TODO open game with this logo
+                viewModel.navigateTo(view)
             }
         }
 

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.Controller.GalleryAdapter
 import com.fititu.logoquizitu.Controller.GalleryLayoutManager
 import com.fititu.logoquizitu.Model.SortBy
+import com.fititu.logoquizitu.View.IGalleryView
 import com.fititu.logoquizitu.ViewModels.GalleryViewModel
 
 class GalleryFragment(
@@ -27,7 +28,7 @@ class GalleryFragment(
     private val level: Int?,
     private val sortBy: SortBy,
     private val hide: Boolean
-) : Fragment() {
+) : Fragment(), IGalleryView {
     private lateinit var spinnerCountry: Spinner
     private lateinit var spinnerLevel: Spinner
     private lateinit var spinnerCategory: Spinner
@@ -92,7 +93,9 @@ class GalleryFragment(
 
         recyclerView = view.findViewById(R.id.recycleView_gallery)
 
-        recyclerView.adapter = GalleryAdapter(requireContext(), viewModel)
+        val adapter = GalleryAdapter(requireContext(), viewModel)
+        adapter.view = this
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = GalleryLayoutManager(requireContext(), 3)
 
         setFragmentFilters()
@@ -168,5 +171,13 @@ class GalleryFragment(
             SortBy.LEVEL -> {radioLevel.isChecked = true}
             SortBy.AGE -> {radioAge.isChecked = true}
         }
+    }
+
+    override fun navigateTo(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+        transaction.replace(R.id.mainMenuFragmentContainer, fragment)
+        transaction.addToBackStack(null) // Optional: Add to back stack
+        transaction.commit()
     }
 }
