@@ -145,16 +145,18 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     // remake to open new game
-    fun navigateTo(view: IGalleryView) {
+    fun navigateTo(view: IGalleryView, clickedCompanyId : Int) {
         val gameRandomFragment = GameRandom()
         val bundle = Bundle().apply {
-            if (level != null || level != "any"){
-                putString("GameMode", "Levels:")
+            if (level != null && level != "any"){
+                putString("GameMode", "Levels")
                 putString("GameModeParameter", level)
+                putString("CompanyId", clickedCompanyId.toString())
             }
-            else if (category != null || category != "any"){
-                putString("GameMode", "Levels:")
+            else if (category != null && category != "any"){
+                putString("GameMode", "Categories")
                 putString("GameModeParameter", category)
+                putString("CompanyId", clickedCompanyId.toString())
             }
             else{
                 putString("GameMode", "GameRandom")

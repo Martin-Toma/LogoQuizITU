@@ -48,8 +48,8 @@ class GalleryAdapter(private val context: Context, private val viewModel : Galle
             }
 
             imgButton.setOnClickListener {
-                Log.i("Gallery Card", "Clicked on card on position $position")
-                viewModel.navigateTo(view)
+                Log.i("Gallery Card", "Clicked on card on position ${currentCompany.id}")
+                viewModel.navigateTo(view, currentCompany.id)
             }
         }
 
