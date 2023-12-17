@@ -38,16 +38,20 @@ class RandomNameFragment : Fragment() {
     }
 
     private fun setImage() {
-        lifecycleScope.launch {
-            var pathUI: String?
-            withContext(Dispatchers.Main) {
-                val path = viewModel.randomCompanyNames[0].imgOriginal
-                pathUI = path
+        if (viewModel.randomCompanyNames[0].userCreated) {
+            lifecycleScope.launch {
+                var pathUI: String?
+                withContext(Dispatchers.Main) {
+                    val path = viewModel.randomCompanyNames[0].imgOriginal
+                    pathUI = path
+                }
+                Glide.with(requireContext())
+                    .load(pathUI)
+                    .into(randomLogoImageView)
             }
-            Glide.with(requireContext())
-                .load(pathUI)
-                .into(randomLogoImageView)
-        }
+        } else
+            randomLogoImageView.setImageResource(viewModel.randomCompanyNames[0].imgAlteredRsc)
+
     }
 
     private fun generateLogoNameButtons(gridLayout: GridLayout) {
