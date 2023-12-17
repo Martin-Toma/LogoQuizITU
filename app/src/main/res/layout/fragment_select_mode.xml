@@ -37,7 +37,8 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
                 android:text="Random"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/textView"
@@ -45,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:text="Solve a random logo. "
                 android:textAlignment="center"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,14 +66,16 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
                 android:text="Level Mode"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Select a collection of logos based on difficulty and solve them one by one. "
                 android:textAlignment="center"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,14 +94,16 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
                 android:text="Select Logo"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Guess which logo does a company have based on the companies name. "
                 android:textAlignment="center"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,14 +122,16 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
                 android:text="Name Options"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Pick a company name from 4 options that has the displayed logo."
                 android:textAlignment="center"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -142,14 +150,16 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
                 android:text="Category Mode"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Select a collection of logos based on their primary business area and solve them one by one. "
                 android:textAlignment="center"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -168,14 +178,16 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/LogoQuizITU_BackgroundDarker"
                 android:text="My Logos Mode"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Guess names of logos that you added in section My Logos."
                 android:textAlignment="center"
-                android:textColor="@color/LogoQuizITU_Text" />
+                android:textColor="@color/LogoQuizITU_Text"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -15,7 +15,7 @@ interface GlobalProfileDao {
     suspend fun add(globalProfileEntity: GlobalProfileEntity)
 
     @Update
-    fun update(globalProfileEntity: GlobalProfileEntity)
+    suspend fun update(globalProfileEntity: GlobalProfileEntity)
 
     @Delete
     suspend fun delete(globalProfileEntity: GlobalProfileEntity)
