@@ -45,12 +45,6 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         btnStatistics = view.findViewById(R.id.btn_statistics)
         btnMylogos = view.findViewById(R.id.btn_mylogos)
 
-        playButton = view.findViewById(R.id.PlayButton)
-        myLogoButton = view.findViewById(R.id.MyLogos)
-        GameRandomButton = view.findViewById(R.id.GameRandomButton)
-        randomNameButton = view.findViewById(R.id.RandomName)
-        SelectLogoButton = view.findViewById(R.id.SelectLogo)
-        playPresenter = MainMenuController(this)
 
         btnSelectMode?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_SELECT_MODE)
@@ -59,24 +53,16 @@ class MainMenuFragment : Fragment(), IMainMenuView {
             viewModel.navigateTo(this, FragmentConstants.TO_SETTINGS)
         }
 
-        btnGallery?.setOnClickListener{
+        btnGallery?.setOnClickListener {
             viewModel.navigateTo(this, FragmentConstants.TO_GALLERY)
-
-        GameRandomButton?.setOnClickListener{
-            navigateToGameRandomFragment()
-
         }
+
         btnStatistics?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_STATISTICS)
         }
 
         btnMylogos?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_MY_LOGOS)
-        }
-
-
-        SelectLogoButton?.setOnClickListener {
-            (playPresenter as MainMenuController).onClickButton("toSelectLogo")
         }
 
         // Inflate the layout for this fragment
@@ -104,8 +90,6 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
-    }
-    override fun changeViewWithParam(fragment: Fragment) {
     }
 
 }

@@ -232,7 +232,9 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                     countryOfOriginName = countryS,
                     categoryName = categoryS,
                     gameState = null,
-                    levelId = null
+                    levelId = null,
+                    imgAlteredRsc = 0,
+                    imgOriginalRsc = 0
                 )
                 insertPhotoPost(photoPost)
                 return true
