@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.Model.Entity
+// Author: Ondřej Vrána (xvrana32)
 
 import androidx.room.TypeConverter
 import java.util.Date

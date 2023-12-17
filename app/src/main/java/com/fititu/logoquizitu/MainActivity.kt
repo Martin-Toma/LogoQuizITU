@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu
+// Author: Ondřej Vrána (xvrana32) and Martin Tomašovič(xtomas36)
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

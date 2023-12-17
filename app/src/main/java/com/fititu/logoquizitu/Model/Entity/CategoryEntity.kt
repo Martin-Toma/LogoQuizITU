@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.Model.Entity
+// Author: Ondřej Vrána (xvrana32)
 
 import android.graphics.Bitmap
 import androidx.room.Entity

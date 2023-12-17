@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.Controller
+// Author: Ondřej Vrána (xvrana32)
 
 import android.content.Context
 import android.util.Log

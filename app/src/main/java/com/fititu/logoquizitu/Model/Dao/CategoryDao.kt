@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.Model.Dao
+// Author: Ondřej Vrána (xvrana32)
 
 import androidx.room.Dao
 import androidx.room.Delete

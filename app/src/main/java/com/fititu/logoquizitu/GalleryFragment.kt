@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu
+// Author: Ondřej Vrána (xvrana32)
 
 import android.os.Bundle
 import android.util.Log

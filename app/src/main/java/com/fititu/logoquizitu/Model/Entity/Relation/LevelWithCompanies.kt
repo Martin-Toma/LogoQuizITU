@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.Model.Entity.Relation
+// Author: Ondřej Vrána (xvrana32)
 
 import androidx.room.Embedded
 import androidx.room.Relation

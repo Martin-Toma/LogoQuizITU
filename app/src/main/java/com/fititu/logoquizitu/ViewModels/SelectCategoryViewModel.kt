@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.ViewModels
+// Author: Ondřej Vrána (xvrana32)
 
 import android.app.Application
 import android.content.Context
