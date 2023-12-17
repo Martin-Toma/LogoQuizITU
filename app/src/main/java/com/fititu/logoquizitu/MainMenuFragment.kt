@@ -17,7 +17,6 @@ class MainMenuFragment : Fragment(), IMainMenuView {
   
     private lateinit var viewModel: MainMenuViewModel
     private var btnSelectMode: Button? = null
-    private var btnSettings: Button? = null
     private var btnGallery: Button? = null
     private var btnStatistics: Button? = null
     private var btnMylogos: Button? = null
@@ -40,17 +39,12 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         viewModel = ViewModelProvider(this)[MainMenuViewModel::class.java]
 
         btnSelectMode = view.findViewById(R.id.btn_select_mode)
-        btnSettings = view.findViewById(R.id.btn_settings)
         btnGallery = view.findViewById(R.id.btn_gallery)
         btnStatistics = view.findViewById(R.id.btn_statistics)
         btnMylogos = view.findViewById(R.id.btn_mylogos)
 
-
         btnSelectMode?.setOnClickListener{
             viewModel.navigateTo(this, FragmentConstants.TO_SELECT_MODE)
-        }
-        btnSettings?.setOnClickListener{
-            viewModel.navigateTo(this, FragmentConstants.TO_SETTINGS)
         }
 
         btnGallery?.setOnClickListener {

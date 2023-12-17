@@ -8,7 +8,7 @@ data class GlobalProfileEntity(
     @PrimaryKey(autoGenerate = true) val id : Int,
     val hintsCount: Int,
     val hintsUsedCount: Int,
-    val gameTime: Long, // Duration in seconds
+    var gameTime: Long, // Duration in seconds
 
     // ?
     val currentCompanyId : Int,

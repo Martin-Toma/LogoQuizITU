@@ -2,7 +2,10 @@ package com.fititu.logoquizitu.ViewModels
 
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
+import com.fititu.logoquizitu.GameRandom
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CategoryDao
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
@@ -10,6 +13,7 @@ import com.fititu.logoquizitu.Model.Dao.CountryDao
 import com.fititu.logoquizitu.Model.Dao.LevelDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.Model.SortBy
+import com.fititu.logoquizitu.View.IGalleryView
 import kotlinx.coroutines.runBlocking
 
 class GalleryViewModel(application: Application) : AndroidViewModel(application) {
@@ -140,37 +144,24 @@ class GalleryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     // remake to open new game
-//    fun navigateTo(view: ISelectModeView, fragmentTo: String) {
-//        var fragment: Fragment? = null
-//        fragment = when (fragmentTo) {
-//            FragmentConstants.TO_RANDOM -> {
-//                GameRandom()
-//            }
-//
-//            FragmentConstants.TO_LEVEL -> {
-//                SelectLevelFragment()
-//            }
-//
-//            FragmentConstants.TO_SELECT -> {
-//                TODO()
-//            }
-//
-//            FragmentConstants.TO_NAME -> {
-//                RandomNameFragment()
-//            }
-//
-//            FragmentConstants.TO_CATEGORY -> {
-//                SelectCategoryFragment()
-//            }
-//
-//            FragmentConstants.TO_PLAY_MY_LOGOS -> {
-//                TODO()
-//            }
-//
-//            else -> {
-//                null
-//            }
-//        }
-//        view.changeView(fragment = fragment!!)
-//    }
+    fun navigateTo(view: IGalleryView) {
+        val gameRandomFragment = GameRandom()
+        val bundle = Bundle().apply {
+            if (level != null || level != "any"){
+                putString("GameMode", "Levels:")
+                putString("GameModeParameter", level)
+            }
+            else if (category != null || category != "any"){
+                putString("GameMode", "Levels:")
+                putString("GameModeParameter", category)
+            }
+            else{
+                putString("GameMode", "GameRandom")
+                putString("GameModeParameter", "")
+            }
+        }
+        gameRandomFragment.arguments = bundle
+
+        view.navigateTo(fragment = gameRandomFragment)
+    }
 }
