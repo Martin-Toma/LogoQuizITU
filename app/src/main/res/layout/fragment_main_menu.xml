@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainMenuFragment"
     android:gravity="center"
     android:orientation="vertical">
@@ -39,15 +38,6 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_mylogos_text" />
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/SelectLogo"
-        android:text="Select Logo mode" />
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/RandomName"
-            android:text="Random Name" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>
