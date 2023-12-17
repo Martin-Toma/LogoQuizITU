@@ -2,27 +2,28 @@ package com.fititu.logoquizitu.ViewModels
 
 import android.content.Context
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.*
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
 import com.fititu.logoquizitu.Model.Dao.GlobalProfileDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.Model.Entity.GlobalProfileEntity
 import kotlinx.coroutines.Dispatchers
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.launch
-import androidx.lifecycle.viewModelScope
 
-class GameRandomViewModel(application: Application): AndroidViewModel(application) {
+class GameRandomViewModel(application: Application) : AndroidViewModel(application) {
     private val appContext: Context = application.applicationContext
-    val companyDao : CompanyDao = AppDatabase.getInstance(appContext).companyDao()
-    var globalProfileDao: GlobalProfileDao =  AppDatabase.getInstance(appContext).globalProfileDao()
+    val companyDao: CompanyDao = AppDatabase.getInstance(appContext).companyDao()
+    var globalProfileDao: GlobalProfileDao = AppDatabase.getInstance(appContext).globalProfileDao()
     lateinit var globalProfiles: List<GlobalProfileEntity>
     lateinit var globalProfile: GlobalProfileEntity
     lateinit var randomLogo: CompanyEntity
+    private val _logoNull = MutableLiveData<Boolean>()
+    val logoNull: LiveData<Boolean> get() = _logoNull
+
+
     var gameMode: String = ""
         set(value) {
             field = value
@@ -34,9 +35,13 @@ class GameRandomViewModel(application: Application): AndroidViewModel(applicatio
 
         }
 
+    private fun triggerNavigation() {
+        _logoNull.value = true
+    }
+
     // Coroutine scope for background tasks
     fun getRandomLogo() {
-        randomLogo = runBlocking(Dispatchers.IO) {
+        val randomLogoFromDb = runBlocking(Dispatchers.IO) {
             when (gameMode) {
                 "GameRandom" -> companyDao.getRandomCompany()
                 "Categories:" -> companyDao.getRandomCompanyOfCategory(gameModeParameter)
@@ -44,6 +49,11 @@ class GameRandomViewModel(application: Application): AndroidViewModel(applicatio
                 else -> companyDao.getRandomCompany()
             }
         }
+        if (randomLogoFromDb != null) {
+            randomLogo = randomLogoFromDb
+            return
+        }
+        triggerNavigation()
     }
 
     fun getGlobalProfile() {
@@ -52,6 +62,7 @@ class GameRandomViewModel(application: Application): AndroidViewModel(applicatio
         }
         globalProfile = globalProfiles[0]
     }
+
     fun resetCurrentGameState() {
         runBlocking(Dispatchers.IO) {
             globalProfileDao.update(
@@ -70,6 +81,7 @@ class GameRandomViewModel(application: Application): AndroidViewModel(applicatio
             globalProfiles = globalProfileDao.get()
         }
     }
+
     fun updateCompanySolved() { //todo should work, needs testing
         randomLogo.solved = true
         viewModelScope.launch {
@@ -78,6 +90,7 @@ class GameRandomViewModel(application: Application): AndroidViewModel(applicatio
             }
         }
     }
+
     fun saveStateToDb(
         logoName: String,
         logoColor: String,
@@ -103,7 +116,8 @@ class GameRandomViewModel(application: Application): AndroidViewModel(applicatio
         }
         globalProfile = globalProfiles[0] //update globalProfile
     }
-    fun getCompanyById(){
+
+    fun getCompanyById() {
         randomLogo = runBlocking(Dispatchers.IO) {
             companyDao.getCompanyById(globalProfile.currentCompanyId)
         }

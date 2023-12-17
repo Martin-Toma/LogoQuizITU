@@ -45,6 +45,13 @@ class GameRandom : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this)[GameRandomViewModel::class.java]
+        //if logo is null, navigate to main menu
+        viewModel.logoNull.observe(viewLifecycleOwner
+        ) {
+            if (it) {
+                navigateToNextFragment("MainMenu")
+            }
+        }
         viewModel.gameMode = arguments?.getString("GameMode")!!
         viewModel.gameModeParameter = arguments?.getString("GameModeParameter")!!
         return inflater.inflate(R.layout.fragment_game_random, container, false)
@@ -61,6 +68,10 @@ class GameRandom : Fragment() {
             }
         }
         viewModel.getRandomLogo()
+        if(viewModel.logoNull.value == true) {
+            navigateToNextFragment("MainMenu")
+            return
+        }
         randomLogo = viewModel.randomLogo
         setImage()
         val logoNameGridLayout: GridLayout = view.findViewById(R.id.LogoNameGridLayout)
