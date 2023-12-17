@@ -1,3 +1,7 @@
+/* Project: Logo Quiz ITU
+* Author: Martin Tomasovic
+* Last edit: 17.12.2023
+* */
 package com.fititu.logoquizitu
 
 import android.graphics.Bitmap
@@ -32,12 +36,11 @@ import java.io.FileOutputStream
 
 
 class MyLogosFragment : Fragment(), IMainMenuView {
-    // https://stackoverflow.com/questions/62258967/android-best-approach-for-saving-images-in-room-database
+
     private var plusButton: Button? = null
     private var plusPresenter: IMainMenuController? = null
 
     private val SELECT_IMAGE_REQUEST = 1
-    //private var selectedImagePath: String = ""
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImageAdapter
 
@@ -49,7 +52,6 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
     private lateinit var backButton : Button
 
-    //private lateinit var imageView2 : ImageView
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(

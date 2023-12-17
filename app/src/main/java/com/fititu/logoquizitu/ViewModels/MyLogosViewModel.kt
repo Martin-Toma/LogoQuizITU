@@ -1,3 +1,7 @@
+/* Project: Logo Quiz ITU
+* Author: Martin Tomasovic
+* Last edit: 17.12.2023
+* */
 package com.fititu.logoquizitu.ViewModels
 
 import android.annotation.SuppressLint
