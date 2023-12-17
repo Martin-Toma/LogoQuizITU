@@ -1,7 +1,7 @@
 # LogoQuizITU
 This is logo guessing game programmed in kotlin.
 
-Use Android studio Giraffe.
+Use Android studio Giraffe. Android Q (10) or newer version is required to run correctly 
 
 ## Database
 All data is stored in local database using Room. 

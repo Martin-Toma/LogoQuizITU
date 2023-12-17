@@ -60,7 +60,7 @@ interface CompanyDao {
     suspend fun getCompaniesAllFilters(level: Int, countryName: String, categoryName: String) : List<CompanyEntity>
     // ************************************ filter queries for gallery end ************************************
 
-    @Query("SELECT * FROM CompanyEntity/* WHERE solved=0*/ ORDER BY RANDOM() LIMIT 1") //todo uncomment solved=0, this excludes solved companies
+    @Query("SELECT * FROM CompanyEntity WHERE solved=0 ORDER BY RANDOM() LIMIT 1")
     suspend fun getRandomCompany() : CompanyEntity
     //select entity with id as parameter
 
