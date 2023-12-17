@@ -33,7 +33,7 @@ class MainMenuModel(): IMainMenuModel {
                 fragment = SettingsFragment()
             }
             FragmentConstants.TO_GALLERY -> {
-                fragment = GalleryFragment()
+                fragment = GalleryFragment(null, null, null, SortBy.LEVEL)
             }
             FragmentConstants.TO_STATISTICS -> {
                 fragment = StatisticsFragment()
