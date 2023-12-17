@@ -44,7 +44,6 @@ import java.util.UUID
 import kotlin.math.round
 
 class AddLogoViewModel(application: Application) : AndroidViewModel(application) {
-    // TODO: Implement the ViewModel
 
     @SuppressLint("StaticFieldLeak")
     private val appContext: Context = application.applicationContext
@@ -60,12 +59,9 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                 logoEntityDao.insert(photoPost)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(appContext, "Logo saved successfully", Toast.LENGTH_SHORT).show()
-                    //requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
                 }
 
             }
-
-            //clearFields()
         }
     }
 
@@ -85,7 +81,6 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
 
     fun onDBUpdateComplete() {
         Toast.makeText(appContext, "Logo edited successfully", Toast.LENGTH_SHORT).show()
-        //requireActivity().onBackPressedDispatcher.onBackPressed() // go back to my fragment
     }
 
     fun get_file_type(whole_path : String?) : String?{
@@ -110,10 +105,12 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
             return null
         }
     }
+    // returns CompanyEntity with given Id
     suspend fun initViewData(logoId: Int) : CompanyEntity{
         return logoEntityDao.getCompanyById(logoId)
     }
 
+    // updates database
     @RequiresApi(Build.VERSION_CODES.Q)
     fun updateDB(
         caption : String,
@@ -148,64 +145,31 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
                 val got = imageChange(selectedImagePath, caption, editOn)
                 outputPath = got.first
                 out2 = got.second
-                /*if(editOn){
-                    viewModelScope.launch {
-                        val item = logoEntityDao.getCompanyById(lId!!)
-                        if (fileManagement.delete_file(
-                                appContext.filesDir,
-                                item.imgOriginal,
-                                appContext
-                            )
-                        ) {
-                            outputPath = imageChange(selectedImagePath, caption, editOn)
-                            Toast.makeText(appContext, "New image", Toast.LENGTH_SHORT).show()
-                        }
-                        else{
-                            Toast.makeText(appContext, "Couldn't delete former file please try again", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                else{
-                    outputPath = imageChange(selectedImagePath, caption, editOn)
-                }*/
             }
             // update the DB
             if(editOn){
-                if(!imageNotChanged){
-                    //delete old
-
-                    //load new
-                    //imageChange(selectedImagePath, caption, editOn)
-                }
                 val cId = lId
                 val dirPath = appContext.filesDir
                 viewModelScope.launch {
 
                     val item = logoEntityDao.getCompanyById(cId!!)
                     if (!imageNotChanged) {
-                       /* if (!) {
-                            Toast.makeText(appContext, "Error deleting image", Toast.LENGTH_SHORT)
-                                .show()
-                            return@launch
-                        }*/
+                        // delete hidden image file
                         fileManagement.delete_file(dirPath, item.imgOriginal, appContext)
+                        // delete shown image file
                         fileManagement.delete_file(dirPath, item.imgAltered, appContext)
-                        /*if (!) {
-                            Toast.makeText(appContext, "Error deleting hidden image", Toast.LENGTH_SHORT)
-                                .show()
-                            return@launch
-                        }*/
-                        //Toast.makeText(appContext, "Deleted image file", Toast.LENGTH_SHORT).show()
+
+                        // get new images paths
                         val got = imageChange(selectedImagePath, caption, editOn)
                         outputPath = got.first
                         out2 = got.second
-                        //Toast.makeText(appContext, "Created image file", Toast.LENGTH_SHORT).show()
                     }
                     if(!imageNotChanged){ // change image path if new
                         Log.d("IMG", "Should change from ${item.imgOriginal} to ${outputPath}")
                         item.imgOriginal = out2
                         item.imgAltered = outputPath
                     }
+                    // update the rest of columns
                     item.companyName = caption
                     item.companyDescription = description
                     item.solved = false
@@ -245,8 +209,8 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         return false
     }
 
+    // changes image
     fun imageChange(selectedImagePath : String, caption : String, editOn : Boolean) : Pair<String, String>{
-
 
         var outputPath : String = ""
 
@@ -258,12 +222,6 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         Log.d("File name", new_image_file_name)
 
         val dir_path = appContext.filesDir
-        /*if(editOn){
-            if(fileManagement.delete_file(dir_path, new_image_file_name, appContext) == false){
-                Toast.makeText(appContext, "Here is the error", Toast.LENGTH_SHORT).show()
-                return ""
-            }
-        }*/
 
         val file = File(dir_path, new_image_file_name)
         file.createNewFile()
@@ -290,8 +248,6 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
             while (inputStream?.read(buffer, 0, bufferSize).also { bytesRead = it } != -1) {
                 outputStream.write(buffer, 0, bytesRead!!)
             }
-                //FileUtils.copy(inputStream, outputStream)
-                //outputStream.getChannel().transferFrom(inputStream, 0, inputStream.size());
         } else {
             Log.e("ERR", "empty input")
         }
@@ -308,6 +264,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         return Pair(outputPath, out2)
     }
 
+    // for generating unique part of file name
     fun generateUniqueFileName(originalFileName: String): String {
         val extension = originalFileName.substringAfterLast(".", "")
         val fileName = originalFileName.substringBeforeLast(".", "")
@@ -316,6 +273,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         return "$fileName-$uuid.$extension"
     }
 
+    // creates whole hidden image and stores it
     fun generateHiddenImg(uri : Uri, fileHidden : File){
         val bm = getBitmapFromInputStream(appContext, uri)
         if(bm != null){
@@ -325,6 +283,7 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
             outputStream.close()
         }
     }
+    // returns bitmap from uri
     fun getBitmapFromInputStream(context: Context, uri: Uri): Bitmap? {
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
             return BitmapFactory.decodeStream(inputStream)
@@ -332,12 +291,14 @@ class AddLogoViewModel(application: Application) : AndroidViewModel(application)
         return null
     }
 
+    // draws on image to hide it using canvas
     fun drawLineOnBitmap(bitmap: Bitmap): Bitmap {
         val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(mutableBitmap)
         // red stripe horizontal center
         var paint = Paint().apply {
             color = Color.RED
+            // adjust the width according to bitmap dimensions
             strokeWidth = round((mutableBitmap.height.coerceAtMost(mutableBitmap.width) /10).toFloat())
         }
 

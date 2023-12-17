@@ -21,7 +21,6 @@ import kotlinx.coroutines.withContext
 
 class MyLogosViewModel(application: Application) : AndroidViewModel(application) {
 
-
     @SuppressLint("StaticFieldLeak")
     private val appContext: Context = application.applicationContext
     private var logoEntityDao: CompanyDao = AppDatabase.getInstance(appContext).companyDao()
@@ -35,6 +34,7 @@ class MyLogosViewModel(application: Application) : AndroidViewModel(application)
         loadPhotoPosts()
     }
 
+    // loads entity from db posts it as LiveData
     fun loadPhotoPosts() {
         viewModelScope.launch {
             val list = withContext(Dispatchers.IO) {
@@ -44,8 +44,8 @@ class MyLogosViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // deletes logo from db and file
     fun onDelete(position : Int){
-        //val itemToDelete = photoList[position]
 
         // Run the delete operation in a coroutine
         viewModelScope.launch {
@@ -57,19 +57,6 @@ class MyLogosViewModel(application: Application) : AndroidViewModel(application)
                 companyDao.delete(itemToDelete)
                 loadPhotoPosts()
             }
-                /*withContext(Dispatchers.Main) {
-                    // Update the RecyclerView
-                    photoList = companyDao.getAll()
-                    notifyDataSetChanged()
-                    //Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
-                }*/
-
-
-            /*}
-            else{
-                Log.e("ERR", "Error deleting")
-                //Toast.makeText(context, "Item not deleted due to file deletion error", Toast.LENGTH_SHORT).show()
-            }*/
 
         }
     }
