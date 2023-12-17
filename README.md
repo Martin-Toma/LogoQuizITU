@@ -15,6 +15,7 @@ Uses 3 key components:
 
 ## Installation
 
+* locate LogoQuizITU/app/release/app-release.apk file
 * download apk file to your Android device to Downloads folder
 * click on the downloaded .apk file
 * confirm installing from unknown source
