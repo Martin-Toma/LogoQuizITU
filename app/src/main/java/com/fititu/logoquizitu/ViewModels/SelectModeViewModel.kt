@@ -1,4 +1,4 @@
-package com.fititu.logoquizitu.myviewmodels
+package com.fititu.logoquizitu.ViewModels
 
 import android.app.Application
 import android.content.Context

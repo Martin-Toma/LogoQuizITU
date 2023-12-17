@@ -9,9 +9,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.R
-import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
 import com.fititu.logoquizitu.SelectLevelFragment
-import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
+import com.fititu.logoquizitu.ViewModels.SelectLevelViewModel
 
 class SelectLevelAdapter(
     private val context: Context,

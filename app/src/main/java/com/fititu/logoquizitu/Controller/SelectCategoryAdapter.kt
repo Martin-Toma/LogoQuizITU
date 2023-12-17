@@ -1,31 +1,17 @@
 package com.fititu.logoquizitu.Controller
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.fititu.logoquizitu.Model.Entity.Relation.CategoryWithCompanies
 import com.fititu.logoquizitu.R
-import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
 import com.fititu.logoquizitu.SelectCategoryFragment
-import com.fititu.logoquizitu.SelectLevelFragment
-import com.fititu.logoquizitu.myviewmodels.SelectCategoryViewModel
-import kotlinx.coroutines.coroutineScope
-import java.io.File
-import java.io.FileDescriptor
-import java.io.FileReader
-import java.nio.file.Paths
+import com.fititu.logoquizitu.ViewModels.SelectCategoryViewModel
 
 class SelectCategoryAdapter(
     private val context: Context,

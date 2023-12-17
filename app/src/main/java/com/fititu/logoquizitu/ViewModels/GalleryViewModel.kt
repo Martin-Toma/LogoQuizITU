@@ -1,21 +1,12 @@
-package com.fititu.logoquizitu.myviewmodels
+package com.fititu.logoquizitu.ViewModels
 
 import android.app.Application
 import android.content.Context
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
-import com.fititu.logoquizitu.FragmentConstants
-import com.fititu.logoquizitu.GameRandom
 import com.fititu.logoquizitu.Model.AppDatabase
 import com.fititu.logoquizitu.Model.Dao.CompanyDao
-import com.fititu.logoquizitu.Model.Dao.LevelDao
 import com.fititu.logoquizitu.Model.Entity.CompanyEntity
-import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
 import com.fititu.logoquizitu.Model.SortBy
-import com.fititu.logoquizitu.RandomNameFragment
-import com.fititu.logoquizitu.SelectCategoryFragment
-import com.fititu.logoquizitu.SelectLevelFragment
-import com.fititu.logoquizitu.View.ISelectModeView
 import kotlinx.coroutines.runBlocking
 
 class GalleryViewModel(application: Application) : AndroidViewModel(application) {

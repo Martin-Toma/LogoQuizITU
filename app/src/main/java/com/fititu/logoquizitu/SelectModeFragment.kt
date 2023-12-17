@@ -8,12 +8,9 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.fititu.logoquizitu.Controller.IMainMenuController
 //import com.fititu.logoquizitu.Controller.MainMenuController
-import com.fititu.logoquizitu.View.IMainMenuView
 import com.fititu.logoquizitu.View.ISelectModeView
-import com.fititu.logoquizitu.myviewmodels.MainMenuViewModel
-import com.fititu.logoquizitu.myviewmodels.SelectModeViewModel
+import com.fititu.logoquizitu.ViewModels.SelectModeViewModel
 
 class SelectModeFragment : Fragment(), ISelectModeView {
     private lateinit var viewModel: SelectModeViewModel

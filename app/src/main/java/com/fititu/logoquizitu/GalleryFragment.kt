@@ -6,18 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.Controller.GalleryAdapter
 import com.fititu.logoquizitu.Controller.GalleryLayoutManager
-import com.fititu.logoquizitu.Model.AppDatabase
-import com.fititu.logoquizitu.Model.Dao.CompanyDao
-import com.fititu.logoquizitu.Model.Entity.CompanyEntity
 import com.fititu.logoquizitu.Model.SortBy
-import com.fititu.logoquizitu.myviewmodels.GalleryViewModel
-import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
-import kotlinx.coroutines.launch
+import com.fititu.logoquizitu.ViewModels.GalleryViewModel
 
 class GalleryFragment(
     private val countryOfOrigin: String?,

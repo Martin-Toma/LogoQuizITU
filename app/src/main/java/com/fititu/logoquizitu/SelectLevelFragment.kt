@@ -7,17 +7,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fititu.logoquizitu.Controller.SelectLevelAdapter
-import com.fititu.logoquizitu.Model.AppDatabase
-import com.fititu.logoquizitu.Model.Dao.LevelDao
-import com.fititu.logoquizitu.Model.Entity.Relation.LevelWithCompanies
 import com.fititu.logoquizitu.View.ILevelView
-import com.fititu.logoquizitu.myviewmodels.MainMenuViewModel
-import com.fititu.logoquizitu.myviewmodels.SelectLevelViewModel
-import kotlinx.coroutines.launch
+import com.fititu.logoquizitu.ViewModels.SelectLevelViewModel
 
 class SelectLevelFragment : Fragment(), ILevelView {
     private lateinit var viewModel: SelectLevelViewModel
