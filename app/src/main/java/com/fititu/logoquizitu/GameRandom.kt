@@ -384,29 +384,20 @@ class GameRandom : Fragment() {
             } else i++
         }
         i = 0
-        val stupidKotlin = StringBuilder(logoNameString)
+        val modifiedLogoName = StringBuilder(logoNameString)
         while (i < logoNameString.length) {
             if (correctLogoNameModified[i] == '.') {
-                stupidKotlin.setCharAt(i, '.')
+                modifiedLogoName.setCharAt(i, '.')
             }
             i++
         }
         i = 0
-        //reset all letterbuttons that are yellow to white
-        for (letter in letters) {
-            if (letter.bgColor == Color.YELLOW) {
-                val letterButton = letterButtons[letters.indexOf(letter)]
-                letterButton.setBackgroundColor(Color.WHITE)
-                letterButton.isEnabled = true
-                letter.bgColor = Color.WHITE
-                letter.defaultColor = Color.WHITE
-            }
-        }
-        while (i < stupidKotlin.length) {
-            if (stupidKotlin[i] == '.') {
+        resetYellowLetters()
+        while (i < modifiedLogoName.length) {
+            if (modifiedLogoName[i] == '.') {
                 i++
                 continue
-            } else if (correctLogoNameModified.contains(stupidKotlin[i])) {
+            } else if (correctLogoNameModified.contains(modifiedLogoName[i])) {
                 //find the letter in correctLogoNameModified
                 val nameLetter = nameLetters[i]
                 val logoNameButton = logoNameButtons[nameLetters.indexOf(nameLetter)]
@@ -421,8 +412,8 @@ class GameRandom : Fragment() {
                 letter.bgColor = Color.YELLOW
                 letter.defaultColor = Color.YELLOW
                 nameLetter.bgColor = Color.WHITE
-                stupidKotlin.setCharAt(i, '.')
-                correctLogoNameModified = correctLogoNameModified.replaceFirst(stupidKotlin[i].toString(), ".")
+                modifiedLogoName.setCharAt(i, '.')
+                correctLogoNameModified = correctLogoNameModified.replaceFirst(modifiedLogoName[i].toString(), ".")
             }
             i++
         }
@@ -430,6 +421,18 @@ class GameRandom : Fragment() {
         resetUsedLetters()
         if (viewModel.gameMode == "GameRandom")
             saveCurrentGameState()
+    }
+
+    private fun resetYellowLetters() {
+        for (letter in letters) {
+            if (letter.bgColor == Color.YELLOW) {
+                val letterButton = letterButtons[letters.indexOf(letter)]
+                letterButton.setBackgroundColor(Color.WHITE)
+                letterButton.isEnabled = true
+                letter.bgColor = Color.WHITE
+                letter.defaultColor = Color.WHITE
+            }
+        }
     }
 
     private fun resetNameButtons() {
