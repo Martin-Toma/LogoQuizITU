@@ -124,7 +124,7 @@ class SelectLogoGameFragment : Fragment() {
                 val imbtn: ImageButton = rel.getChildAt(0) as ImageButton
                 if(randomLogos[i].userCreated){
                     Glide.with(requireContext())
-                        .load(randomLogos[i].imgAltered)
+                        .load(randomLogos[i].imgOriginal)
                         .into(imbtn)
                 }
                 else{
