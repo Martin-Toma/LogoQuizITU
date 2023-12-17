@@ -20,4 +20,7 @@ interface CategoryDao {
     @Transaction
     @Query("SELECT * FROM CategoryEntity")
     suspend fun getCategoriesWithCompanies() : List<CategoryWithCompanies>
+
+    @Query("SELECT name FROM CategoryEntity")
+    suspend fun getCategoryNames() : List<String>
 }

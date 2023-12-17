@@ -20,4 +20,7 @@ interface CountryDao {
     @Transaction
     @Query("SELECT * FROM CountryEntity")
     suspend fun getCountriesWithCompanies() : List<CountryWithCompanies>
+
+    @Query("SELECT name FROM CountryEntity")
+    suspend fun getCountryNames() : List<String>
 }

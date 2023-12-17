@@ -20,4 +20,7 @@ interface LevelDao {
     @Transaction
     @Query("SELECT * FROM LevelEntity")
     suspend fun getLevelsWithCompanies() : List<LevelWithCompanies>
+
+    @Query("SELECT id FROM LevelEntity")
+    suspend fun getLevelIds() : List<Int>
 }
