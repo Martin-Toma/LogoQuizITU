@@ -82,16 +82,16 @@ class RandomNameFragment : Fragment() {
     }
 
     private fun onButtonClicked(button: Button) {
-        if (button.text == viewModel.correctName) {
+        if (viewModel.checkAnswer(button.text.toString())) {
             for (currentButton in logoNamesButtons) {
-                if (currentButton.text == viewModel.correctName) {
+                if (viewModel.checkAnswer(currentButton.text.toString())) {
                     currentButton.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_green)
                 }
             }
         } else {
             for (currentButton in logoNamesButtons) {
-                if (currentButton.text == viewModel.correctName)
+                if (viewModel.checkAnswer(currentButton.text.toString()))
                     currentButton.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_green)
                 else
