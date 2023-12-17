@@ -2,6 +2,7 @@ package com.fititu.logoquizitu
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,47 +11,41 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.fititu.logoquizitu.Model.AppDatabase
-import com.fititu.logoquizitu.Model.Dao.CompanyDao
-import com.fititu.logoquizitu.Model.Entity.CompanyEntity
+import com.fititu.logoquizitu.ViewModels.RandomNameViewModel
 import kotlinx.coroutines.*
 
 
 class RandomNameFragment : Fragment() {
     private var logoNamesButtons = mutableListOf<Button>()
-    private lateinit var randomCompanyNames: List<CompanyEntity>
-    private lateinit var companyDao: CompanyDao
     private lateinit var randomLogoImageView: ImageView
-    private lateinit var correctName: String
-
+    private lateinit var viewModel: RandomNameViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        companyDao = AppDatabase.getInstance(requireContext()).companyDao()
+        viewModel = ViewModelProvider(this)[RandomNameViewModel::class.java]
         randomLogoImageView = view.findViewById(R.id.randomLogoImage)
-        getRandomLogos()
+        viewModel.getRandomLogos()
+        setImage()
         val logoNamesGridLayout: GridLayout = view.findViewById(R.id.LogoNamesGridLayout)
         generateLogoNameButtons(logoNamesGridLayout)
+        updateHomeButton()
     }
 
-    private fun getRandomLogos() {
-        randomCompanyNames = runBlocking(Dispatchers.IO) {
-            companyDao.getRandomCompanies()
-        }
+    private fun setImage() {
         lifecycleScope.launch {
-            var path_UI: String?
+            var pathUI: String?
             withContext(Dispatchers.Main) {
-                val path = randomCompanyNames[0].imgOriginal//randomLogo2.imagePath
-                path_UI = path
+                val path = viewModel.randomCompanyNames[0].imgOriginal
+                pathUI = path
             }
             Glide.with(requireContext())
-                .load(path_UI)
+                .load(pathUI)
                 .into(randomLogoImageView)
         }
     }
@@ -58,13 +53,12 @@ class RandomNameFragment : Fragment() {
     private fun generateLogoNameButtons(gridLayout: GridLayout) {
         gridLayout.rowCount = 4
         gridLayout.columnCount = 1
-        correctName = randomCompanyNames[0].companyName
-        randomCompanyNames = randomCompanyNames.shuffled()
+        viewModel.setCorrectName()
+        viewModel.shuffleCompanyNames()
         for (i in 0..3) {
-            //todo generate 4 buttons with the 4 logo names
             val button = Button(requireContext())
             val params = GridLayout.LayoutParams()
-            button.text = randomCompanyNames[i].companyName
+            button.text = viewModel.randomCompanyNames[i].companyName
             button.setBackgroundColor(Color.WHITE)
             button.setOnClickListener {
                 onButtonClicked(button)
@@ -75,23 +69,25 @@ class RandomNameFragment : Fragment() {
             params.columnSpec = GridLayout.spec(0)
             params.setMargins(10, 10, 10, 10)
             button.layoutParams = params
+            params.setGravity(Gravity.CENTER_HORIZONTAL) // Center horizontally within the cell
             button.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_white)
             gridLayout.addView(button)
             logoNamesButtons.add(button)
+
         }
     }
 
     private fun onButtonClicked(button: Button) {
-        if (button.text == correctName) {
+        if (button.text == viewModel.correctName) {
             for (currentButton in logoNamesButtons) {
-                if (currentButton.text == correctName) {
+                if (currentButton.text == viewModel.correctName) {
                     currentButton.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_green)
                 }
             }
         } else {
             for (currentButton in logoNamesButtons) {
-                if (currentButton.text == correctName)
+                if (currentButton.text == viewModel.correctName)
                     currentButton.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_green)
                 else
@@ -111,6 +107,23 @@ class RandomNameFragment : Fragment() {
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
+    }
+
+    private fun updateHomeButton() {
+        val homeButton = view?.findViewById<Button>(R.id.HomeButton)
+        homeButton?.text = "HOME"
+        homeButton?.setOnClickListener {
+            returnToMainMenu()
+        }
+    }
+
+    private fun returnToMainMenu() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val newFragment = MainMenuFragment()
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     override fun onCreateView(

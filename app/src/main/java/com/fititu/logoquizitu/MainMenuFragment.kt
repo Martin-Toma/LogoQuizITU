@@ -41,7 +41,7 @@ class MainMenuFragment : Fragment(), IMainMenuView {
             (playPresenter as MainMenuController).onClickButton("toMyLogos")
         }
         GameRandomButton?.setOnClickListener{
-            (playPresenter as MainMenuController).onClickButton("toGameRandom")
+            navigateToGameRandomFragment()
         }
         randomNameButton?.setOnClickListener{
             (playPresenter as MainMenuController).onClickButton("toRandomName")
@@ -61,6 +61,20 @@ class MainMenuFragment : Fragment(), IMainMenuView {
         transaction.commit()
     }
 
+    private fun navigateToGameRandomFragment() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val newFragment = GameRandom()
+        val bundle = Bundle().apply {
+            putString("GameMode", "GameRandom")
+            putString("GameModeParameter", "")
+        }
+        newFragment.arguments = bundle
+        fragmentTransaction.replace(R.id.mainMenuFragmentContainer, newFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
     override fun changeViewWithParam(fragment: Fragment) {
     }
 
