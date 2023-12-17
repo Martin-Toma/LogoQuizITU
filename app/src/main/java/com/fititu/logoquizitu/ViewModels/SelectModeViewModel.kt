@@ -10,6 +10,7 @@ import com.fititu.logoquizitu.GameRandom
 import com.fititu.logoquizitu.RandomNameFragment
 import com.fititu.logoquizitu.SelectCategoryFragment
 import com.fititu.logoquizitu.SelectLevelFragment
+import com.fititu.logoquizitu.SelectLogoGameFragment
 import com.fititu.logoquizitu.View.ISelectModeView
 
 class SelectModeViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,7 +32,7 @@ class SelectModeViewModel(application: Application) : AndroidViewModel(applicati
                 SelectLevelFragment()
             }
             FragmentConstants.TO_SELECT ->{
-                TODO()
+                SelectLogoGameFragment()
             }
             FragmentConstants.TO_NAME ->{
                 RandomNameFragment()

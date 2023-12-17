@@ -47,6 +47,8 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
     private lateinit var viewModel : MyLogosViewModel
 
+    private lateinit var backButton : Button
+
     //private lateinit var imageView2 : ImageView
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -68,10 +70,12 @@ class MyLogosFragment : Fragment(), IMainMenuView {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // redirect to the edit logo fragment
         adapter.setOnEditButtonClickListener(object : ImageAdapter.OnEditButtonClickListener {
             override fun onEditButtonClicked(position: Int, id: Int) {
                 Log.d("Check", "onEditButtonClicked was clicked")
-                (playPresenter as MainMenuController).editDbFragment("toAdd", id)
+                val fragment = AddLogoFragment.newInstance(id)
+                changeViewWithParam(fragment)
             }
         })
 
@@ -85,6 +89,11 @@ class MyLogosFragment : Fragment(), IMainMenuView {
             }
         })
 
+        backButton = view.findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed() // go back to menu fragment
+        }
+
         observeViewModel()
         return view
     }
@@ -97,13 +106,13 @@ class MyLogosFragment : Fragment(), IMainMenuView {
         transaction.commit()
     }
 
-    /*override fun changeViewWithParam(fragment: Fragment) {
+    fun changeViewWithParam(fragment: Fragment) {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
         transaction.replace(R.id.mainMenuFragmentContainer, fragment)
         transaction.addToBackStack(null) // Optional - Add to back stack
         transaction.commit()
-    }*/
+    }
     override fun onResume() {
         super.onResume()
 
