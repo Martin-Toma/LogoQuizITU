@@ -1,5 +1,5 @@
 package com.fititu.logoquizitu.ViewModels
-
+//Authors: Ján Špaček (xspace39) and Ondřej Vrána (xvrana32)
 import android.app.Application
 import android.content.Context
 import android.os.Bundle

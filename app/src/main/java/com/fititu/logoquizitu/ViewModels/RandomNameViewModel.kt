@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.ViewModels
+//Author: Ján Špaček (xspace39)
 
 import android.app.Application
 import android.content.Context
@@ -13,7 +14,7 @@ class RandomNameViewModel(application: Application): AndroidViewModel(applicatio
     private val appContext: Context = application.applicationContext
     lateinit var randomCompanyNames: List<CompanyEntity>
     private var companyDao: CompanyDao = AppDatabase.getInstance(appContext).companyDao()
-    lateinit var correctName: String
+    private lateinit var correctName: String
     fun getRandomLogos() {
         randomCompanyNames = runBlocking(Dispatchers.IO) {
             companyDao.getRandomCompanies(4)

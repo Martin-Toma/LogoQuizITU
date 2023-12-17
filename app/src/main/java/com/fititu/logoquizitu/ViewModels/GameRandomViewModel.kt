@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.ViewModels
+//Author: Ján Špaček (xspace39)
 
 import android.content.Context
 import android.app.Application
@@ -99,7 +100,7 @@ class GameRandomViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun updateCompanySolved() { //todo should work, needs testing
+    fun updateCompanySolved() {
         randomLogo.solved = true
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

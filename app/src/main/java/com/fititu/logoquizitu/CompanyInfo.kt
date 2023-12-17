@@ -1,6 +1,6 @@
 package com.fititu.logoquizitu
+//Author: Ján Špaček (xspace39)
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,7 +16,6 @@ import com.fititu.logoquizitu.ViewModels.CompanyInfoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class CompanyInfo : Fragment() {
     private lateinit var viewModel: CompanyInfoViewModel
@@ -63,7 +62,7 @@ class CompanyInfo : Fragment() {
                     .into(imageView!!)
             }
         } else
-            imageView!!.setImageResource(viewModel.company.imgAlteredRsc)
+            imageView!!.setImageResource(viewModel.company.imgOriginalRsc)
     }
 
     private fun updateModeButton(view: View) {

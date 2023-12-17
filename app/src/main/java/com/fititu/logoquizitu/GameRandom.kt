@@ -1,9 +1,7 @@
 package com.fititu.logoquizitu
 
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +21,7 @@ import com.fititu.logoquizitu.ViewModels.GameRandomViewModel
 import kotlinx.coroutines.*
 import java.util.*
 
+//Author: Ján Špaček (xspace39)
 
 class GameRandom : Fragment() {
     private lateinit var randomLogo: CompanyEntity //so i don't have to write viewModel.randomLogo every time
@@ -237,14 +236,6 @@ class GameRandom : Fragment() {
         jumpToFreeLetter()
     }
 
-    /*  private fun updateCompanySolved() { //todo delete this only if the viewmodel version is confirmed to work
-          randomLogo.solved = true
-          lifecycleScope.launch {
-              withContext(Dispatchers.IO) {
-                  companyDao.update(randomLogo) // need to get dao again
-              }
-          }
-      }*/
 
     private fun navigateToNextFragment(fragment: String) {
         if (fragment != "MainMenu")
@@ -612,7 +603,7 @@ class GameRandom : Fragment() {
             if (logoLetter.bgColor == Color.GREEN) {
                 //find the letter in letters and assign it to logoLetter
                 val letter =
-                    letters.find { it.letter == logoLetter.letter && it.bgColor == Color.GREEN }//todo stopped here
+                    letters.find { it.letter == logoLetter.letter && it.bgColor == Color.GREEN }
                 logoLetter.assignedLetter = letter?.id
             } else if (logoLetter.letter != ' ') {
                 val letter = letters.find { it.letter == logoLetter.letter && it.bgColor == Color.DKGRAY }

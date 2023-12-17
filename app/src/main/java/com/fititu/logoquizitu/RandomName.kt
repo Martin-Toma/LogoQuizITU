@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.fititu.logoquizitu.ViewModels.RandomNameViewModel
 import kotlinx.coroutines.*
 
-
+//Author: Ján Špaček (xspace39)
 class RandomNameFragment : Fragment() {
     private var logoNamesButtons = mutableListOf<Button>()
     private lateinit var randomLogoImageView: ImageView

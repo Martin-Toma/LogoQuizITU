@@ -1,4 +1,5 @@
 package com.fititu.logoquizitu.Model.Dao
+//Authors: Ján Špaček (xspace39) and Ondřej Vrána (xvrana32) and Martin Tomašovič(xtomas36)
 
 import androidx.room.Dao
 import androidx.room.Delete
